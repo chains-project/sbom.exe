@@ -51,7 +51,7 @@ public class Terminator {
                             List<StackManipulation> manipulations = new ArrayList<>();
 
                             // add the code to print and exit
-                            manipulations.add(new TextConstant("You accidentally have included `" + prohibitedClassName + "` in the app"));
+                            manipulations.add(new TextConstant("You accidentally have executed `" + prohibitedClassName + "` in the app"));
                             manipulations.add(MethodInvocation.invoke(new MethodDescription.ForLoadedMethod(Terminator.class.getMethod("printer", String.class))));
                             manipulations.add(IntegerConstant.forValue(1));
                             manipulations.add(MethodInvocation.invoke(new MethodDescription.ForLoadedMethod(Terminator.class.getMethod("exit", int.class))));

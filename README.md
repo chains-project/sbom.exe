@@ -82,7 +82,7 @@ What do you want to do with these numbers?
 Add (1)
 Subtract (2)
 2
-You accidentally have included `org/apache/commons/math3/analysis/function/Subtract` in the app
+You accidentally have executed `org/apache/commons/math3/analysis/function/Subtract` in the app
 ```
 
 You can see that the app is terminated because a method in 
