@@ -2,8 +2,6 @@ package foo;
 
 import java.util.Scanner;
 
-import org.apache.commons.math3.analysis.function.Subtract;
-
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -32,8 +30,6 @@ public class Main {
     }
 
     private static int subtract(int a, int b) {
-        Subtract subtract = new Subtract();
-        double result =  subtract.value(new Double(a).doubleValue(), new Double(b).doubleValue());
-        return (int) result;
+        return a - b;
     }
 }
