@@ -16,8 +16,11 @@ public class Terminator {
 
     static {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            // Just to verify that the number of classes loaded in LOG_OF_CLASSES is correct
-            System.out.println("Classes loaded: " + List.copyOf(CLASSES).size());
+            try {
+                Files.write(LOG_OF_CLASSES.toPath(), CLASSES, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }));
     }
 
@@ -37,13 +40,7 @@ public class Terminator {
     }
 
     private static byte[] terminationCode(String className, byte[] classfileBuffer) throws NoSuchMethodException {
-        String s = className + "\n";
-        try {
-            Files.writeString(LOG_OF_CLASSES.toPath(), s, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-            CLASSES.add(className);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        CLASSES.add(className);
         return classfileBuffer;
     }
 }
