@@ -1,7 +1,8 @@
 # Terminator
 
 A proof-of-concept to illustrate termination of Java virtual machine if a
-prohibited method in invoked.
+prohibited method in invoked. The proof-of-concept is located in
+[poc branch](https://github.com/ASSERT-KTH/terminator/tree/poc).
 
 ## Preparation
 
