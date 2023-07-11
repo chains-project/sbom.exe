@@ -1,9 +1,13 @@
 package org.example;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.sbom.Cyclonedx;
+
 import java.io.File;
+import java.io.IOException;
 
 public class Options {
-    private File sbomFile;
+    private Cyclonedx sbom;
 
     public Options(String agentArgs) {
         String[] args = agentArgs.split(",");
@@ -17,7 +21,12 @@ public class Options {
 
             switch (key) {
                 case "sbom":
-                    sbomFile = new File(value);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    try {
+                        this.sbom = objectMapper.readValue(new File(value), Cyclonedx.class);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown argument: " + key);
@@ -25,7 +34,7 @@ public class Options {
         }
     }
 
-    public File getSbomFile() {
-        return sbomFile;
+    public Cyclonedx getSbom() {
+        return sbom;
     }
 }
