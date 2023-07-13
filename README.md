@@ -4,6 +4,10 @@ A proof-of-concept to illustrate termination of Java virtual machine if a
 prohibited method in invoked. The proof-of-concept is located in
 [poc branch](https://github.com/ASSERT-KTH/terminator/tree/poc). Checkout the README on that branch for instructions. 
 
+## [Visualization by GitHub Next](https://githubnext.com/projects/repo-visualization/)
+
+![Visualization of the codebase](./diagram.svg)
+
 ## Build
 
 ### Build agent

@@ -1,0 +1,19 @@
+# Diagrams from https://githubnext.com/projects/repo-visualization/
+
+name: create-diagram
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    name: Create diagram
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Update diagram
+        uses: githubocto/repo-visualizer@0.7.1
