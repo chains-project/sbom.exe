@@ -21,3 +21,4 @@ jobs:
         uses: githubocto/repo-visualizer@0.9.1
         with:
           excluded_paths: ".github"
+          commit_message: "docs: update diagram"
