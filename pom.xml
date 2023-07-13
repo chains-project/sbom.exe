@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.example</groupId>
@@ -12,4 +10,32 @@
     <module>watchdog-agent</module>
     <module>fingerprint-generator</module>
   </modules>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>com.diffplug.spotless</groupId>
+          <artifactId>spotless-maven-plugin</artifactId>
+          <version>2.37.0</version>
+          <configuration>
+            <java>
+              <includes>
+                <include>src/main/java/**/*.java</include>
+                <include>src/test/java/**/*.java</include>
+              </includes>
+              <palantirJavaFormat></palantirJavaFormat>
+              <formatAnnotations></formatAnnotations>
+            </java>
+            <pom>
+              <includes>
+                <include>pom.xml</include>
+              </includes>
+              <sortPom></sortPom>
+            </pom>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 </project>
