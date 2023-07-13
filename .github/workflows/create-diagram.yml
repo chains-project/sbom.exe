@@ -20,4 +20,4 @@ jobs:
       - name: Repo Visualizer
         uses: githubocto/repo-visualizer@0.9.1
         with:
-          excluded_path: ".github"
+          excluded_paths: ".github"
