@@ -12,14 +12,14 @@ prohibited method in invoked. The proof-of-concept is located in
 
 The project is structured as follows:
 
-1. `fingerprint-generator` - Maven plugin that generates fingerprints for
+1. `classfile-fingerprint` - Maven plugin that generates fingerprints for
    _all_ classfiles in a JAR file.
 2. `watchdog-agent` - Java agent that is attached to the JVM and verifies the
    fingerprints of loaded classes.
 
 > **Note:** The `watchdog-agent` is not yet implemented.
 
-## `fingerprint-generator`
+## `classfile-fingerprint`
 
 Run it as follows:
 
