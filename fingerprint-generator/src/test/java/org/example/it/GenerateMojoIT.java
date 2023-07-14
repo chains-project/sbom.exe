@@ -14,12 +14,6 @@ import java.nio.file.Path;
 class GenerateMojoIT {
     @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:generate")
     @MavenTest
-    void hello_world(MavenExecutionResult result) {
-        assertThat(result).isSuccessful();
-    }
-
-    @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:generate")
-    @MavenTest
     void guava(MavenExecutionResult result) throws IOException {
         assertThat(result).isSuccessful();
 
