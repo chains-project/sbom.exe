@@ -1,0 +1,58 @@
+{
+  "project": {
+    "name": "terminator",
+    "description": "Monitors Java application and disrupts it if a prohibited class is loaded.",
+    "longDescription": "Generates fingerprints of each classfile and verify them during runtime. If a prohibited class is loaded, the application is terminated.",
+
+    "authors": [
+      "algomaster99"
+    ],
+    "license": "MIT",
+    "links": {
+      "homepage": "https://github.com/ASSERT-KTH/terminator"
+    },
+    "java": {
+      "groupId": "io.github.algomaster99",
+      "version": "17"
+    },
+    "inceptionYear": "2023"
+  },
+
+  "release": {
+    "github": {
+      "owner": "ASSERT-KTH",
+      "releaseName": "{{tagName}}",
+      "changelog": {
+        "formatted": "ALWAYS",
+        "preset": "conventional-commits",
+        "format": "- {{commitShortHash}} {{commitTitle}}",
+        "contributors": {
+          "format": "- {{contributorName}} ({{contributorUsernameAsLink}})"
+        }
+      },
+      "sign": true
+    }
+  },
+
+  "signing": {
+    "active": "ALWAYS",
+    "armored": true,
+    "verify": true
+  },
+
+  "deploy": {
+    "maven": {
+      "nexus2": {
+        "maven-central": {
+          "active": "ALWAYS",
+          "url": "https://s01.oss.sonatype.org/service/local",
+          "closeRepository": true,
+          "releaseRepository": true,
+          "stagingRepositories": [
+            "target/staging-deploy"
+          ]
+        }
+      }
+    }
+  }
+}

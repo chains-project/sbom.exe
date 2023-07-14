@@ -7,10 +7,12 @@
     <artifactId>terminator</artifactId>
     <version>0.0.1</version>
   </parent>
-
-  <name>Classfile Fingerprint Generator</name>
   <artifactId>classfile-fingerprint</artifactId>
   <packaging>maven-plugin</packaging>
+
+  <name>Classfile Fingerprint Generator</name>
+  <description>Generates fingerprint of all classfiles in a JAR.</description>
+  <url>${project.parent.url}</url>
 
   <properties>
     <maven.compiler.source>17</maven.compiler.source>

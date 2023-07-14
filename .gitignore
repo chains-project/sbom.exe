@@ -33,3 +33,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### JReleaser files ###
+out/
+jreleaser-cli.jar
+JRELEASER_VERSION
