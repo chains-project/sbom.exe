@@ -8,7 +8,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>watchdog-agent</module>
-    <module>fingerprint-generator</module>
+    <module>classfile-fingerprint</module>
   </modules>
 
   <build>
