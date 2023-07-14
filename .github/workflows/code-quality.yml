@@ -16,6 +16,4 @@ jobs:
           distribution: 'oracle'
           java-version: '17'
       - name: Run spotless check
-        run: |
-          mvn -v
-          mvn spotless:check
+        run: mvn spotless:check
