@@ -38,3 +38,6 @@ build/
 out/
 jreleaser-cli.jar
 JRELEASER_VERSION
+
+### Deployment files ###
+semver-1.0.2-jar-with-dependencies.jar
