@@ -8,35 +8,28 @@ prohibited method in invoked. The proof-of-concept is located in
 
 ![Visualization of the codebase](./diagram.svg)
 
-## Build
+## Project structure
 
-### Build agent
+The project is structured as follows:
 
-At root directory, run
+1. `fingerprint-generator` - Maven plugin that generates fingerprints for
+   _all_ classfiles in a JAR file.
+2. `watchdog-agent` - Java agent that is attached to the JVM and verifies the
+   fingerprints of loaded classes.
 
-```bash
-mvn clean package
-```
+> **Note:** The `watchdog-agent` is not yet implemented.
 
-### Build test application
+## `fingerprint-generator`
 
-In `src/test/resources/sample-maven-project`, run
-
-```bash
-mvn clean package
-```
-
-## Run
-
-Run java agent, at the root directory, like so:
+Run it as follows:
 
 ```bash
-java -javaagent:target/terminator-1.0-SNAPSHOT.jar=sbom=/home/aman/personal/who-are-you/src/test/resources/sample-maven-project/target/bom.json -jar src/test/resources/sample-maven-project/target/i-am-affected-1.0-SNAPSHOT-jar-with-dependencies.jar
+mvn org.example:javaclass-hash-sum:generate
 ```
 
-It outputs `classes_javaagent.txt` in the root directory.
+The plugin also takes an optional `-Dalgorithm` argument to specify the
+algorithm used to generate the hash sum. The default is `SHA-256`.
+Options are
+[written here](https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#messagedigest-algorithms).
 
-Note that `-javaagent` is the path to the agent jar file and it takes the following input:
-1. `sbom`: path to the software bill of materials (SBOM) file (CycloneDX format)
-   > For demonstration purposes, I created an SBOM using CycloneDX Maven plugin.
-   > The plugin is configured in `pom.xml` of the test application.
+This will output a file `classfile.sha-256` in the `target` directory.
