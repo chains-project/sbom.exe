@@ -87,6 +87,8 @@ class GenerateMojoIT {
 
         Path actualFingerprint = getFingerprint(projectDirectory, "classfile.sha256");
 
+        System.out.println(Files.readString(actualFingerprint));
+
         Path expectedFingerprint;
 
         if (osName.contains("Mac")) {
