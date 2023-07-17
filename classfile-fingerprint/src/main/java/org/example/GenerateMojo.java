@@ -34,7 +34,7 @@ public class GenerateMojo extends AbstractMojo {
      *
      * @see <a href="https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#messagedigest-algorithms">Possible values</a>
      */
-    @Parameter(defaultValue = "SHA-256", required = true, property = "algorithm")
+    @Parameter(defaultValue = "SHA256", required = true, property = "algorithm")
     private String algorithm;
 
     private final Map<String, String> hashToClass = new HashMap<>();
