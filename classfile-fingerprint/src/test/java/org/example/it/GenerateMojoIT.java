@@ -75,6 +75,23 @@ class GenerateMojoIT {
         assertThat(actualFingerprint).isRegularFile().hasContent(expectedContent);
     }
 
+    @DisplayName("Classfile fingerprint with native dependency")
+    @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:generate")
+    @MavenTest
+    void native_dependency(MavenExecutionResult result) throws IOException {
+        assertThat(result).isSuccessful();
+
+        Path projectDirectory = result.getMavenProjectResult().getTargetProjectDirectory();
+
+        Path actualFingerprint = getFingerprint(projectDirectory, "classfile.sha256");
+
+        Path expectedFingerprint =
+                Path.of(projectDirectory.toString(), "src", "test", "resources", "expected-classfile.sha256");
+        String expectedContent = Files.readString(expectedFingerprint);
+
+        assertThat(actualFingerprint).isRegularFile().hasContent(expectedContent);
+    }
+
     private static Path getFingerprint(Path projectDirectory, String classfileFingerprintName) {
         return Path.of(projectDirectory.toString(), "target", classfileFingerprintName);
     }
