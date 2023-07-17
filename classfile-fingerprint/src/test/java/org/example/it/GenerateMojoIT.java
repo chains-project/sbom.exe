@@ -7,7 +7,6 @@ import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
 import com.soebes.itf.jupiter.extension.MavenOption;
 import com.soebes.itf.jupiter.extension.MavenTest;
 import com.soebes.itf.jupiter.maven.MavenExecutionResult;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -88,11 +87,19 @@ class GenerateMojoIT {
 
         Path actualFingerprint = getFingerprint(projectDirectory, "classfile.sha256");
 
-        Path expectedFingerprint = Path.of(
-                projectDirectory.toString(), "src", "test", "resources", "expected-classfile." + osName + ".sha256");
+        Path expectedFingerprint;
 
-        if (!Files.exists(expectedFingerprint)) {
-            throw new FileNotFoundException("OS specific fingerprint file not found: " + expectedFingerprint);
+        if (osName.contains("Mac")) {
+            expectedFingerprint =
+                    Path.of(projectDirectory.toString(), "src", "test", "resources", "expected-classfile.MacOS.sha256");
+        } else if (osName.contains("Linux")) {
+            expectedFingerprint =
+                    Path.of(projectDirectory.toString(), "src", "test", "resources", "expected-classfile.Linux.sha256");
+        } else if (osName.contains("Windows")) {
+            expectedFingerprint = Path.of(
+                    projectDirectory.toString(), "src", "test", "resources", "expected-classfile.Windows.sha256");
+        } else {
+            throw new IllegalStateException("Unsupported OS: " + osName);
         }
 
         String expectedContent = Files.readString(expectedFingerprint);
