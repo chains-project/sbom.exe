@@ -107,6 +107,27 @@ class GenerateMojoIT {
         assertThat(actualFingerprint).isRegularFile().hasContent(expectedContent);
     }
 
+    @DisplayName("Different fingerprint should be generated for sub-modules")
+    @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:generate")
+    @MavenTest
+    void multi_module(MavenExecutionResult result) throws IOException {
+        assertThat(result).isSuccessful();
+
+        Path rootModule = result.getMavenProjectResult().getTargetProjectDirectory();
+
+        Path a = Path.of(rootModule.toString(), "a");
+        Path b = Path.of(rootModule.toString(), "b");
+
+        Path rootFingerPrint = getFingerprint(rootModule, "classfile.sha256");
+        assertThat(rootFingerPrint).isRegularFile().isEmptyFile();
+
+        Path aFingerPrint = getFingerprint(a, "classfile.sha256");
+        assertThat(aFingerPrint).isRegularFile().isNotEmptyFile();
+
+        Path bFingerPrint = getFingerprint(b, "classfile.sha256");
+        assertThat(bFingerPrint).isRegularFile().isNotEmptyFile();
+    }
+
     private static Path getFingerprint(Path projectDirectory, String classfileFingerprintName) {
         return Path.of(projectDirectory.toString(), "target", classfileFingerprintName);
     }
