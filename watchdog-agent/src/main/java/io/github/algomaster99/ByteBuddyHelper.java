@@ -1,4 +1,4 @@
-package org.example;
+package io.github.algomaster99;
 
 import net.bytebuddy.ClassFileVersion;
 import net.bytebuddy.dynamic.TargetType;

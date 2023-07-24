@@ -1,4 +1,4 @@
-package org.example.it;
+package io.github.algomaster99.it;
 
 import static com.soebes.itf.extension.assertj.MavenITAssertions.assertThat;
 

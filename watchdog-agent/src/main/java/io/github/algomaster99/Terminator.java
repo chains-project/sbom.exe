@@ -1,4 +1,4 @@
-package org.example;
+package io.github.algomaster99;
 
 import java.io.File;
 import java.io.IOException;
