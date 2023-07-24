@@ -103,9 +103,8 @@ class GenerateMojoIT {
         }
 
         String expectedContent = Files.readString(expectedFingerprint);
-        System.out.println(Files.readString(actualFingerprint));
 
-//        assertThat(actualFingerprint).isRegularFile().hasContent(expectedContent);
+        assertThat(actualFingerprint).isRegularFile().hasContent(expectedContent);
     }
 
     @DisplayName("Different fingerprint should be generated for sub-modules")
