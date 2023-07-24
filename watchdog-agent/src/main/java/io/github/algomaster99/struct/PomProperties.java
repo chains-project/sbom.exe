@@ -1,4 +1,4 @@
-package org.example.struct;
+package io.github.algomaster99.struct;
 
 public class PomProperties {
     private final String groupID;

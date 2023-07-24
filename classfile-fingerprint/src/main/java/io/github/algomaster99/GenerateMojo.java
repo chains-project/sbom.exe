@@ -1,4 +1,4 @@
-package org.example;
+package io.github.algomaster99;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SequenceWriter;
@@ -21,7 +21,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
-import org.example.data.Fingerprint;
+import io.github.algomaster99.data.Fingerprint;
 
 @Mojo(
         name = "generate",
