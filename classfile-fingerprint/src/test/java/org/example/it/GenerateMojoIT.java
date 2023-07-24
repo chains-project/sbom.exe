@@ -26,8 +26,8 @@ class GenerateMojoIT {
         void sha256(MavenExecutionResult result) {
             assertThat(result).isSuccessful();
 
-            Path fingerprintFile =
-                    getFingerprint(result.getMavenProjectResult().getTargetProjectDirectory(), "classfile.sha256");
+            Path fingerprintFile = getFingerprint(
+                    result.getMavenProjectResult().getTargetProjectDirectory(), "classfile.sha256.jsonl");
 
             assertThat(fingerprintFile).isRegularFile().content().hasLineCount(CLASSFILES_LOADED);
         }
@@ -40,7 +40,7 @@ class GenerateMojoIT {
             assertThat(result).isSuccessful();
 
             Path fingerprintFile =
-                    getFingerprint(result.getMavenProjectResult().getTargetProjectDirectory(), "classfile.sha1");
+                    getFingerprint(result.getMavenProjectResult().getTargetProjectDirectory(), "classfile.sha1.jsonl");
 
             assertThat(fingerprintFile).isRegularFile().content().hasLineCount(CLASSFILES_LOADED);
         }
@@ -53,7 +53,7 @@ class GenerateMojoIT {
             assertThat(result).isSuccessful();
 
             Path fingerprintFile =
-                    getFingerprint(result.getMavenProjectResult().getTargetProjectDirectory(), "classfile.md5");
+                    getFingerprint(result.getMavenProjectResult().getTargetProjectDirectory(), "classfile.md5.jsonl");
 
             assertThat(fingerprintFile).isRegularFile().content().hasLineCount(CLASSFILES_LOADED);
         }
@@ -66,10 +66,10 @@ class GenerateMojoIT {
 
         Path projectDirectory = result.getMavenProjectResult().getTargetProjectDirectory();
 
-        Path actualFingerprint = getFingerprint(projectDirectory, "classfile.sha256");
+        Path actualFingerprint = getFingerprint(projectDirectory, "classfile.sha256.jsonl");
 
         Path expectedFingerprint =
-                Path.of(projectDirectory.toString(), "src", "test", "resources", "expected-classfile.sha256");
+                Path.of(projectDirectory.toString(), "src", "test", "resources", "expected-classfile.sha256.jsonl");
         String expectedContent = Files.readString(expectedFingerprint);
 
         assertThat(actualFingerprint).isRegularFile().hasContent(expectedContent);
@@ -85,19 +85,19 @@ class GenerateMojoIT {
 
         Path projectDirectory = result.getMavenProjectResult().getTargetProjectDirectory();
 
-        Path actualFingerprint = getFingerprint(projectDirectory, "classfile.sha256");
+        Path actualFingerprint = getFingerprint(projectDirectory, "classfile.sha256.jsonl");
 
         Path expectedFingerprint;
 
         if (osName.contains("Mac")) {
-            expectedFingerprint =
-                    Path.of(projectDirectory.toString(), "src", "test", "resources", "expected-classfile.MacOS.sha256");
+            expectedFingerprint = Path.of(
+                    projectDirectory.toString(), "src", "test", "resources", "expected-classfile.MacOS.sha256.jsonl");
         } else if (osName.contains("Linux")) {
-            expectedFingerprint =
-                    Path.of(projectDirectory.toString(), "src", "test", "resources", "expected-classfile.Linux.sha256");
+            expectedFingerprint = Path.of(
+                    projectDirectory.toString(), "src", "test", "resources", "expected-classfile.Linux.sha256.jsonl");
         } else if (osName.contains("Windows")) {
             expectedFingerprint = Path.of(
-                    projectDirectory.toString(), "src", "test", "resources", "expected-classfile.Windows.sha256");
+                    projectDirectory.toString(), "src", "test", "resources", "expected-classfile.Windows.sha256.jsonl");
         } else {
             throw new IllegalStateException("Unsupported OS: " + osName);
         }
@@ -110,7 +110,7 @@ class GenerateMojoIT {
     @DisplayName("Different fingerprint should be generated for sub-modules")
     @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:generate")
     @MavenTest
-    void multi_module(MavenExecutionResult result) throws IOException {
+    void multi_module(MavenExecutionResult result) {
         assertThat(result).isSuccessful();
 
         Path rootModule = result.getMavenProjectResult().getTargetProjectDirectory();
@@ -118,13 +118,13 @@ class GenerateMojoIT {
         Path a = Path.of(rootModule.toString(), "a");
         Path b = Path.of(rootModule.toString(), "b");
 
-        Path rootFingerPrint = getFingerprint(rootModule, "classfile.sha256");
+        Path rootFingerPrint = getFingerprint(rootModule, "classfile.sha256.jsonl");
         assertThat(rootFingerPrint).isRegularFile().isEmptyFile();
 
-        Path aFingerPrint = getFingerprint(a, "classfile.sha256");
+        Path aFingerPrint = getFingerprint(a, "classfile.sha256.jsonl");
         assertThat(aFingerPrint).isRegularFile().isNotEmptyFile();
 
-        Path bFingerPrint = getFingerprint(b, "classfile.sha256");
+        Path bFingerPrint = getFingerprint(b, "classfile.sha256.jsonl");
         assertThat(bFingerPrint).isRegularFile().isNotEmptyFile();
     }
 

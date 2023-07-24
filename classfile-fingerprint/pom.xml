@@ -38,6 +38,11 @@
       <version>3.9.3</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.15.2</version>
+    </dependency>
     <!--    For MOJO test. See: https://khmarbaise.github.io/maven-it-extension/itf-documentation/usersguide/usersguide.html-->
     <dependency>
       <groupId>org.assertj</groupId>
