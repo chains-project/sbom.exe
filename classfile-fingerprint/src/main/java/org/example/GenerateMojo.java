@@ -10,6 +10,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SequenceWriter;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -19,6 +22,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
+import org.example.data.Fingerprint;
 
 @Mojo(
         name = "generate",
@@ -37,7 +41,7 @@ public class GenerateMojo extends AbstractMojo {
     @Parameter(defaultValue = "SHA256", required = true, property = "algorithm")
     private String algorithm;
 
-    private final Map<String, String> hashToClass = new HashMap<>();
+    private final List<Fingerprint> fingerprints = new ArrayList<>();
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -47,7 +51,7 @@ public class GenerateMojo extends AbstractMojo {
             processArtifact(artifact);
         }
         Path fingerprintFile = getFingerprintFile(project, algorithm);
-        writeFingerprint(hashToClass, fingerprintFile);
+        writeFingerprint(fingerprints, fingerprintFile);
         getLog().info("Wrote fingerprint to: " + fingerprintFile);
     }
 
@@ -67,7 +71,7 @@ public class GenerateMojo extends AbstractMojo {
                     String jarEntryName =
                             jarEntry.getName().substring(0, jarEntry.getName().length() - ".class".length());
 
-                    hashToClass.put(hashOfClass, jarEntryName);
+                    fingerprints.add(new Fingerprint(artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion(), jarEntryName,hashOfClass));
                 }
             }
         } catch (IOException e) {
@@ -77,19 +81,14 @@ public class GenerateMojo extends AbstractMojo {
         }
     }
 
-    private static void writeFingerprint(Map<String, String> hashToClass, Path fingerprintFile) {
-        StringBuilder sb = new StringBuilder();
-        boolean first = true;
-        for (Map.Entry<String, String> entry : hashToClass.entrySet()) {
-            if (first) {
-                first = false;
-            } else {
-                sb.append("\n");
+    private static void writeFingerprint(List<Fingerprint> fingerprints, Path fingerprintFile) {
+        ObjectMapper mapper = new ObjectMapper();
+        try (SequenceWriter seq = mapper.writer()
+                .withRootValueSeparator(System.lineSeparator())
+                .writeValues(fingerprintFile.toFile())) {
+            for (Fingerprint fingerprint : fingerprints) {
+                seq.write(fingerprint);
             }
-            sb.append(entry.getKey()).append("  ").append(entry.getValue());
-        }
-        try {
-            Files.writeString(fingerprintFile, sb.toString());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -122,6 +121,7 @@ public class GenerateMojo extends AbstractMojo {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return Path.of(project.getBuild().getDirectory(), String.format("classfile.%s", algorithm.toLowerCase()));
+        // see https://jsonlines.org/
+        return Path.of(project.getBuild().getDirectory(), String.format("classfile.%s.jsonl", algorithm.toLowerCase()));
     }
 }
