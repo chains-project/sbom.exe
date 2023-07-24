@@ -1,4 +1,60 @@
 
+# 0.2.0
+## Changelog
+
+## 🚀 Features
+- ad1182f feat: use line-delimited json for storing provenance information (#24)
+
+## 🔄️ Changes
+- f6b4e96 refactor: correct package name (#25)
+
+## 🧰 Tasks
+- cab8c06 chore: releasing version 0.2.0
+- 039c5ec chore(deps): update dependency org.junit.jupiter:junit-jupiter-engine to v5.10.0
+- 8919b0d chore(deps): update dependency com.diffplug.spotless:spotless-maven-plugin to v2.38.0
+- 6a1fc5f chore(deps): update dependency org.apache.maven.plugins:maven-shade-plugin to v3.5.0
+- 2c3265b chore(deps): update dependency org.apache.maven.plugin-tools:maven-plugin-annotations to v3.9.0
+- 44e47da chore(deps): update dependency org.junit.jupiter:junit-jupiter-engine to v5.9.3
+- 6ce49e7 chore(deps): update dependency org.apache.maven:maven-plugin-api to v3.9.3
+- 1164add chore(deps): update dependency net.bytebuddy:byte-buddy-dep to v1.14.5
+- bc8c51a chore: add renovate configuration
+- e4952b1 chore: setting SNAPSHOT version 0.1.0-SNAPSHOT
+
+## 🛠  Build
+- 834407a test: add test for multi-module projects (#19)
+- b23d43b test: add test for fingerprinting of native dependency (#17)
+- 5f0fa20 ci: run CI on multiple operating systems (#16)
+- c404d6f test: add test for algorithm argument (#15)
+
+## 📝 Documentation
+- ae1124d docs: update diagram
+- e5700cf docs: update diagram
+- ba226e6 docs: update diagram
+- 2447626 docs: update diagram
+- 74a35f6 docs: add comments
+- d9e341f docs: update diagram
+- b4160bc docs: replicate fractureiser
+- e63c1c6 docs: update diagram
+- 07d2265 docs: update diagram
+- ee7838b docs: update diagram
+- 7e25bf5 docs: update diagram
+- fc4a01c docs: update diagram
+- ab32001 docs: update diagram
+- dc9a589 docs: update diagram
+- a5647c0 docs: update diagram
+- 5ac226a docs: update diagram
+- 1b55356 docs: update diagram
+- 5705c9d docs: Correct JDK version for JReleaser workflow
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- GitHub ()
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+- renovate[bot] ([@renovate[bot]](https://github.com/apps/renovate))
+- repo-visualizer ()
+
 # 0.1.0
 
 ## Changelog
