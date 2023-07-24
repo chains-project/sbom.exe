@@ -1,5 +1,7 @@
 package org.example;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SequenceWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,9 +12,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SequenceWriter;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -71,7 +70,12 @@ public class GenerateMojo extends AbstractMojo {
                     String jarEntryName =
                             jarEntry.getName().substring(0, jarEntry.getName().length() - ".class".length());
 
-                    fingerprints.add(new Fingerprint(artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion(), jarEntryName,hashOfClass));
+                    fingerprints.add(new Fingerprint(
+                            artifact.getGroupId(),
+                            artifact.getArtifactId(),
+                            artifact.getVersion(),
+                            jarEntryName,
+                            hashOfClass));
                 }
             }
         } catch (IOException e) {
@@ -83,9 +87,8 @@ public class GenerateMojo extends AbstractMojo {
 
     private static void writeFingerprint(List<Fingerprint> fingerprints, Path fingerprintFile) {
         ObjectMapper mapper = new ObjectMapper();
-        try (SequenceWriter seq = mapper.writer()
-                .withRootValueSeparator(System.lineSeparator())
-                .writeValues(fingerprintFile.toFile())) {
+        try (SequenceWriter seq =
+                mapper.writer().withRootValueSeparator(System.lineSeparator()).writeValues(fingerprintFile.toFile())) {
             for (Fingerprint fingerprint : fingerprints) {
                 seq.write(fingerprint);
             }
