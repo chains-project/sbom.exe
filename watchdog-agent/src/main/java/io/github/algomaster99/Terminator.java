@@ -12,7 +12,7 @@ import java.util.List;
 public class Terminator {
     private static Options options;
 
-    private static final List<String> INTERNAL_PACKAGES = List.of("java/", "javax/", "jdk/", "sun/");
+    private static final List<String> INTERNAL_PACKAGES = List.of("java/", "javax/", "jdk/", "sun/", "com/sun/");
 
     public static void premain(String agentArgs, Instrumentation inst) {
         options = new Options(agentArgs);
