@@ -1,3 +1,4 @@
+{"groupId":"org.example","artifactId":"guava","version":"1.0-SNAPSHOT","className":"Main","hash":"3daadb44abb68a65f03bd0a49f3d879464aa11d3ff9f71fb3252b0ea281450b1"}
 {"groupId":"com.google.guava","artifactId":"guava","version":"32.1.1-jre","className":"com/google/common/annotations/Beta","hash":"f9af3b23355adb9cd64031476f93eaf7c2f4da7f669289734f371a9d445671e9"}
 {"groupId":"com.google.guava","artifactId":"guava","version":"32.1.1-jre","className":"com/google/common/annotations/GwtCompatible","hash":"fc31bd53be45345a4910c4d4b94cca7b0fa732e8e81329a0f3e975bf9c80e38c"}
 {"groupId":"com.google.guava","artifactId":"guava","version":"32.1.1-jre","className":"com/google/common/annotations/GwtIncompatible","hash":"1d39f39d51809699519bf5aee9b88c7841eaaff3b53e48be2ed692ceb186372b"}
