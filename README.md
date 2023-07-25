@@ -1,5 +1,7 @@
 # Terminator
 
+[![tests](https://github.com/ASSERT-KTH/terminator/actions/workflows/tests.yml/badge.svg)](https://github.com/ASSERT-KTH/terminator/actions/workflows/tests.yml)
+
 A proof-of-concept to illustrate termination of Java virtual machine if a
 prohibited method in invoked. The proof-of-concept is located in
 [poc branch](https://github.com/ASSERT-KTH/terminator/tree/poc). Checkout the README on that branch for instructions. 
@@ -33,6 +35,8 @@ Options are
 This will output a file `classfile.sha-256.jsonl` in the `target` directory.
 
 ## `watchdog-agent`
+
+> It is not being tested yet.
 
 Run it as follows:
 
