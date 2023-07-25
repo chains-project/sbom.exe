@@ -34,6 +34,18 @@
     }
   },
 
+  "distributions": {
+    "watchdog-agent": {
+      "type": "SINGLE_JAR",
+      "stereotype": "CLI",
+      "artifacts": [
+        {
+          "path": "watchdog-agent/target/{{distributionName}}-{{projectVersion}}.jar"
+        }
+      ]
+    }
+  },
+
   "signing": {
     "active": "ALWAYS",
     "armored": true,
