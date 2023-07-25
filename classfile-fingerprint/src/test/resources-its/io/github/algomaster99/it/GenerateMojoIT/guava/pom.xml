@@ -6,6 +6,13 @@
     <artifactId>guava</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+<!--        Default with maven 3.9.1-->
+<!--        https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html#source -->
+        <maven.compiler.source>7</maven.compiler.source>
+        <maven.compiler.target>7</maven.compiler.target>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>

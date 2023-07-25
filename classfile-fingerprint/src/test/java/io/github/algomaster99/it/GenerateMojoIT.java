@@ -3,6 +3,7 @@ package io.github.algomaster99.it;
 import static com.soebes.itf.extension.assertj.MavenITAssertions.assertThat;
 
 import com.soebes.itf.jupiter.extension.MavenGoal;
+import com.soebes.itf.jupiter.extension.MavenGoals;
 import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
 import com.soebes.itf.jupiter.extension.MavenOption;
 import com.soebes.itf.jupiter.extension.MavenTest;
@@ -13,15 +14,25 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 
+@MavenGoals(
+        value = {
+            @MavenGoal("compile"),
+            @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:generate")
+        })
 @MavenJupiterExtension
 class GenerateMojoIT {
 
+    // @MavenGoals was not inherited by nested classes, so we have to repeat it here
     @Nested
+    @MavenGoals(
+            value = {
+                @MavenGoal("compile"),
+                @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:generate")
+            })
     class Algorithm {
         private static final int CLASSFILES_LOADED = 5992;
 
         @DisplayName("SHA256 - the default algorithm")
-        @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:generate")
         @MavenTest
         void sha256(MavenExecutionResult result) {
             assertThat(result).isSuccessful();
@@ -33,7 +44,6 @@ class GenerateMojoIT {
         }
 
         @DisplayName("SHA1")
-        @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:generate")
         @MavenOption("-Dalgorithm=SHA1")
         @MavenTest
         void sha1(MavenExecutionResult result) {
@@ -46,7 +56,6 @@ class GenerateMojoIT {
         }
 
         @DisplayName("MD5")
-        @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:generate")
         @MavenOption("-Dalgorithm=MD5")
         @MavenTest
         void md5(MavenExecutionResult result) {
@@ -59,7 +68,6 @@ class GenerateMojoIT {
         }
     }
 
-    @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:generate")
     @MavenTest
     void guava(MavenExecutionResult result) throws IOException {
         assertThat(result).isSuccessful();
@@ -76,7 +84,6 @@ class GenerateMojoIT {
     }
 
     @DisplayName("Classfile fingerprint with native dependency")
-    @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:generate")
     @MavenTest
     void native_dependency(MavenExecutionResult result) throws IOException {
         assertThat(result).isSuccessful();
@@ -108,7 +115,6 @@ class GenerateMojoIT {
     }
 
     @DisplayName("Different fingerprint should be generated for sub-modules")
-    @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:generate")
     @MavenTest
     void multi_module(MavenExecutionResult result) {
         assertThat(result).isSuccessful();
