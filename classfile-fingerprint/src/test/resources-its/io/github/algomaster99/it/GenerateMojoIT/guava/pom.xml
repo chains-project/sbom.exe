@@ -7,8 +7,10 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+<!--        Default with maven 3.9.1-->
+<!--        https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html#source -->
+        <maven.compiler.source>7</maven.compiler.source>
+        <maven.compiler.target>7</maven.compiler.target>
     </properties>
 
     <dependencies>
