@@ -115,7 +115,9 @@
         <altDeploymentRepository>local::file:./target/staging-deploy</altDeploymentRepository>
       </properties>
       <build>
-        <defaultGoal>deploy</defaultGoal>
+        <!--        I have no clue why clean is needed, but if artifacts are already there an exception is thrown. See https://github.com/ASSERT-KTH/terminator/pull/29#issue-1820261947-->
+        <!--        Bug has already been filed: https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-698?filter=allopenissues -->
+        <defaultGoal>clean deploy</defaultGoal>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
