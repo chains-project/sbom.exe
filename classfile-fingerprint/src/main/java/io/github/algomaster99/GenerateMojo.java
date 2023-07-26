@@ -1,14 +1,15 @@
 package io.github.algomaster99;
 
+import static io.github.algomaster99.terminator.commons.HashComputer.computeHash;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SequenceWriter;
-import io.github.algomaster99.data.Fingerprint;
+import io.github.algomaster99.terminator.commons.Fingerprint;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.jar.JarEntry;
@@ -98,7 +99,8 @@ public class GenerateMojo extends AbstractMojo {
                     JarEntry jarEntry = jarEntries.nextElement();
                     if (jarEntry.getName().endsWith(".class")) {
                         getLog().debug("Found class: " + jarEntry.getName());
-                        String hashOfClass = computeHash(jarFile.getInputStream(jarEntry), algorithm);
+                        String hashOfClass =
+                                computeHash(jarFile.getInputStream(jarEntry).readAllBytes(), algorithm);
 
                         String jarEntryName = jarEntry.getName()
                                 .substring(0, jarEntry.getName().length() - ".class".length());
@@ -138,7 +140,7 @@ public class GenerateMojo extends AbstractMojo {
                                 .replace("\\", "/");
                         getLog().debug("Found class: " + className);
                         try (InputStream byteStream = Files.newInputStream(path)) {
-                            String hashOfClass = computeHash(byteStream, algorithm);
+                            String hashOfClass = computeHash(byteStream.readAllBytes(), algorithm);
                             fingerprints.add(
                                     new Fingerprint(groupId, artifactId, version, className, hashOfClass, algorithm));
                         } catch (IOException e) {
@@ -162,27 +164,6 @@ public class GenerateMojo extends AbstractMojo {
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private static String computeHash(InputStream byteStream, String algorithm) throws NoSuchAlgorithmException {
-        try {
-            byte[] bytes = byteStream.readAllBytes();
-            byte[] algorithmSum = MessageDigest.getInstance(algorithm).digest(bytes);
-
-            return toHexString(algorithmSum);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static String toHexString(byte[] bytes) {
-        Formatter result = new Formatter();
-        try (result) {
-            for (byte b : bytes) {
-                result.format("%02x", b & 0xff);
-            }
-            return result.toString();
         }
     }
 

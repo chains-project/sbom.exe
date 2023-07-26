@@ -31,6 +31,7 @@
   <modules>
     <module>watchdog-agent</module>
     <module>classfile-fingerprint</module>
+    <module>terminator-commons</module>
   </modules>
 
   <scm>

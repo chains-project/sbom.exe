@@ -22,6 +22,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>io.github.algomaster99</groupId>
+      <artifactId>terminator-commons</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
     </dependency>

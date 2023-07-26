@@ -1,12 +1,12 @@
 package io.github.algomaster99;
 
-import io.github.algomaster99.data.Fingerprint;
+import static io.github.algomaster99.terminator.commons.HashComputer.computeHash;
+
+import io.github.algomaster99.terminator.commons.Fingerprint;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.ProtectionDomain;
-import java.util.Formatter;
 import java.util.List;
 
 public class Terminator {
@@ -56,23 +56,5 @@ public class Terminator {
         System.err.println("Class " + className + " is not whitelisted");
         System.exit(1);
         return null;
-    }
-
-    // TODO: Duplicate of the method from GenerateMojo class
-    private static String computeHash(byte[] bytes, String algorithm) throws NoSuchAlgorithmException {
-        // TODO: softcode the hash algorithm
-        byte[] algorithmSum = MessageDigest.getInstance(algorithm).digest(bytes);
-        return toHexString(algorithmSum);
-    }
-
-    // TODO: Duplicate of the method from GenerateMojo class
-    private static String toHexString(byte[] bytes) {
-        Formatter result = new Formatter();
-        try (result) {
-            for (byte b : bytes) {
-                result.format("%02x", b & 0xff);
-            }
-            return result.toString();
-        }
     }
 }
