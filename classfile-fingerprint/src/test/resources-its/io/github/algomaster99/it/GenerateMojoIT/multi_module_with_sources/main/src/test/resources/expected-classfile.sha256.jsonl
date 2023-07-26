@@ -1,2 +1,2 @@
 {"groupId":"org.example","artifactId":"main","version":"1.0.0-SNAPSHOT","className":"Main","hash":"9f7b58e9e3bfd086349dd179d11904cc305fcb8939354b54d890dcf4f2de36a4"}
-{"groupId":"org.example","artifactId":"commons","version":"1.0.0-SNAPSHOT","className":"org/example/Pair","hash":"5ae0fe6962ebfd33ba824551502376f432add2a271d3d0957571de087212be5a"}
+{"groupId":"org.example","artifactId":"commons","version":"1.0.0-SNAPSHOT","className":"org/example/Pair","hash":"af956e490abe20cb1f16cad339aa0ac5ec709fc77743a5f1662cef5a8afca9a0"}

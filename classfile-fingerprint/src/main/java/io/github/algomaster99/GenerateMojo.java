@@ -73,25 +73,7 @@ public class GenerateMojo extends AbstractMojo {
             getLog().warn("If you know you compiled the project, please ignore this warning.");
             return;
         }
-        try (Stream<Path> stream = Files.walk(classesDirectory)) {
-            stream.filter(Files::isRegularFile)
-                    .filter(path -> path.toString().endsWith(".class"))
-                    .forEach(path -> {
-                        String className = classesDirectory.relativize(path).toString();
-                        className = className.substring(0, className.length() - ".class".length());
-                        getLog().debug("Found class: " + className);
-                        try (InputStream byteStream = Files.newInputStream(path)) {
-                            String hashOfClass = computeHash(byteStream, algorithm);
-                            fingerprints.add(new Fingerprint(groupId, artifactId, version, className, hashOfClass));
-                        } catch (IOException e) {
-                            getLog().error("Could not open file: " + path);
-                        } catch (NoSuchAlgorithmException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        walkOverClassDirectory(classesDirectory.toFile(), groupId, artifactId, version);
         getLog().info(String.format(
                 "Classes of %s:%s:%s:%s are included.", groupId, artifactId, version, projectPackaging));
     }
@@ -109,28 +91,59 @@ public class GenerateMojo extends AbstractMojo {
         File artifactFileOnSystem = artifact.getFile();
         getLog().debug("Artifact file on system: " + artifactFileOnSystem);
 
-        try (JarFile jarFile = new JarFile(artifactFileOnSystem)) {
-            Enumeration<JarEntry> jarEntries = jarFile.entries();
-            while (jarEntries.hasMoreElements()) {
-                JarEntry jarEntry = jarEntries.nextElement();
-                if (jarEntry.getName().endsWith(".class")) {
-                    getLog().debug("Found class: " + jarEntry.getName());
-                    String hashOfClass = computeHash(jarFile.getInputStream(jarEntry), algorithm);
+        if (artifactFileOnSystem.toString().endsWith(".jar")) {
+            try (JarFile jarFile = new JarFile(artifactFileOnSystem)) {
+                Enumeration<JarEntry> jarEntries = jarFile.entries();
+                while (jarEntries.hasMoreElements()) {
+                    JarEntry jarEntry = jarEntries.nextElement();
+                    if (jarEntry.getName().endsWith(".class")) {
+                        getLog().debug("Found class: " + jarEntry.getName());
+                        String hashOfClass = computeHash(jarFile.getInputStream(jarEntry), algorithm);
 
-                    String jarEntryName =
-                            jarEntry.getName().substring(0, jarEntry.getName().length() - ".class".length());
+                        String jarEntryName = jarEntry.getName()
+                                .substring(0, jarEntry.getName().length() - ".class".length());
 
-                    fingerprints.add(new Fingerprint(
-                            artifact.getGroupId(),
-                            artifact.getArtifactId(),
-                            artifact.getVersion(),
-                            jarEntryName,
-                            hashOfClass));
+                        fingerprints.add(new Fingerprint(
+                                artifact.getGroupId(),
+                                artifact.getArtifactId(),
+                                artifact.getVersion(),
+                                jarEntryName,
+                                hashOfClass));
+                    }
                 }
+            } catch (IOException e) {
+                getLog().error("Could not open JAR file: " + artifactFileOnSystem);
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
             }
+        } else {
+            getLog().debug("Artifact is not a JAR file: " + artifactFileOnSystem);
+            getLog().debug("Artifact might be in classes directory.");
+            walkOverClassDirectory(
+                    artifactFileOnSystem, artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion());
+        }
+    }
+
+    private void walkOverClassDirectory(File artifactFileOnSystem, String groupId, String artifactId, String version) {
+        try (Stream<Path> stream = Files.walk(artifactFileOnSystem.toPath())) {
+            stream.filter(Files::isRegularFile)
+                    .filter(path -> path.toString().endsWith(".class"))
+                    .forEach(path -> {
+                        String className =
+                                artifactFileOnSystem.toPath().relativize(path).toString();
+                        className = className.substring(0, className.length() - ".class".length());
+                        getLog().debug("Found class: " + className);
+                        try (InputStream byteStream = Files.newInputStream(path)) {
+                            String hashOfClass = computeHash(byteStream, algorithm);
+                            fingerprints.add(new Fingerprint(groupId, artifactId, version, className, hashOfClass));
+                        } catch (IOException e) {
+                            getLog().error("Could not open file: " + path);
+                        } catch (NoSuchAlgorithmException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
         } catch (IOException e) {
-            getLog().error("Could not open JAR file: " + artifactFileOnSystem);
-        } catch (NoSuchAlgorithmException e) {
+            getLog().error("Could not open target/classes directory as well: " + artifactFileOnSystem);
             throw new RuntimeException(e);
         }
     }
