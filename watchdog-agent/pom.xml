@@ -22,14 +22,13 @@
 
   <dependencies>
     <dependency>
+      <groupId>io.github.algomaster99</groupId>
+      <artifactId>terminator-commons</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-    </dependency>
-    <!--        Declaring it to use the shared data classes-->
-    <dependency>
-      <groupId>io.github.algomaster99</groupId>
-      <artifactId>classfile-fingerprint</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>net.bytebuddy</groupId>

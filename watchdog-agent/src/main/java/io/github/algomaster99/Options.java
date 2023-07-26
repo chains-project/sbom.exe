@@ -2,7 +2,7 @@ package io.github.algomaster99;
 
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.algomaster99.data.Fingerprint;
+import io.github.algomaster99.terminator.commons.Fingerprint;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
