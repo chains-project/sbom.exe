@@ -134,6 +134,22 @@ class GenerateMojoIT {
         assertThat(bFingerPrint).isRegularFile().isNotEmptyFile();
     }
 
+    @DisplayName("Report classfile's fingerprint of another submodule")
+    @MavenTest
+    void multi_module_with_sources(MavenExecutionResult result) throws IOException {
+        assertThat(result).isSuccessful();
+
+        Path rootModule = result.getMavenProjectResult().getTargetProjectDirectory();
+
+        Path main = Path.of(rootModule.toString(), "main");
+        Path fingerPrint = getFingerprint(main, "classfile.sha256.jsonl");
+
+        Path expectedFingerprint =
+                Path.of(main.toString(), "src", "test", "resources", "expected-classfile.sha256.jsonl");
+
+        assertThat(fingerPrint).isRegularFile().hasContent(Files.readString(expectedFingerprint));
+    }
+
     private static Path getFingerprint(Path projectDirectory, String classfileFingerprintName) {
         return Path.of(projectDirectory.toString(), "target", classfileFingerprintName);
     }
