@@ -4,6 +4,7 @@ import static io.github.algomaster99.terminator.commons.HashComputer.computeHash
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SequenceWriter;
+import io.github.algomaster99.terminator.commons.ClassfileVersion;
 import io.github.algomaster99.terminator.commons.Fingerprint;
 import java.io.File;
 import java.io.IOException;
@@ -99,17 +100,19 @@ public class GenerateMojo extends AbstractMojo {
                     JarEntry jarEntry = jarEntries.nextElement();
                     if (jarEntry.getName().endsWith(".class")) {
                         getLog().debug("Found class: " + jarEntry.getName());
-                        String hashOfClass =
-                                computeHash(jarFile.getInputStream(jarEntry).readAllBytes(), algorithm);
+                        byte[] classfileBytes = jarFile.getInputStream(jarEntry).readAllBytes();
+                        String hashOfClass = computeHash(classfileBytes, algorithm);
 
                         String jarEntryName = jarEntry.getName()
                                 .substring(0, jarEntry.getName().length() - ".class".length());
+                        int classfileVersion = ClassfileVersion.getVersion(classfileBytes);
 
                         fingerprints.add(new Fingerprint(
                                 artifact.getGroupId(),
                                 artifact.getArtifactId(),
                                 artifact.getVersion(),
                                 jarEntryName,
+                                classfileVersion,
                                 hashOfClass,
                                 algorithm));
                     }
@@ -140,9 +143,11 @@ public class GenerateMojo extends AbstractMojo {
                                 .replace("\\", "/");
                         getLog().debug("Found class: " + className);
                         try (InputStream byteStream = Files.newInputStream(path)) {
-                            String hashOfClass = computeHash(byteStream.readAllBytes(), algorithm);
-                            fingerprints.add(
-                                    new Fingerprint(groupId, artifactId, version, className, hashOfClass, algorithm));
+                            byte[] classfileBytes = byteStream.readAllBytes();
+                            String hashOfClass = computeHash(classfileBytes, algorithm);
+                            int classfileVersion = ClassfileVersion.getVersion(classfileBytes);
+                            fingerprints.add(new Fingerprint(
+                                    groupId, artifactId, version, className, classfileVersion, hashOfClass, algorithm));
                         } catch (IOException e) {
                             getLog().error("Could not open file: " + path);
                         } catch (NoSuchAlgorithmException e) {

@@ -12,7 +12,7 @@ public class HashComputer {
         return toHexString(algorithmSum);
     }
 
-    private static String toHexString(byte[] bytes) {
+    public static String toHexString(byte[] bytes) {
         Formatter result = new Formatter();
         try (result) {
             for (byte b : bytes) {
