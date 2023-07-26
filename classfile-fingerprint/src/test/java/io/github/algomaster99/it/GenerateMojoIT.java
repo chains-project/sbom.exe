@@ -2,12 +2,16 @@ package io.github.algomaster99.it;
 
 import static com.soebes.itf.extension.assertj.MavenITAssertions.assertThat;
 
+import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soebes.itf.jupiter.extension.MavenGoal;
 import com.soebes.itf.jupiter.extension.MavenGoals;
 import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
 import com.soebes.itf.jupiter.extension.MavenOption;
 import com.soebes.itf.jupiter.extension.MavenTest;
 import com.soebes.itf.jupiter.maven.MavenExecutionResult;
+import io.github.algomaster99.data.Fingerprint;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -41,6 +45,7 @@ class GenerateMojoIT {
                     result.getMavenProjectResult().getTargetProjectDirectory(), "classfile.sha256.jsonl");
 
             assertThat(fingerprintFile).isRegularFile().content().hasLineCount(CLASSFILES_LOADED);
+            assertAlgorithm(fingerprintFile.toFile(), "SHA256");
         }
 
         @DisplayName("SHA1")
@@ -53,6 +58,7 @@ class GenerateMojoIT {
                     getFingerprint(result.getMavenProjectResult().getTargetProjectDirectory(), "classfile.sha1.jsonl");
 
             assertThat(fingerprintFile).isRegularFile().content().hasLineCount(CLASSFILES_LOADED);
+            assertAlgorithm(fingerprintFile.toFile(), "SHA1");
         }
 
         @DisplayName("MD5")
@@ -65,6 +71,19 @@ class GenerateMojoIT {
                     getFingerprint(result.getMavenProjectResult().getTargetProjectDirectory(), "classfile.md5.jsonl");
 
             assertThat(fingerprintFile).isRegularFile().content().hasLineCount(CLASSFILES_LOADED);
+            assertAlgorithm(fingerprintFile.toFile(), "MD5");
+        }
+
+        private static void assertAlgorithm(File fingerprintsFile, String algorithm) {
+            final ObjectMapper mapper = new ObjectMapper();
+            try (MappingIterator<Fingerprint> it =
+                    mapper.readerFor(Fingerprint.class).readValues(fingerprintsFile)) {
+                it.forEachRemaining(fingerprint -> {
+                    assertThat(fingerprint.algorithm()).isEqualTo(algorithm);
+                });
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

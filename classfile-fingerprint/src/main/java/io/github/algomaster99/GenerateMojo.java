@@ -108,7 +108,8 @@ public class GenerateMojo extends AbstractMojo {
                                 artifact.getArtifactId(),
                                 artifact.getVersion(),
                                 jarEntryName,
-                                hashOfClass));
+                                hashOfClass,
+                                algorithm));
                     }
                 }
             } catch (IOException e) {
@@ -138,7 +139,8 @@ public class GenerateMojo extends AbstractMojo {
                         getLog().debug("Found class: " + className);
                         try (InputStream byteStream = Files.newInputStream(path)) {
                             String hashOfClass = computeHash(byteStream, algorithm);
-                            fingerprints.add(new Fingerprint(groupId, artifactId, version, className, hashOfClass));
+                            fingerprints.add(
+                                    new Fingerprint(groupId, artifactId, version, className, hashOfClass, algorithm));
                         } catch (IOException e) {
                             getLog().error("Could not open file: " + path);
                         } catch (NoSuchAlgorithmException e) {
