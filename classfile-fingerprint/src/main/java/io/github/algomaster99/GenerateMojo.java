@@ -131,7 +131,10 @@ public class GenerateMojo extends AbstractMojo {
                     .forEach(path -> {
                         String className =
                                 artifactFileOnSystem.toPath().relativize(path).toString();
-                        className = className.substring(0, className.length() - ".class".length());
+                        className = className
+                                .substring(0, className.length() - ".class".length())
+                                // Windows path contain "\\" as delimiters
+                                .replace("\\\\", "/");
                         getLog().debug("Found class: " + className);
                         try (InputStream byteStream = Files.newInputStream(path)) {
                             String hashOfClass = computeHash(byteStream, algorithm);
