@@ -134,7 +134,7 @@ public class GenerateMojo extends AbstractMojo {
                         className = className
                                 .substring(0, className.length() - ".class".length())
                                 // Windows path contain "\\" as delimiters
-                                .replace("\\\\", "/");
+                                .replace("\\", "/");
                         getLog().debug("Found class: " + className);
                         try (InputStream byteStream = Files.newInputStream(path)) {
                             String hashOfClass = computeHash(byteStream, algorithm);
