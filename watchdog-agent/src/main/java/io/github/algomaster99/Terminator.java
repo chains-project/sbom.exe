@@ -38,7 +38,7 @@ public class Terminator {
             if (className.equals(fingerprint.className())) {
                 String hash;
                 try {
-                    hash = computeHash(classfileBuffer);
+                    hash = computeHash(classfileBuffer, fingerprint.algorithm());
                 } catch (NoSuchAlgorithmException e) {
                     System.err.println("No such algorithm: " + e.getMessage());
                     System.exit(1);
@@ -59,9 +59,9 @@ public class Terminator {
     }
 
     // TODO: Duplicate of the method from GenerateMojo class
-    private static String computeHash(byte[] bytes) throws NoSuchAlgorithmException {
+    private static String computeHash(byte[] bytes, String algorithm) throws NoSuchAlgorithmException {
         // TODO: softcode the hash algorithm
-        byte[] algorithmSum = MessageDigest.getInstance("SHA256").digest(bytes);
+        byte[] algorithmSum = MessageDigest.getInstance(algorithm).digest(bytes);
         return toHexString(algorithmSum);
     }
 
