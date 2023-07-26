@@ -1,4 +1,50 @@
 
+# 0.4.0
+## Changelog
+
+## 🚀 Features
+- e9b2b33 feat: add code to terminate JVM if unknown class is loaded (#26)
+
+## 🐛 Fixes
+- 02193a9 fix: include classes of the project itself (#27)
+- 944282f fix: add 'com/sun' to whitelisted packages
+
+## 🧰 Tasks
+- 4527404 chore: releasing version 0.4.0
+- e3342cd chore: releasing version 0.3.0
+- 31fe8bc chore: releasing version 0.3.0
+- 5d210c4 chore: releasing version 0.3.0
+- 98f22f1 chore: make POM of watchdog-agent compatible with release requirements (#29)
+- 43ef76b chore: releasing version 0.3.0
+- 279b2a2 chore: setting SNAPSHOT version 0.2.1-SNAPSHOT
+
+## 🛠  Build
+- b7268a3 ci: safeguard release against weird javadoc behaviour
+
+## 📝 Documentation
+- 2d4ae12 docs: update diagram
+- 10da8fd docs: update diagram
+- cd7b0c3 docs: update diagram
+- dc5710e docs: update diagram
+- e99e5ec docs: update diagram
+- 1dc9bb4 docs: add badge
+- 3555c86 docs: update diagram
+- 057f14e docs: update diagram
+- 04e299e docs: update diagram
+
+---
+- 3664e44 Revert "chore: releasing version 0.3.0"
+- 2011f6a Revert "chore: releasing version 0.3.0"
+- 9debd18 Revert "chore: releasing version 0.3.0"
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- GitHub ()
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+- repo-visualizer ()
+
 # 0.2.0
 ## Changelog
 
