@@ -5,6 +5,6 @@ public record Fingerprint(
         String artifactId,
         String version,
         String className,
-        int classFileVersion,
+        String classFileVersion,
         String hash,
         String algorithm) {}

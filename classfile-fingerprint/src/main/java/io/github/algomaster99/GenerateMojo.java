@@ -105,7 +105,7 @@ public class GenerateMojo extends AbstractMojo {
 
                         String jarEntryName = jarEntry.getName()
                                 .substring(0, jarEntry.getName().length() - ".class".length());
-                        int classfileVersion = ClassfileVersion.getVersion(classfileBytes);
+                        String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
 
                         fingerprints.add(new Fingerprint(
                                 artifact.getGroupId(),
@@ -145,7 +145,7 @@ public class GenerateMojo extends AbstractMojo {
                         try (InputStream byteStream = Files.newInputStream(path)) {
                             byte[] classfileBytes = byteStream.readAllBytes();
                             String hashOfClass = computeHash(classfileBytes, algorithm);
-                            int classfileVersion = ClassfileVersion.getVersion(classfileBytes);
+                            String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
                             fingerprints.add(new Fingerprint(
                                     groupId, artifactId, version, className, classfileVersion, hashOfClass, algorithm));
                         } catch (IOException e) {
