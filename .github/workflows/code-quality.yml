@@ -21,6 +21,7 @@ jobs:
   codeql:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
