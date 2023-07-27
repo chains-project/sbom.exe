@@ -1,4 +1,37 @@
 
+# 0.5.0
+## Changelog
+
+## 🚀 Features
+- 2120e14 feat: include classfile version (#33)
+- 2791d92 feat: include algorithm in fingerprint (#31)
+- 64b59a6 feat: extract classfiles from submodules (#30)
+
+## 🔄️ Changes
+- 4b5add8 refactor: move common functions to commons module (#32)
+
+## 🧰 Tasks
+- c5b417f chore: releasing version 0.5.0
+- 318cfbd chore: setting SNAPSHOT version 0.4.1-SNAPSHOT
+
+## 🛠  Build
+- 5278686 ci: add codeql job (#34)
+
+## 📝 Documentation
+- 1102d30 docs: update diagram
+- ab59d1c docs: update diagram
+- 69b2378 docs: update diagram
+- 6a6443f docs: update diagram
+- b2fde3f docs: update diagram
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- GitHub ()
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+- repo-visualizer ()
+
 # 0.4.0
 ## Changelog
 
