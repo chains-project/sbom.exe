@@ -7,7 +7,7 @@ import java.util.Arrays;
 public class ClassfileVersion {
 
     // cafebabe
-    private static final byte[] CLASSFILE_HEADER = new byte[] {-54, -2, -70, -66};
+    private static final byte[] CLASSFILE_HEADER = new byte[] {(byte) 0xca, (byte) 0xfe, (byte) 0xba, (byte) 0xbe};
 
     private ClassfileVersion() {}
 
