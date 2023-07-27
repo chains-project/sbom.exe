@@ -27,6 +27,7 @@ jobs:
         with:
           languages: java
       - run: |
+          java -version
           mvn -version
           mvn clean install -DskipTests
 
