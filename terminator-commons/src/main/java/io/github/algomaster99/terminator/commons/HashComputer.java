@@ -16,9 +16,13 @@ public class HashComputer {
         Formatter result = new Formatter();
         try (result) {
             for (byte b : bytes) {
-                result.format("%02x", b & 0xff);
+                result.format(toHexString(b));
             }
             return result.toString();
         }
+    }
+
+    public static String toHexString(byte b) {
+        return String.format("%02x", b & 0xff);
     }
 }

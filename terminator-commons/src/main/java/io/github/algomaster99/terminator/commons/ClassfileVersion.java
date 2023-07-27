@@ -2,18 +2,22 @@ package io.github.algomaster99.terminator.commons;
 
 import static io.github.algomaster99.terminator.commons.HashComputer.toHexString;
 
+import java.util.Arrays;
+
 public class ClassfileVersion {
 
-    private static final String CLASSFILE_HEADER = "cafebabe";
+    // cafebabe
+    private static final byte[] CLASSFILE_HEADER = new byte[] {-54, -2, -70, -66};
 
     private ClassfileVersion() {}
 
     public static int getVersion(byte[] bytes) {
-        String hexString = toHexString(bytes);
-        if (!hexString.substring(0, 8).startsWith(CLASSFILE_HEADER)) {
+        byte[] header = new byte[4];
+        // copy the first 4 bytes
+        System.arraycopy(bytes, 0, header, 0, 4);
+        if (!Arrays.equals(header, CLASSFILE_HEADER)) {
             throw new IllegalArgumentException("Not a classfile");
         }
-        String majorVersion = hexString.substring(12, 16);
-        return Integer.parseInt(majorVersion, 16);
+        return Integer.parseInt(toHexString(bytes[7]), 16);
     }
 }
