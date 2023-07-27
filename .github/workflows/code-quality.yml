@@ -26,10 +26,7 @@ jobs:
         uses: github/codeql-action/init@v2
         with:
           languages: java
-      - run: |
-          java -version
-          mvn -version
-          mvn clean install -DskipTests
+      - run: mvn clean install -DskipTests
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
