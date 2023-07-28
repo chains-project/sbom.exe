@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Fri Jul 28 16:28:41 CEST 2023
+foobar-main-1.0.0-SNAPSHOT.jar>=
+foobar-main-1.0.0-SNAPSHOT.pom>=
+foobar-main-1.0.0-SNAPSHOT-jar-with-dependencies.jar>=
