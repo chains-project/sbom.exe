@@ -47,6 +47,10 @@
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
     </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
     <!--    For MOJO test. See: https://khmarbaise.github.io/maven-it-extension/itf-documentation/usersguide/usersguide.html-->
     <dependency>
       <groupId>org.assertj</groupId>
@@ -70,6 +74,14 @@
       <groupId>com.soebes.itf.jupiter.extension</groupId>
       <artifactId>itf-jupiter-extension</artifactId>
       <version>0.12.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- For tests that don't fit in the maven-it-extension framework -->
+    <dependency>
+      <groupId>org.apache.maven.shared</groupId>
+      <artifactId>maven-invoker</artifactId>
+      <version>3.2.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

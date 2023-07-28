@@ -4,6 +4,7 @@ import static com.soebes.itf.extension.assertj.MavenITAssertions.assertThat;
 
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.soebes.itf.jupiter.extension.MavenDebug;
 import com.soebes.itf.jupiter.extension.MavenGoal;
 import com.soebes.itf.jupiter.extension.MavenGoals;
 import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
@@ -167,6 +168,24 @@ class GenerateMojoIT {
                 Path.of(main.toString(), "src", "test", "resources", "expected-classfile.sha256.jsonl");
 
         assertThat(fingerPrint).isRegularFile().hasContent(Files.readString(expectedFingerprint));
+    }
+
+    @MavenTest
+    @MavenDebug
+    @MavenGoals(value = {@MavenGoal("compile"), @MavenGoal("${project.groupId}:${project.artifactId}:0.5.0:generate")})
+    void prioritise_local_classes(MavenExecutionResult result) throws IOException {
+        assertThat(result).isSuccessful();
+
+        Path rootModule = result.getMavenProjectResult().getTargetProjectDirectory();
+        Path foobarMain = Path.of(rootModule.toString(), "foobar-main");
+
+        Path actualFingerprint = getFingerprint(foobarMain, "classfile.sha256.jsonl");
+
+        Path expectedFingerprint =
+                Path.of(foobarMain.toString(), "src", "test", "resources", "expected-classfile.sha256.jsonl");
+        String expectedContent = Files.readString(expectedFingerprint);
+
+        assertThat(actualFingerprint).isRegularFile().hasContent(expectedContent);
     }
 
     private static Path getFingerprint(Path projectDirectory, String classfileFingerprintName) {

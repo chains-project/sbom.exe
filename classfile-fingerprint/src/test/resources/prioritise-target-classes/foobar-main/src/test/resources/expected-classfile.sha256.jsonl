@@ -1,0 +1,2 @@
+{"groupId":"foo.bar","artifactId":"foobar-main","version":"1.0.0-SNAPSHOT","className":"foo/bar/Main","classFileVersion":"51.0","hash":"a6176d145f62e1d29f75dbf7484a85847d2e1124ebc2076491f4fc2856fe70f0","algorithm":"SHA256"}
+{"groupId":"foo.bar","artifactId":"foobar-commons","version":"1.0.0-SNAPSHOT","className":"foo/bar/Triple","classFileVersion":"51.0","hash":"486da34595b2dd44c4311f4a693dff113bef865295df11797dc890d932ef9435","algorithm":"SHA256"}
