@@ -72,11 +72,6 @@ mvn compile io.github.algomaster99:classfile-fingerprint:generate
 >  }
 > ]
 
-The plugin also takes an optional `-Dalgorithm` argument to specify the
-algorithm used to generate the hash sum. The default is `SHA256`.
-Options are
-[written here](https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#messagedigest-algorithms).
-
 Both methods will output a file `classfile.sha256.jsonl` in the `target` directory.
 
 ## `watchdog-agent`
