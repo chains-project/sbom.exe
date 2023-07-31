@@ -114,7 +114,7 @@ public class GenerateMojo extends AbstractMojo {
         }
     }
 
-    private void goInsideJar(File artifactFileOnSystem, String ...provenanceInformation) {
+    private void goInsideJar(File artifactFileOnSystem, String... provenanceInformation) {
         try (JarFile jarFile = new JarFile(artifactFileOnSystem)) {
             Enumeration<JarEntry> jarEntries = jarFile.entries();
             while (jarEntries.hasMoreElements()) {
@@ -124,8 +124,8 @@ public class GenerateMojo extends AbstractMojo {
                     byte[] classfileBytes = jarFile.getInputStream(jarEntry).readAllBytes();
                     String hashOfClass = computeHash(classfileBytes, algorithm);
 
-                    String jarEntryName = jarEntry.getName()
-                            .substring(0, jarEntry.getName().length() - ".class".length());
+                    String jarEntryName =
+                            jarEntry.getName().substring(0, jarEntry.getName().length() - ".class".length());
                     String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
 
                     if (provenanceInformation.length == 3) {
@@ -133,13 +133,7 @@ public class GenerateMojo extends AbstractMojo {
                         String artifactId = provenanceInformation[1];
                         String version = provenanceInformation[2];
                         fingerprints.add(new Maven(
-                                groupId,
-                                artifactId,
-                                version,
-                                jarEntryName,
-                                classfileVersion,
-                                hashOfClass,
-                                algorithm));
+                                groupId, artifactId, version, jarEntryName, classfileVersion, hashOfClass, algorithm));
                     } else if (provenanceInformation.length == 1) {
                         String jarLocation = provenanceInformation[0];
                         fingerprints.add(new Jar(jarLocation, jarEntryName, classfileVersion, hashOfClass, algorithm));
@@ -188,17 +182,19 @@ public class GenerateMojo extends AbstractMojo {
     private void processExternalJars() {
         if (externalJars == null) {
             getLog().info("No external jars are known.");
+            return;
         }
 
         ObjectMapper mapper = new ObjectMapper();
         List<ExternalJar> externalJarList;
         try {
-            externalJarList = mapper.readerFor(new TypeReference<List<ExternalJar>>() {}).readValue(externalJars);
+            externalJarList =
+                    mapper.readerFor(new TypeReference<List<ExternalJar>>() {}).readValue(externalJars);
         } catch (IOException e) {
             throw new RuntimeException("Could not open external jar file: " + e);
         }
 
-        for (ExternalJar jar: externalJarList) {
+        for (ExternalJar jar : externalJarList) {
             getLog().info("Processing external jar" + jar.path().getAbsolutePath());
             goInsideJar(jar.path().getAbsoluteFile(), jar.path().getAbsolutePath());
         }

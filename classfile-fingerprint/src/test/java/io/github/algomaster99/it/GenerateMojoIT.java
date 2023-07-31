@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 
@@ -176,11 +177,26 @@ class GenerateMojoIT {
 
         Path projectDirectory = result.getMavenProjectResult().getTargetProjectDirectory();
         Path fingerprint = getFingerprint(projectDirectory, "classfile.sha256.jsonl");
+        List<Fingerprint> fingerprints = parseFingerprints(fingerprint);
 
-        assertThat(fingerprint).isRegularFile().content().hasLineCount(2);
+        assertThat(fingerprints)
+                .hasSize(2)
+                .element(1)
+                .extracting("className", "hash")
+                .containsExactly("NonMalicious", "de3318e0ba5527a90fb600307ca12e0d06752474d1da3086cfdb4a48f714da5d");
     }
 
     private static Path getFingerprint(Path projectDirectory, String classfileFingerprintName) {
         return Path.of(projectDirectory.toString(), "target", classfileFingerprintName);
+    }
+
+    private static List<Fingerprint> parseFingerprints(Path fingerprintFile) {
+        final ObjectMapper mapper = new ObjectMapper();
+        try (MappingIterator<Fingerprint> it =
+                mapper.readerFor(Fingerprint.class).readValues(fingerprintFile.toFile())) {
+            return it.readAll();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
