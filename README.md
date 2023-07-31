@@ -32,6 +32,7 @@ Run it as follows:
     <version>latest version here</version> <!-- use latest version here -->
     <configuration>
         <algorithm>SHA256</algorithm> <!-- optional -->
+        <externalJars>path to jar</externalJars> <!-- optional -->
     </configuration>
     <executions>
         <execution>
@@ -55,6 +56,21 @@ themselves.
 ```bash
 mvn compile io.github.algomaster99:classfile-fingerprint:generate
 ```
+
+**Optional parameters**
+
+|   Parameter    |   Type   | Description                                                                                                                                                                                                  |
+|:--------------:|:--------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|  `algorithm`   | `String` | Algorithm used to generate the hash sum. Default: `SHA256`.<br/> All options are [written here](https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#messagedigest-algorithms). |
+| `externalJars` |  `File`  | Configuration file to specify external jars. Default: `null`.                                                                                                                                                |
+
+> `externalJars` is a JSON file with the following structure:
+> ```json
+> [
+>  {
+>   "path": "path/to/jar",
+>  }
+> ]
 
 The plugin also takes an optional `-Dalgorithm` argument to specify the
 algorithm used to generate the hash sum. The default is `SHA256`.
