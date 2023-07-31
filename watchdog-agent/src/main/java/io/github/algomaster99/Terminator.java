@@ -2,7 +2,7 @@ package io.github.algomaster99;
 
 import static io.github.algomaster99.terminator.commons.HashComputer.computeHash;
 
-import io.github.algomaster99.terminator.commons.Fingerprint;
+import io.github.algomaster99.terminator.commons.fingerprint.Fingerprint;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.security.NoSuchAlgorithmException;

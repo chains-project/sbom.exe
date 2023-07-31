@@ -10,11 +10,12 @@ import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
 import com.soebes.itf.jupiter.extension.MavenOption;
 import com.soebes.itf.jupiter.extension.MavenTest;
 import com.soebes.itf.jupiter.maven.MavenExecutionResult;
-import io.github.algomaster99.terminator.commons.Fingerprint;
+import io.github.algomaster99.terminator.commons.fingerprint.Fingerprint;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 
@@ -169,7 +170,33 @@ class GenerateMojoIT {
         assertThat(fingerPrint).isRegularFile().hasContent(Files.readString(expectedFingerprint));
     }
 
+    @MavenTest
+    @MavenOption("-DexternalJars=src/test/resources/externalJars.json")
+    void url_classloader_local_jar(MavenExecutionResult result) {
+        assertThat(result).isSuccessful();
+
+        Path projectDirectory = result.getMavenProjectResult().getTargetProjectDirectory();
+        Path fingerprint = getFingerprint(projectDirectory, "classfile.sha256.jsonl");
+        List<Fingerprint> fingerprints = parseFingerprints(fingerprint);
+
+        assertThat(fingerprints)
+                .hasSize(2)
+                .element(1)
+                .extracting("className", "hash")
+                .containsExactly("NonMalicious", "de3318e0ba5527a90fb600307ca12e0d06752474d1da3086cfdb4a48f714da5d");
+    }
+
     private static Path getFingerprint(Path projectDirectory, String classfileFingerprintName) {
         return Path.of(projectDirectory.toString(), "target", classfileFingerprintName);
+    }
+
+    private static List<Fingerprint> parseFingerprints(Path fingerprintFile) {
+        final ObjectMapper mapper = new ObjectMapper();
+        try (MappingIterator<Fingerprint> it =
+                mapper.readerFor(Fingerprint.class).readValues(fingerprintFile.toFile())) {
+            return it.readAll();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
