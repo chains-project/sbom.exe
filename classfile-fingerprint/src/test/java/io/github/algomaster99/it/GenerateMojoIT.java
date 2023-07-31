@@ -10,7 +10,7 @@ import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
 import com.soebes.itf.jupiter.extension.MavenOption;
 import com.soebes.itf.jupiter.extension.MavenTest;
 import com.soebes.itf.jupiter.maven.MavenExecutionResult;
-import io.github.algomaster99.terminator.commons.Fingerprint;
+import io.github.algomaster99.terminator.commons.fingerprint.Fingerprint;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

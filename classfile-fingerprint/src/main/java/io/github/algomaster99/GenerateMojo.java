@@ -5,7 +5,8 @@ import static io.github.algomaster99.terminator.commons.HashComputer.computeHash
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SequenceWriter;
 import io.github.algomaster99.terminator.commons.ClassfileVersion;
-import io.github.algomaster99.terminator.commons.Fingerprint;
+import io.github.algomaster99.terminator.commons.fingerprint.Fingerprint;
+import io.github.algomaster99.terminator.commons.fingerprint.Maven;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -107,7 +108,7 @@ public class GenerateMojo extends AbstractMojo {
                                 .substring(0, jarEntry.getName().length() - ".class".length());
                         String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
 
-                        fingerprints.add(new Fingerprint(
+                        fingerprints.add(new Maven(
                                 artifact.getGroupId(),
                                 artifact.getArtifactId(),
                                 artifact.getVersion(),
@@ -146,7 +147,7 @@ public class GenerateMojo extends AbstractMojo {
                             byte[] classfileBytes = byteStream.readAllBytes();
                             String hashOfClass = computeHash(classfileBytes, algorithm);
                             String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
-                            fingerprints.add(new Fingerprint(
+                            fingerprints.add(new Maven(
                                     groupId, artifactId, version, className, classfileVersion, hashOfClass, algorithm));
                         } catch (IOException e) {
                             getLog().error("Could not open file: " + path);
