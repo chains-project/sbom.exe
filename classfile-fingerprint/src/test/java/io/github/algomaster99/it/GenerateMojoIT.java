@@ -169,6 +169,16 @@ class GenerateMojoIT {
         assertThat(fingerPrint).isRegularFile().hasContent(Files.readString(expectedFingerprint));
     }
 
+    @MavenTest
+    void url_classloader_local_jar(MavenExecutionResult result) throws IOException {
+        assertThat(result).isSuccessful();
+
+        Path projectDirectory = result.getMavenProjectResult().getTargetProjectDirectory();
+        Path fingerprint = getFingerprint(projectDirectory, "classfile.sha256.jsonl");
+
+        assertThat(fingerprint).isRegularFile().content().hasLineCount(2);
+    }
+
     private static Path getFingerprint(Path projectDirectory, String classfileFingerprintName) {
         return Path.of(projectDirectory.toString(), "target", classfileFingerprintName);
     }
