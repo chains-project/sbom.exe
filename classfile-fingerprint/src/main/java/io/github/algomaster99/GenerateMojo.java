@@ -2,10 +2,13 @@ package io.github.algomaster99;
 
 import static io.github.algomaster99.terminator.commons.HashComputer.computeHash;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SequenceWriter;
 import io.github.algomaster99.terminator.commons.ClassfileVersion;
+import io.github.algomaster99.terminator.commons.data.ExternalJar;
 import io.github.algomaster99.terminator.commons.fingerprint.Fingerprint;
+import io.github.algomaster99.terminator.commons.fingerprint.Jar;
 import io.github.algomaster99.terminator.commons.fingerprint.Maven;
 import java.io.File;
 import java.io.IOException;
@@ -44,12 +47,19 @@ public class GenerateMojo extends AbstractMojo {
     @Parameter(defaultValue = "SHA256", required = true, property = "algorithm")
     private String algorithm;
 
+    /**
+     * Path to known external jars.
+     */
+    @Parameter(property = "externalJars")
+    private File externalJars;
+
     private final List<Fingerprint> fingerprints = new ArrayList<>();
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         processProjectItself();
         processDependencies();
+        processExternalJars();
 
         Path fingerprintFile = getFingerprintFile(project, algorithm);
         writeFingerprint(fingerprints, fingerprintFile);
@@ -95,39 +105,53 @@ public class GenerateMojo extends AbstractMojo {
         getLog().debug("Artifact file on system: " + artifactFileOnSystem);
 
         if (artifactFileOnSystem.toString().endsWith(".jar")) {
-            try (JarFile jarFile = new JarFile(artifactFileOnSystem)) {
-                Enumeration<JarEntry> jarEntries = jarFile.entries();
-                while (jarEntries.hasMoreElements()) {
-                    JarEntry jarEntry = jarEntries.nextElement();
-                    if (jarEntry.getName().endsWith(".class")) {
-                        getLog().debug("Found class: " + jarEntry.getName());
-                        byte[] classfileBytes = jarFile.getInputStream(jarEntry).readAllBytes();
-                        String hashOfClass = computeHash(classfileBytes, algorithm);
-
-                        String jarEntryName = jarEntry.getName()
-                                .substring(0, jarEntry.getName().length() - ".class".length());
-                        String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
-
-                        fingerprints.add(new Maven(
-                                artifact.getGroupId(),
-                                artifact.getArtifactId(),
-                                artifact.getVersion(),
-                                jarEntryName,
-                                classfileVersion,
-                                hashOfClass,
-                                algorithm));
-                    }
-                }
-            } catch (IOException e) {
-                getLog().error("Could not open JAR file: " + artifactFileOnSystem);
-            } catch (NoSuchAlgorithmException e) {
-                throw new RuntimeException(e);
-            }
+            goInsideJar(artifactFileOnSystem, artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion());
         } else {
             getLog().debug("Artifact is not a JAR file: " + artifactFileOnSystem);
             getLog().debug("Artifact might be in classes directory.");
             walkOverClassDirectory(
                     artifactFileOnSystem, artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion());
+        }
+    }
+
+    private void goInsideJar(File artifactFileOnSystem, String ...provenanceInformation) {
+        try (JarFile jarFile = new JarFile(artifactFileOnSystem)) {
+            Enumeration<JarEntry> jarEntries = jarFile.entries();
+            while (jarEntries.hasMoreElements()) {
+                JarEntry jarEntry = jarEntries.nextElement();
+                if (jarEntry.getName().endsWith(".class")) {
+                    getLog().debug("Found class: " + jarEntry.getName());
+                    byte[] classfileBytes = jarFile.getInputStream(jarEntry).readAllBytes();
+                    String hashOfClass = computeHash(classfileBytes, algorithm);
+
+                    String jarEntryName = jarEntry.getName()
+                            .substring(0, jarEntry.getName().length() - ".class".length());
+                    String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
+
+                    if (provenanceInformation.length == 3) {
+                        String groupId = provenanceInformation[0];
+                        String artifactId = provenanceInformation[1];
+                        String version = provenanceInformation[2];
+                        fingerprints.add(new Maven(
+                                groupId,
+                                artifactId,
+                                version,
+                                jarEntryName,
+                                classfileVersion,
+                                hashOfClass,
+                                algorithm));
+                    } else if (provenanceInformation.length == 1) {
+                        String jarLocation = provenanceInformation[0];
+                        fingerprints.add(new Jar(jarLocation, jarEntryName, classfileVersion, hashOfClass, algorithm));
+                    } else {
+                        throw new RuntimeException("Wrong number of elements in provenance information.");
+                    }
+                }
+            }
+        } catch (IOException e) {
+            getLog().error("Could not open JAR file: " + artifactFileOnSystem);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -158,6 +182,25 @@ public class GenerateMojo extends AbstractMojo {
         } catch (IOException e) {
             getLog().error("Could not open target/classes directory as well: " + artifactFileOnSystem);
             throw new RuntimeException(e);
+        }
+    }
+
+    private void processExternalJars() {
+        if (externalJars == null) {
+            getLog().info("No external jars are known.");
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<ExternalJar> externalJarList;
+        try {
+            externalJarList = mapper.readerFor(new TypeReference<List<ExternalJar>>() {}).readValue(externalJars);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not open external jar file: " + e);
+        }
+
+        for (ExternalJar jar: externalJarList) {
+            getLog().info("Processing external jar" + jar.path().getAbsolutePath());
+            goInsideJar(jar.path().getAbsoluteFile(), jar.path().getAbsolutePath());
         }
     }
 

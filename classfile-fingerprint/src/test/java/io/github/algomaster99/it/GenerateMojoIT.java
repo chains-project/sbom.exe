@@ -170,7 +170,8 @@ class GenerateMojoIT {
     }
 
     @MavenTest
-    void url_classloader_local_jar(MavenExecutionResult result) throws IOException {
+    @MavenOption("-DexternalJars=src/test/resources/externalJars.json")
+    void url_classloader_local_jar(MavenExecutionResult result) {
         assertThat(result).isSuccessful();
 
         Path projectDirectory = result.getMavenProjectResult().getTargetProjectDirectory();

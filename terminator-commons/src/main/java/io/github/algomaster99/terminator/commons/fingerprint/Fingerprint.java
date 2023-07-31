@@ -26,7 +26,7 @@ class FingerprintDeserializer extends JsonDeserializer<Fingerprint> {
         ObjectMapper mapper = (ObjectMapper) p.getCodec();
         ObjectNode root = mapper.readTree(p);
         Class<? extends Fingerprint> instanceClass = null;
-        if (root.has("fileLocation")) {
+        if (root.has("path")) {
             instanceClass = Jar.class;
         } else {
             instanceClass = Maven.class;
