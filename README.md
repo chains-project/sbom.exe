@@ -23,16 +23,45 @@ The project is structured as follows:
 
 Run it as follows:
 
+### Via POM configuration
+
+```xml
+<plugin>
+    <groupId>io.github.algomaster99</groupId>
+    <artifactId>classfile-fingerprint</artifactId>
+    <version>latest version here</version> <!-- use latest version here -->
+    <configuration>
+        <algorithm>SHA256</algorithm> <!-- optional -->
+    </configuration>
+    <executions>
+        <execution>
+            <goals>
+                <goal>generate</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+
+```
+
+Run: `mvn compile`.
+
+It attaches to `compile` phase by default. We recommend to not change the
+phase preceding `compile` phase as it may not fingerprint the source files
+themselves.
+
+### Via command line
+
 ```bash
-mvn io.github.algomaster99:classfile-fingerprint:generate
+mvn compile io.github.algomaster99:classfile-fingerprint:generate
 ```
 
 The plugin also takes an optional `-Dalgorithm` argument to specify the
-algorithm used to generate the hash sum. The default is `SHA-256`.
+algorithm used to generate the hash sum. The default is `SHA256`.
 Options are
 [written here](https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#messagedigest-algorithms).
 
-This will output a file `classfile.sha-256.jsonl` in the `target` directory.
+Both methods will output a file `classfile.sha256.jsonl` in the `target` directory.
 
 ## `watchdog-agent`
 
