@@ -1,4 +1,27 @@
 
+# 0.6.0
+## Changelog
+
+## 🚀 Features
+- 589b5e8 feat: app support for loading external classes (#36)
+
+## 🧰 Tasks
+- 47bcfd2 chore: releasing version 0.6.0
+- 5d581dd chore: setting SNAPSHOT version 0.5.1-SNAPSHOT
+
+## 📝 Documentation
+- c81b14f docs: update diagram
+- 081317d docs: update diagram
+- 76fcbfd docs: update configuration information
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- GitHub ()
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+- repo-visualizer ()
+
 # 0.5.0
 ## Changelog
 
