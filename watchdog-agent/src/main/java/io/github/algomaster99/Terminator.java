@@ -48,13 +48,13 @@ public class Terminator {
                 if (hash.equals(fingerprint.hash())) {
                     return classfileBuffer;
                 } else {
-                    System.err.println("Class " + className + " has been modified");
+                    System.err.println("[MODIFIED]: " + className);
                     System.exit(1);
                     return null;
                 }
             }
         }
-        System.err.println("Class " + className + " is not whitelisted");
+        System.err.println("[NOT WHITELISTED]: " + className);
         System.exit(1);
         return null;
     }
