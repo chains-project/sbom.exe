@@ -1,4 +1,41 @@
 
+# 0.7.0
+## Changelog
+
+## 🐛 Fixes
+- 57945c7 fix!: record multiple provenances (#40)
+- 6c7a69a fix: exclude org/xml/sax (#38)
+
+## 🔄️ Changes
+- a320aee refactor: aggregate related classfile helpers together (#42)
+- ac0ed87 refactor: move common utilities for serialization and deserialization (#41)
+- 9c8d03b style: remove debugging statement
+- bc2be26 style: improve error message
+
+## 🧰 Tasks
+- eb8510b chore: releasing version 0.7.0
+- f7f71cd chore: setting SNAPSHOT version 0.6.1-SNAPSHOT
+
+## 🛠  Build
+- 510e57d test: add more tests to verify deserialisation (#39)
+
+## 📝 Documentation
+- ebe8b03 docs: update diagram
+- 1e3b409 docs: update diagram
+- 70b7c97 docs: update diagram
+- ddaa919 docs: update diagram
+- 009ac64 docs: update diagram
+- 35bf539 docs: update diagram
+- 3c1a3c3 docs: update diagram
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- GitHub ()
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+- repo-visualizer ()
+
 # 0.6.0
 ## Changelog
 
