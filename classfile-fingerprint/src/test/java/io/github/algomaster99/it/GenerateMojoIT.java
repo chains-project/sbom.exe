@@ -87,9 +87,6 @@ class GenerateMojoIT {
                     Map<String, List<Provenance>> item = it.nextValue();
                     for (String className : item.keySet()) {
                         List<Provenance> provenances = item.get(className);
-                        if (provenances.size() == 2) {
-                            System.out.println(className);
-                        }
                         provenances.forEach(p ->
                                 assertThat(p.classFileAttributes().algorithm()).isEqualTo(algorithm));
                     }
