@@ -1,12 +1,9 @@
 package io.github.algomaster99;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.MappingIterator;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper.deserializeFingerprints;
+
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
-import java.io.IOException;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,28 +22,12 @@ public class Options {
 
             switch (key) {
                 case "fingerprints":
-                    fingerprints = parseFingerprints(Path.of(value));
+                    fingerprints = deserializeFingerprints(Path.of(value));
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown argument: " + key);
             }
         }
-    }
-
-    private static Map<String, List<Provenance>> parseFingerprints(Path fingerprintFile) {
-        Map<String, List<Provenance>> result = new HashMap<>();
-        final ObjectMapper mapper = new ObjectMapper();
-        try (MappingIterator<Map<String, List<Provenance>>> it = mapper.readerFor(
-                        new TypeReference<Map<String, List<Provenance>>>() {})
-                .readValues(fingerprintFile.toFile())) {
-            while (it.hasNext()) {
-                Map<String, List<Provenance>> item = it.nextValue();
-                result.putAll(item);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return result;
     }
 
     public Map<String, List<Provenance>> getFingerprints() {
