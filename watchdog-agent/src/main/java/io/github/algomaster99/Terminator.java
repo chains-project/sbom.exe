@@ -2,12 +2,13 @@ package io.github.algomaster99;
 
 import static io.github.algomaster99.terminator.commons.HashComputer.computeHash;
 
-import io.github.algomaster99.terminator.commons.fingerprint.Fingerprint;
+import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.security.NoSuchAlgorithmException;
 import java.security.ProtectionDomain;
 import java.util.List;
+import java.util.Map;
 
 public class Terminator {
     private static Options options;
@@ -31,27 +32,30 @@ public class Terminator {
     }
 
     private static byte[] isLoadedClassWhitelisted(String className, byte[] classfileBuffer) {
-        List<Fingerprint> fingerprints = options.getFingerprints();
+        Map<String, List<Provenance>> fingerprints = options.getFingerprints();
         if (INTERNAL_PACKAGES.stream().anyMatch(className::startsWith)) {
             return classfileBuffer;
         }
-        for (Fingerprint fingerprint : fingerprints) {
-            if (className.equals(fingerprint.className())) {
-                String hash;
-                try {
-                    hash = computeHash(classfileBuffer, fingerprint.algorithm());
-                } catch (NoSuchAlgorithmException e) {
-                    System.err.println("No such algorithm: " + e.getMessage());
-                    System.exit(1);
-                    return null;
+        for (String expectedClassName : fingerprints.keySet()) {
+            if (expectedClassName.equals(className)) {
+                List<Provenance> candidates = fingerprints.get(expectedClassName);
+                for (Provenance candidate : candidates) {
+                    String hash;
+                    try {
+                        hash = computeHash(
+                                classfileBuffer, candidate.classFileAttributes().algorithm());
+                    } catch (NoSuchAlgorithmException e) {
+                        System.err.println("No such algorithm: " + e.getMessage());
+                        System.exit(1);
+                        return null;
+                    }
+                    if (hash.equals(candidate.classFileAttributes().hash())) {
+                        return classfileBuffer;
+                    }
                 }
-                if (hash.equals(fingerprint.hash())) {
-                    return classfileBuffer;
-                } else {
-                    System.err.println("[MODIFIED]: " + className);
-                    System.exit(1);
-                    return null;
-                }
+                System.err.println("[MODIFIED]: " + className);
+                System.exit(1);
+                return null;
             }
         }
         System.err.println("[NOT WHITELISTED]: " + className);
