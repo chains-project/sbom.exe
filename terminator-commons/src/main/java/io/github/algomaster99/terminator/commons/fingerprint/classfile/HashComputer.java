@@ -1,4 +1,4 @@
-package io.github.algomaster99.terminator.commons;
+package io.github.algomaster99.terminator.commons.fingerprint.classfile;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

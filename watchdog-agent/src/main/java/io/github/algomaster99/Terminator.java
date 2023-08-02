@@ -1,6 +1,6 @@
 package io.github.algomaster99;
 
-import static io.github.algomaster99.terminator.commons.HashComputer.computeHash;
+import static io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer.computeHash;
 
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import java.lang.instrument.ClassFileTransformer;

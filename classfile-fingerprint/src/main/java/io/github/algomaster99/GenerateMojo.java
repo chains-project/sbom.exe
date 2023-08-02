@@ -1,13 +1,13 @@
 package io.github.algomaster99;
 
-import static io.github.algomaster99.terminator.commons.HashComputer.computeHash;
+import static io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer.computeHash;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SequenceWriter;
-import io.github.algomaster99.terminator.commons.ClassfileVersion;
 import io.github.algomaster99.terminator.commons.data.ExternalJar;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassfileVersion;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Jar;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Maven;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
