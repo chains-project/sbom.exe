@@ -2,6 +2,7 @@ package io.github.algomaster99.it;
 
 import static com.soebes.itf.extension.assertj.MavenITAssertions.assertThat;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soebes.itf.jupiter.extension.MavenGoal;
@@ -10,12 +11,14 @@ import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
 import com.soebes.itf.jupiter.extension.MavenOption;
 import com.soebes.itf.jupiter.extension.MavenTest;
 import com.soebes.itf.jupiter.maven.MavenExecutionResult;
-import io.github.algomaster99.terminator.commons.fingerprint.Fingerprint;
+import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 
@@ -35,7 +38,7 @@ class GenerateMojoIT {
                 @MavenGoal("${project.groupId}:${project.artifactId}:${project.version}:generate")
             })
     class Algorithm {
-        private static final int CLASSFILES_LOADED = 5992;
+        private static final int CLASSFILES_LOADED = 5991;
 
         @DisplayName("SHA256 - the default algorithm")
         @MavenTest
@@ -77,11 +80,20 @@ class GenerateMojoIT {
 
         private static void assertAlgorithm(File fingerprintsFile, String algorithm) {
             final ObjectMapper mapper = new ObjectMapper();
-            try (MappingIterator<Fingerprint> it =
-                    mapper.readerFor(Fingerprint.class).readValues(fingerprintsFile)) {
-                it.forEachRemaining(fingerprint -> {
-                    assertThat(fingerprint.algorithm()).isEqualTo(algorithm);
-                });
+            try (MappingIterator<Map<String, List<Provenance>>> it = mapper.readerFor(
+                            new TypeReference<Map<String, List<Provenance>>>() {})
+                    .readValues(fingerprintsFile)) {
+                while (it.hasNext()) {
+                    Map<String, List<Provenance>> item = it.nextValue();
+                    for (String className : item.keySet()) {
+                        List<Provenance> provenances = item.get(className);
+                        if (provenances.size() == 2) {
+                            System.out.println(className);
+                        }
+                        provenances.forEach(p ->
+                                assertThat(p.classFileAttributes().algorithm()).isEqualTo(algorithm));
+                    }
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -177,26 +189,35 @@ class GenerateMojoIT {
 
         Path projectDirectory = result.getMavenProjectResult().getTargetProjectDirectory();
         Path fingerprint = getFingerprint(projectDirectory, "classfile.sha256.jsonl");
-        List<Fingerprint> fingerprints = parseFingerprints(fingerprint);
+        Map<String, List<Provenance>> fingerprints = parseFingerprints(fingerprint);
 
         assertThat(fingerprints)
                 .hasSize(2)
-                .element(1)
-                .extracting("className", "hash")
-                .containsExactly("NonMalicious", "de3318e0ba5527a90fb600307ca12e0d06752474d1da3086cfdb4a48f714da5d");
+                .extractingByKey("NonMalicious")
+                .asList()
+                .element(0)
+                .extracting("classFileAttributes")
+                .hasFieldOrPropertyWithValue(
+                        "hash", "de3318e0ba5527a90fb600307ca12e0d06752474d1da3086cfdb4a48f714da5d");
     }
 
     private static Path getFingerprint(Path projectDirectory, String classfileFingerprintName) {
         return Path.of(projectDirectory.toString(), "target", classfileFingerprintName);
     }
 
-    private static List<Fingerprint> parseFingerprints(Path fingerprintFile) {
+    private static Map<String, List<Provenance>> parseFingerprints(Path fingerprintFile) {
+        Map<String, List<Provenance>> result = new HashMap<>();
         final ObjectMapper mapper = new ObjectMapper();
-        try (MappingIterator<Fingerprint> it =
-                mapper.readerFor(Fingerprint.class).readValues(fingerprintFile.toFile())) {
-            return it.readAll();
+        try (MappingIterator<Map<String, List<Provenance>>> it = mapper.readerFor(
+                        new TypeReference<Map<String, List<Provenance>>>() {})
+                .readValues(fingerprintFile.toFile())) {
+            while (it.hasNext()) {
+                Map<String, List<Provenance>> item = it.nextValue();
+                result.putAll(item);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return result;
     }
 }

@@ -1,5 +1,6 @@
 package io.github.algomaster99;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
@@ -35,8 +36,9 @@ public class Options {
     private static Map<String, List<Provenance>> parseFingerprints(Path fingerprintFile) {
         Map<String, List<Provenance>> result = new HashMap<>();
         final ObjectMapper mapper = new ObjectMapper();
-        try (MappingIterator<Map<String, List<Provenance>>> it =
-                mapper.readerFor(Map.class).readValues(fingerprintFile.toFile())) {
+        try (MappingIterator<Map<String, List<Provenance>>> it = mapper.readerFor(
+                        new TypeReference<Map<String, List<Provenance>>>() {})
+                .readValues(fingerprintFile.toFile())) {
             while (it.hasNext()) {
                 Map<String, List<Provenance>> item = it.nextValue();
                 result.putAll(item);
