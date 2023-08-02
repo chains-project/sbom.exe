@@ -7,9 +7,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SequenceWriter;
 import io.github.algomaster99.terminator.commons.ClassfileVersion;
 import io.github.algomaster99.terminator.commons.data.ExternalJar;
-import io.github.algomaster99.terminator.commons.fingerprint.Fingerprint;
-import io.github.algomaster99.terminator.commons.fingerprint.Jar;
-import io.github.algomaster99.terminator.commons.fingerprint.Maven;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
+import io.github.algomaster99.terminator.commons.fingerprint.provenance.Jar;
+import io.github.algomaster99.terminator.commons.fingerprint.provenance.Maven;
+import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,7 +54,7 @@ public class GenerateMojo extends AbstractMojo {
     @Parameter(property = "externalJars")
     private File externalJars;
 
-    private final List<Fingerprint> fingerprints = new ArrayList<>();
+    private final Map<String, List<Provenance>> fingerprints = new HashMap<>();
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -121,24 +122,23 @@ public class GenerateMojo extends AbstractMojo {
                 JarEntry jarEntry = jarEntries.nextElement();
                 if (jarEntry.getName().endsWith(".class")) {
                     getLog().debug("Found class: " + jarEntry.getName());
-                    byte[] classfileBytes = jarFile.getInputStream(jarEntry).readAllBytes();
-                    String hashOfClass = computeHash(classfileBytes, algorithm);
 
                     String jarEntryName =
                             jarEntry.getName().substring(0, jarEntry.getName().length() - ".class".length());
+                    byte[] classfileBytes = jarFile.getInputStream(jarEntry).readAllBytes();
                     String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
+                    String hashOfClass = computeHash(classfileBytes, algorithm);
 
-                    if (provenanceInformation.length == 3) {
-                        String groupId = provenanceInformation[0];
-                        String artifactId = provenanceInformation[1];
-                        String version = provenanceInformation[2];
-                        fingerprints.add(new Maven(
-                                groupId, artifactId, version, jarEntryName, classfileVersion, hashOfClass, algorithm));
-                    } else if (provenanceInformation.length == 1) {
-                        String jarLocation = provenanceInformation[0];
-                        fingerprints.add(new Jar(jarLocation, jarEntryName, classfileVersion, hashOfClass, algorithm));
+                    ClassFileAttributes classFileAttributes =
+                            new ClassFileAttributes(classfileVersion, hashOfClass, algorithm);
+
+                    if (fingerprints.containsKey(jarEntryName)) {
+                        List<Provenance> alreadyExistingProvenance = fingerprints.get(jarEntryName);
+                        updateProvenanceList(alreadyExistingProvenance, classFileAttributes, provenanceInformation);
                     } else {
-                        throw new RuntimeException("Wrong number of elements in provenance information.");
+                        List<Provenance> newProvenance = new ArrayList<>();
+                        updateProvenanceList(newProvenance, classFileAttributes, provenanceInformation);
+                        fingerprints.put(jarEntryName, newProvenance);
                     }
                 }
             }
@@ -146,6 +146,22 @@ public class GenerateMojo extends AbstractMojo {
             getLog().error("Could not open JAR file: " + artifactFileOnSystem);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static void updateProvenanceList(
+            List<Provenance> provenances, ClassFileAttributes classFileAttributes, String... provenanceInformation) {
+        if (provenanceInformation.length == 3) {
+            String groupId = provenanceInformation[0];
+            String artifactId = provenanceInformation[1];
+            String version = provenanceInformation[2];
+
+            provenances.add(new Maven(classFileAttributes, groupId, artifactId, version));
+        } else if (provenanceInformation.length == 1) {
+            String jarLocation = provenanceInformation[0];
+            provenances.add(new Jar(classFileAttributes, jarLocation));
+        } else {
+            throw new RuntimeException("Wrong number of elements in provenance information.");
         }
     }
 
@@ -165,8 +181,19 @@ public class GenerateMojo extends AbstractMojo {
                             byte[] classfileBytes = byteStream.readAllBytes();
                             String hashOfClass = computeHash(classfileBytes, algorithm);
                             String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
-                            fingerprints.add(new Maven(
-                                    groupId, artifactId, version, className, classfileVersion, hashOfClass, algorithm));
+
+                            ClassFileAttributes classFileAttributes =
+                                    new ClassFileAttributes(classfileVersion, hashOfClass, algorithm);
+                            Provenance provenance = new Maven(classFileAttributes, groupId, artifactId, version);
+
+                            if (fingerprints.containsKey(className)) {
+                                List<Provenance> alreadyExistingProvenance = fingerprints.get(className);
+                                alreadyExistingProvenance.add(provenance);
+                            } else {
+                                List<Provenance> newProvenance = new ArrayList<>();
+                                newProvenance.add(provenance);
+                                fingerprints.put(className, newProvenance);
+                            }
                         } catch (IOException e) {
                             getLog().error("Could not open file: " + path);
                         } catch (NoSuchAlgorithmException e) {
@@ -200,11 +227,11 @@ public class GenerateMojo extends AbstractMojo {
         }
     }
 
-    private static void writeFingerprint(List<Fingerprint> fingerprints, Path fingerprintFile) {
+    private static void writeFingerprint(Map<String, List<Provenance>> fingerprints, Path fingerprintFile) {
         ObjectMapper mapper = new ObjectMapper();
         try (SequenceWriter seq =
                 mapper.writer().withRootValueSeparator(System.lineSeparator()).writeValues(fingerprintFile.toFile())) {
-            for (Fingerprint fingerprint : fingerprints) {
+            for (var fingerprint : fingerprints.entrySet()) {
                 seq.write(fingerprint);
             }
         } catch (IOException e) {

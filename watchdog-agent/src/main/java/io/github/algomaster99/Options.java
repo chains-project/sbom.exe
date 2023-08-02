@@ -1,14 +1,17 @@
 package io.github.algomaster99;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.algomaster99.terminator.commons.fingerprint.Fingerprint;
-import java.io.File;
+import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Options {
-    private List<Fingerprint> fingerprints;
+    private Map<String, List<Provenance>> fingerprints;
 
     public Options(String agentArgs) {
         String[] args = agentArgs.split(",");
@@ -22,7 +25,7 @@ public class Options {
 
             switch (key) {
                 case "fingerprints":
-                    fingerprints = parseFingerprints(new File(value));
+                    fingerprints = parseFingerprints(Path.of(value));
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown argument: " + key);
@@ -30,17 +33,23 @@ public class Options {
         }
     }
 
-    private static List<Fingerprint> parseFingerprints(File fingerprintsFile) {
+    private static Map<String, List<Provenance>> parseFingerprints(Path fingerprintFile) {
+        Map<String, List<Provenance>> result = new HashMap<>();
         final ObjectMapper mapper = new ObjectMapper();
-        try (MappingIterator<Fingerprint> it =
-                mapper.readerFor(Fingerprint.class).readValues(fingerprintsFile)) {
-            return it.readAll();
+        try (MappingIterator<Map<String, List<Provenance>>> it = mapper.readerFor(
+                        new TypeReference<Map<String, List<Provenance>>>() {})
+                .readValues(fingerprintFile.toFile())) {
+            while (it.hasNext()) {
+                Map<String, List<Provenance>> item = it.nextValue();
+                result.putAll(item);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return result;
     }
 
-    public List<Fingerprint> getFingerprints() {
+    public Map<String, List<Provenance>> getFingerprints() {
         if (fingerprints == null) {
             throw new IllegalStateException("Fingerprints not set");
         }
