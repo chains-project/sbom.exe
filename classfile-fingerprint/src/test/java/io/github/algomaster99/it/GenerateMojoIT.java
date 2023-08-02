@@ -11,12 +11,12 @@ import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
 import com.soebes.itf.jupiter.extension.MavenOption;
 import com.soebes.itf.jupiter.extension.MavenTest;
 import com.soebes.itf.jupiter.maven.MavenExecutionResult;
+import io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -186,7 +186,7 @@ class GenerateMojoIT {
 
         Path projectDirectory = result.getMavenProjectResult().getTargetProjectDirectory();
         Path fingerprint = getFingerprint(projectDirectory, "classfile.sha256.jsonl");
-        Map<String, List<Provenance>> fingerprints = parseFingerprints(fingerprint);
+        Map<String, List<Provenance>> fingerprints = ParsingHelper.deserializeFingerprints(fingerprint);
 
         assertThat(fingerprints)
                 .hasSize(2)
@@ -200,21 +200,5 @@ class GenerateMojoIT {
 
     private static Path getFingerprint(Path projectDirectory, String classfileFingerprintName) {
         return Path.of(projectDirectory.toString(), "target", classfileFingerprintName);
-    }
-
-    private static Map<String, List<Provenance>> parseFingerprints(Path fingerprintFile) {
-        Map<String, List<Provenance>> result = new HashMap<>();
-        final ObjectMapper mapper = new ObjectMapper();
-        try (MappingIterator<Map<String, List<Provenance>>> it = mapper.readerFor(
-                        new TypeReference<Map<String, List<Provenance>>>() {})
-                .readValues(fingerprintFile.toFile())) {
-            while (it.hasNext()) {
-                Map<String, List<Provenance>> item = it.nextValue();
-                result.putAll(item);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return result;
     }
 }

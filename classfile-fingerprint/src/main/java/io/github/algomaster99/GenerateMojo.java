@@ -5,7 +5,9 @@ import static io.github.algomaster99.terminator.commons.fingerprint.classfile.Ha
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SequenceWriter;
+import io.github.algomaster99.terminator.commons.ClassfileVersion;
 import io.github.algomaster99.terminator.commons.data.ExternalJar;
+import io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassfileVersion;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Jar;
@@ -63,7 +65,7 @@ public class GenerateMojo extends AbstractMojo {
         processExternalJars();
 
         Path fingerprintFile = getFingerprintFile(project, algorithm);
-        writeFingerprint(fingerprints, fingerprintFile);
+        ParsingHelper.serialiseFingerprints(fingerprints, fingerprintFile);
         getLog().info("Wrote fingerprint to: " + fingerprintFile);
     }
 
@@ -224,18 +226,6 @@ public class GenerateMojo extends AbstractMojo {
         for (ExternalJar jar : externalJarList) {
             getLog().info("Processing external jar" + jar.path().getAbsolutePath());
             goInsideJar(jar.path().getAbsoluteFile(), jar.path().getAbsolutePath());
-        }
-    }
-
-    private static void writeFingerprint(Map<String, List<Provenance>> fingerprints, Path fingerprintFile) {
-        ObjectMapper mapper = new ObjectMapper();
-        try (SequenceWriter seq =
-                mapper.writer().withRootValueSeparator(System.lineSeparator()).writeValues(fingerprintFile.toFile())) {
-            for (var fingerprint : fingerprints.entrySet()) {
-                seq.write(fingerprint);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
