@@ -1,6 +1,6 @@
-package io.github.algomaster99.terminator.commons;
+package io.github.algomaster99.terminator.commons.fingerprint.classfile;
 
-import static io.github.algomaster99.terminator.commons.HashComputer.toHexString;
+import static io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer.toHexString;
 
 import java.util.Arrays;
 
