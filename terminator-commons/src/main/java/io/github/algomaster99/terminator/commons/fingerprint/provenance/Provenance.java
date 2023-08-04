@@ -1,6 +1,5 @@
 package io.github.algomaster99.terminator.commons.fingerprint.provenance;
 
-import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
@@ -17,7 +16,7 @@ public interface Provenance {
 
 class ProvenanceDeserializer extends JsonDeserializer<Provenance> {
     @Override
-    public Provenance deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JacksonException {
+    public Provenance deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         ObjectMapper mapper = (ObjectMapper) p.getCodec();
         ObjectNode root = mapper.readTree(p);
         Class<? extends Provenance> instanceClass = null;
