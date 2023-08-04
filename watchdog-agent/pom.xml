@@ -82,6 +82,10 @@
               <pattern>kotlin</pattern>
               <shadedPattern>rtf.kotlin</shadedPattern>
             </relocation>
+            <relocation>
+              <pattern>com.fasterxml.jackson</pattern>
+              <shadedPattern>rtf.com.fasterxml.jackson</shadedPattern>
+            </relocation>
           </relocations>
         </configuration>
         <executions>
