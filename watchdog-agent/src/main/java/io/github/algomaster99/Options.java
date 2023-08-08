@@ -10,6 +10,8 @@ import java.util.Map;
 public class Options {
     private Map<String, List<Provenance>> fingerprints;
 
+    private boolean skipShutdown = false;
+
     public Options(String agentArgs) {
         String[] args = agentArgs.split(",");
         for (String arg : args) {
@@ -24,6 +26,9 @@ public class Options {
                 case "fingerprints":
                     fingerprints = deserializeFingerprints(Path.of(value));
                     break;
+                case "skipShutdown":
+                    skipShutdown = Boolean.parseBoolean(value);
+                    break;
                 default:
                     throw new IllegalArgumentException("Unknown argument: " + key);
             }
@@ -35,5 +40,9 @@ public class Options {
             throw new IllegalStateException("Fingerprints not set");
         }
         return fingerprints;
+    }
+
+    public boolean shouldSkipShutdown() {
+        return skipShutdown;
     }
 }

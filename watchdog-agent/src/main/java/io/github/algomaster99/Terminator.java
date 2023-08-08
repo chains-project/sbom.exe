@@ -54,12 +54,20 @@ public class Terminator {
                     }
                 }
                 System.err.println("[MODIFIED]: " + className);
-                System.exit(1);
-                return null;
+                if (options.shouldSkipShutdown()) {
+                    return classfileBuffer;
+                } else {
+                    System.exit(1);
+                    return null;
+                }
             }
         }
         System.err.println("[NOT WHITELISTED]: " + className);
-        System.exit(1);
-        return null;
+        if (options.shouldSkipShutdown()) {
+            return classfileBuffer;
+        } else {
+            System.exit(1);
+            return null;
+        }
     }
 }
