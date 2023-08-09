@@ -176,6 +176,19 @@ We'd like to thank the following people for their contributions:
 - github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
 - repo-visualizer ()
 
+# 0.3.0
+## Changelog
+
+The sources here have the same code as https://github.com/ASSERT-KTH/terminator/releases/tag/v0.4.0.
+
+## What's Changed
+* feat: add code to terminate JVM if unknown class is loaded by @algomaster99 in https://github.com/ASSERT-KTH/terminator/pull/26
+* fix: include classes of the project itself by @algomaster99 in https://github.com/ASSERT-KTH/terminator/pull/27
+* chore: make POM of watchdog-agent compatible with release requirements by @algomaster99 in https://github.com/ASSERT-KTH/terminator/pull/29
+
+
+**Full Changelog**: https://github.com/ASSERT-KTH/terminator/compare/v0.2.0...v0.3.0
+
 # 0.2.0
 ## Changelog
 
