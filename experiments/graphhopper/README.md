@@ -8,9 +8,12 @@ java -javaagent:watchdog-agent-0.8.1-SNAPSHOT.jar=fingerprints=classfile.sha256.
 
 ### Reproduction details
 
-1. `classfile-fingerprint`: `f38a62df1bbee4cb232c4fe4ccdf220e8ec50a60`
-2. `watchdog-agent`: `f38a62df1bbee4cb232c4fe4ccdf220e8ec50a60`
-3. `graphhopper/web`: `7.0@b0a129cc0c7266c0299854f0f73335d83ef4ec52`
+1. `maven`: Apache Maven 3.9.1 (2e178502fcdbffc201671fb2537d0cb4b4cc58f8)
+2. `java`: 17.0.5 oracle
+3. `OS`: Ubuntu 22.04
+4. `classfile-fingerprint`: `f38a62df1bbee4cb232c4fe4ccdf220e8ec50a60`
+5. `watchdog-agent`: `f38a62df1bbee4cb232c4fe4ccdf220e8ec50a60`
+6. `graphhopper/web`: `7.0@b0a129cc0c7266c0299854f0f73335d83ef4ec52`
     > We cannot use the [jar linked on the README](https://repo1.maven.org/maven2/com/graphhopper/graphhopper-web/7.0/graphhopper-web-7.0.jar)
    > because we don't have sources for it and cannot create fingerprint.     
 
