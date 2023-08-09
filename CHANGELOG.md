@@ -1,4 +1,42 @@
 
+# 0.8.0
+## Changelog
+
+## 🚀 Features
+- c96be5e feat: add option to skip system exit (#47)
+
+## 🐛 Fixes
+- 6c06f9b fix: relocate classes in `com.fasterxml.jackson` (#46)
+- da52294 fix: add `org/w3c/dom` to list of internal packages (#45)
+
+## 🔄️ Changes
+- 82e88f4 style: remove redundant exception
+- a389a76 style: explicitly state language level of parent pom
+
+## 🧰 Tasks
+- c25a25e chore: releasing version 0.8.0
+- a8cce06 chore(deps): update dependency org.apache.maven:maven-plugin-api to v3.9.4
+- 314cca6 chore(deps): update dependency org.apache.maven:maven-core to v3.9.4
+- 7dc5326 chore: setting SNAPSHOT version 0.7.1-SNAPSHOT
+
+## 📝 Documentation
+- 39fe43f docs: update diagram
+- 5bcc7fd docs: update diagram
+- 4bb2639 docs: update diagram
+- 2fdf520 docs: update diagram
+- 190c9a9 docs: update diagram
+- 2385402 docs: update diagram
+- 8625bf4 docs: update diagram
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- GitHub ()
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+- renovate[bot] ([@renovate[bot]](https://github.com/apps/renovate))
+- repo-visualizer ()
+
 # 0.7.0
 ## Changelog
 
