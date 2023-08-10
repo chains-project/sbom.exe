@@ -1,6 +1,5 @@
 package io.github.algomaster99.terminator.commons.data;
 
-import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
@@ -16,7 +15,7 @@ public record ExternalJar(File path) {}
 class ExternalJarDeserialize extends JsonDeserializer<ExternalJar> {
 
     @Override
-    public ExternalJar deserialize(JsonParser jp, DeserializationContext ctx) throws IOException, JacksonException {
+    public ExternalJar deserialize(JsonParser jp, DeserializationContext ctx) throws IOException {
         JsonNode node = jp.getCodec().readTree(jp);
 
         String configFile = String.valueOf(ctx.findInjectableValue("configFile", null, null));
