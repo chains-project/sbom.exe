@@ -180,7 +180,7 @@ class GenerateMojoIT {
     }
 
     @MavenTest
-    @MavenOption("-DexternalJars=src/test/resources/externalJars.json")
+    @MavenOption("-DexternalJars=external_source/externalJars.json")
     void url_classloader_local_jar(MavenExecutionResult result) {
         assertThat(result).isSuccessful();
 

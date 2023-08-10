@@ -68,9 +68,13 @@ mvn compile io.github.algomaster99:classfile-fingerprint:generate
 > ```json
 > [
 >  {
->   "path": "path/to/jar",
+>   "path": "path/to/jar"
 >  }
 > ]
+> ```
+> 1. Path to `externalJars` **must** be absolute if the maven project is multimodular.
+> 2. The `path` inside the file is relativized to the path of the `externalJars` file itself.
+>     However, if the path is absolute, it is not relativized.
 
 Both methods will output a file `classfile.sha256.jsonl` in the `target` directory.
 

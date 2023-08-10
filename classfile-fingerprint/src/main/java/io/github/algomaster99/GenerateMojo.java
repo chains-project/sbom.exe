@@ -3,6 +3,7 @@ package io.github.algomaster99;
 import static io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer.computeHash;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.algomaster99.terminator.commons.data.ExternalJar;
 import io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper;
@@ -144,6 +145,7 @@ public class GenerateMojo extends AbstractMojo {
             }
         } catch (IOException e) {
             getLog().error("Could not open JAR file: " + artifactFileOnSystem);
+            throw new RuntimeException(e);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
@@ -215,8 +217,10 @@ public class GenerateMojo extends AbstractMojo {
         ObjectMapper mapper = new ObjectMapper();
         List<ExternalJar> externalJarList;
         try {
-            externalJarList =
-                    mapper.readerFor(new TypeReference<List<ExternalJar>>() {}).readValue(externalJars);
+            InjectableValues inject = new InjectableValues.Std().addValue("configFile", externalJars.getAbsolutePath());
+            externalJarList = mapper.setInjectableValues(inject)
+                    .readerFor(new TypeReference<List<ExternalJar>>() {})
+                    .readValue(externalJars);
         } catch (IOException e) {
             throw new RuntimeException("Could not open external jar file: " + e);
         }
