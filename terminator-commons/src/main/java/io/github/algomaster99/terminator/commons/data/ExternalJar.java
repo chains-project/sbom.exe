@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 @JsonDeserialize(using = ExternalJarDeserialize.class)
 public record ExternalJar(File path) {}
@@ -20,16 +21,13 @@ class ExternalJarDeserialize extends JsonDeserializer<ExternalJar> {
 
         String configFile = String.valueOf(ctx.findInjectableValue("configFile", null, null));
 
-        File relativePath = new File(node.get("path").asText());
+        File absolutePathOfExternalJar = new File(configFile)
+                .getParentFile()
+                .toPath()
+                // It trivially returns the path of external jar if it is absolute
+                .resolve(Path.of(node.get("path").asText()))
+                .toFile();
 
-        if (!relativePath.isAbsolute()) {
-            relativePath = new File(configFile)
-                    .getParentFile()
-                    .toPath()
-                    .resolve(relativePath.toPath())
-                    .toFile();
-        }
-
-        return new ExternalJar(relativePath.getAbsoluteFile());
+        return new ExternalJar(absolutePathOfExternalJar.getAbsoluteFile());
     }
 }
