@@ -144,6 +144,7 @@ public class GenerateMojo extends AbstractMojo {
             }
         } catch (IOException e) {
             getLog().error("Could not open JAR file: " + artifactFileOnSystem);
+            throw new RuntimeException(e);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
