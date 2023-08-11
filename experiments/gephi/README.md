@@ -47,4 +47,5 @@ After including the external JARs in the classpath, the following were the resul
 [INFO] [NOT WHITELISTED]: org/jcp/xml/dsig/internal/dom/XMLDSigRI$1
 [INFO] [NOT WHITELISTED]: org/jcp/xml/dsig/internal/dom/XMLDSigRI$2
 [INFO] [NOT WHITELISTED]: org/jcp/xml/dsig/internal/dom/XMLDSigRI$ProviderService
+[INFO] [MODIFIED]: org/netbeans/api/progress/ProgressHandle
 ```
