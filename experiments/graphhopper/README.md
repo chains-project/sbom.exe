@@ -23,6 +23,9 @@ Classes that were not whitelisted just before starting the server.
 
 ⚠️ We also notice `org/apache/log4j/LogManager` as the first class loaded!
 
+> The source code _does not_ seem vulnerable to `Log4Shell` because it uses
+> `logback`. Dropwizard seems to load this class for some reason.
+
 ```text
 [NOT WHITELISTED]: org/apache/log4j/LogManager
 [NOT WHITELISTED]: io/dropwizard/jersey/DropwizardResourceConfig$SpecificBinderb8eaee19-4a93-4f14-806f-1cf04771e3bf
