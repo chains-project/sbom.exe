@@ -18,5 +18,8 @@ jobs:
         with:
           distribution: 'oracle'
           java-version: '17'
+      - name: Build project
+        # We need to build the agent first, because the tests depend on it
+        run: mvn clean install -DskipTests
       - name: Run tests
-        run: mvn clean install
+        run: mvn test
