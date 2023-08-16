@@ -89,14 +89,14 @@ public class AgentTest {
                     @Override
                     public FileVisitResult visitFile(Path file, @SuppressWarnings("unused") BasicFileAttributes attrs)
                             throws IOException {
-                        Files.delete(file);
+                        Files.deleteIfExists(file);
                         return FileVisitResult.CONTINUE;
                     }
 
                     @Override
                     public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
                         if (e == null) {
-                            Files.delete(dir);
+                            Files.deleteIfExists(dir);
                             return FileVisitResult.CONTINUE;
                         }
                         // directory iteration failed
