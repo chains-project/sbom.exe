@@ -80,8 +80,6 @@ Both methods will output a file `classfile.sha256.jsonl` in the `target` directo
 
 ## `watchdog-agent`
 
-> It is not being tested yet.
-
 Run it as follows:
 
 ```bash
