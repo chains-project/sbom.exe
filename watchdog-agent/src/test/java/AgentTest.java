@@ -18,9 +18,11 @@ import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.InvocationResult;
 import org.apache.maven.shared.invoker.Invoker;
 import org.apache.maven.shared.invoker.MavenInvocationException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class AgentTest {
+    @Disabled("Should be worked upon after the input is from an SBOM and not maven project")
     @Test
     void shouldDisallowLoadingCustomJDKClass() throws MavenInvocationException, IOException, InterruptedException {
         // contract: watchdog-agent should detect if the class masquerading as an internal class
