@@ -38,11 +38,13 @@ public class FromSbom implements Runnable {
      */
     @CommandLine.Option(
             names = {"-a", "--algorithm"},
+            required = false,
             description = "The algorithm to use for computing the hash.")
     private String algorithm = "SHA256";
 
     @CommandLine.Option(
             names = {"-o", "--output"},
+            required = false,
             description = "The output file.")
     private Path output = Path.of(String.format("classfile.%s.json", algorithm.toLowerCase()));
 
