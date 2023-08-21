@@ -14,16 +14,36 @@ prohibited method in invoked. The proof-of-concept is located in
 
 The project is structured as follows:
 
-1. `classfile-fingerprint` - Maven plugin that generates fingerprints for
-   _all_ classfiles in a JAR file.
+1. `classfile-fingerprint` - CLI to generate fingerprints of class files of a
+   Java project using maven project or SBOM.
 2. `watchdog-agent` - Java agent that is attached to the JVM and verifies the
    fingerprints of loaded classes.
 
 ## `classfile-fingerprint`
 
-Run it as follows:
+### CLI
 
-### Via POM configuration
+```shell
+java -jar classfile-fingerprint-0.8.1-SNAPSHOT.jar
+```
+
+#### Required parameters
+
+|     Parameter     |  Type  | Description                                |
+|:-----------------:|:------:|--------------------------------------------|
+| `-i` or `--input` | `File` | Path to the input SBOM in CycloneDX format |
+
+#### Optional parameters
+
+|       Parameter       |   Type   | Description                                                                                                                                                                                                  |
+|:---------------------:|:--------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `-a` or `--algorithm` | `String` | Algorithm used to generate the hash sum. Default: `SHA256`.<br/> All options are [written here](https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#messagedigest-algorithms). |
+|  `-o` or `--output`   |  `File`  | Path to the output file. Default: `classfile.sha256.jsonl`                                                                                                                                                   |
+
+
+### Maven plugin
+
+#### Pom Configuration
 
 ```xml
 <plugin>
@@ -51,7 +71,7 @@ It attaches to `compile` phase by default. We recommend to not change the
 phase preceding `compile` phase as it may not fingerprint the source files
 themselves.
 
-### Via command line
+#### Via command line
 
 ```bash
 mvn compile io.github.algomaster99:classfile-fingerprint:generate
