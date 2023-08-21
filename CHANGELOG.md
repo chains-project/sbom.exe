@@ -1,4 +1,66 @@
 
+# 0.9.0
+## Changelog
+
+## 🚀 Features
+- b07a0ae feat: create fingerprint from CycloneDX SBOM (#57)
+- 1d626a8 feat: add sources to convert CycloneDX 1.4 schema to POJO (#56)
+
+## 🐛 Fixes
+- e937258 fix: make the external jar path relative to config file (#50)
+
+## 🔄️ Changes
+- b63cc21 style: remove redundant exception
+
+## 🧰 Tasks
+- 1c8cd6d chore: releasing version 0.9.0
+- e319ad2 chore(deps): update dependency net.bytebuddy:byte-buddy-dep to v1.14.6
+- 11d53b1 chore: remove redundant declaration of plugins
+- b2aa477 chore: setting SNAPSHOT version 0.8.1-SNAPSHOT
+
+## 📝 Documentation
+- d5a1791 docs: update diagram
+- 5799466 docs: update diagram
+- 2fbeffa docs: update diagram
+- f6b9fe1 docs: update diagram
+- 18753f4 docs: update diagram
+- d9c85a8 docs: update diagram
+- c2bb4aa docs: investigate exploit-ability
+- e4e13f8 docs: update diagram
+- 05ae48f docs: class loaded upon exit
+- be20caf docs: update diagram
+- 8471fe3 docs: include `externalJars` in gephi
+- 1a881f0 docs: update diagram
+- e733b6d docs: update experiment about `gephi`
+- e5bbeee docs: update diagram
+- bfef0ae docs: add information about gephi
+- 0e9b678 docs: update diagram
+- 0ec307d docs: update diagram
+- 43457fd docs: update diagram
+- 0bd5a64 docs: add experiment done using `sorald`
+- ef2f687 docs: update diagram
+- fd71905 docs: add environment information
+- df3fba1 docs: update diagram
+- e6b9bde docs: add experiment done using graphhopper
+- 9afcaaf docs: update diagram
+- aede56c docs: add experiment done using pdfbox
+- f38a62d docs: update diagram
+- 30ceafc docs: release 0.3.0
+- 885e0a3 docs: update diagram
+
+---
+- b668d9c Update README.md
+- 17926aa tests: differentiate internal class from custom classes (#55)
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- GitHub ()
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+- renovate[bot] ([@renovate[bot]](https://github.com/apps/renovate))
+- repo-visualizer ()
+
 # 0.8.0
 ## Changelog
 
