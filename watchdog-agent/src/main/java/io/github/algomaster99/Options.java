@@ -1,10 +1,14 @@
 package io.github.algomaster99;
 
 import static io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper.deserializeFingerprints;
+import static io.github.algomaster99.terminator.commons.jar.JarScanner.goInsideJarAndUpdateFingerprints;
 
 import io.github.algomaster99.terminator.commons.cyclonedx.Bom14Schema;
+import io.github.algomaster99.terminator.commons.cyclonedx.Component;
 import io.github.algomaster99.terminator.commons.cyclonedx.CycloneDX;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
+import io.github.algomaster99.terminator.commons.jar.JarDownloader;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,8 +19,6 @@ public class Options {
     private Map<String, List<Provenance>> fingerprints;
 
     private boolean skipShutdown = false;
-
-    private Bom14Schema sbom = null;
 
     public Options(String agentArgs) {
         String[] args = agentArgs.split(",");
@@ -36,9 +38,24 @@ public class Options {
                     skipShutdown = Boolean.parseBoolean(value);
                     break;
                 case "sbom":
+                    // If an SBOM is passed included the root component in the fingerprints
                     Path sbomPath = Path.of(value);
                     try {
-                        sbom = CycloneDX.getPOJO(Files.readString(sbomPath));
+                        Bom14Schema sbom = CycloneDX.getPOJO(Files.readString(sbomPath));
+                        Component rootComponent = sbom.getMetadata().getComponent();
+                        File jarFile = JarDownloader.getMavenJarFile(
+                                rootComponent.getGroup(), rootComponent.getName(), rootComponent.getVersion());
+                        goInsideJarAndUpdateFingerprints(
+                                jarFile,
+                                fingerprints,
+                                // TODO: Make this configurable
+                                "SHA256",
+                                rootComponent.getGroup(),
+                                rootComponent.getName(),
+                                rootComponent.getVersion());
+                    } catch (InterruptedException e) {
+                        System.err.println("Downloading was interrupted: " + e.getMessage());
+                        System.exit(1);
                     } catch (IOException e) {
                         throw new IllegalArgumentException("Failed to read sbom file: " + value);
                     }
@@ -58,9 +75,5 @@ public class Options {
 
     public boolean shouldSkipShutdown() {
         return skipShutdown;
-    }
-
-    public Bom14Schema getSbom() {
-        return sbom;
     }
 }
