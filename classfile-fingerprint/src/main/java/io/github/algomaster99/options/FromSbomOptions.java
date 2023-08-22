@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+@Deprecated(since = "0.10.0", forRemoval = true)
 public class FromSbomOptions {
     private final Bom14Schema input;
     private final String algorithm;

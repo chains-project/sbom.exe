@@ -21,7 +21,7 @@ The project is structured as follows:
 
 ## `classfile-fingerprint`
 
-### CLI
+### CLI - WILL BE DEPRECATED SOON
 
 > This component is not tested because it runs only jars that are executable
 > and published on maven central.

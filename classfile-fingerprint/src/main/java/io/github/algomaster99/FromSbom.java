@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
+@Deprecated(since = "0.10.0", forRemoval = true)
 @CommandLine.Command(
         name = "from-sbom",
         mixinStandardHelpOptions = true,

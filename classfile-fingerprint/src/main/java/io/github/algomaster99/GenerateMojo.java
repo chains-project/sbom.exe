@@ -27,6 +27,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
+@Deprecated(since = "0.10.0", forRemoval = false)
 @Mojo(
         name = "generate",
         defaultPhase = LifecyclePhase.COMPILE,
