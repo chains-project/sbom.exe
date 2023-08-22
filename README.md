@@ -23,6 +23,10 @@ The project is structured as follows:
 
 ### CLI
 
+> This component is not tested because it runs only jars that are executable
+> and published on maven central.
+> Maybe, in the future, we will add one jar as a resource so that it can be tested.
+
 ```shell
 java -jar classfile-fingerprint-0.8.1-SNAPSHOT.jar
 ```
