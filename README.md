@@ -35,10 +35,11 @@ java -jar classfile-fingerprint-0.8.1-SNAPSHOT.jar
 
 #### Optional parameters
 
-|       Parameter       |   Type   | Description                                                                                                                                                                                                  |
-|:---------------------:|:--------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `-a` or `--algorithm` | `String` | Algorithm used to generate the hash sum. Default: `SHA256`.<br/> All options are [written here](https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#messagedigest-algorithms). |
-|  `-o` or `--output`   |  `File`  | Path to the output file. Default: `classfile.sha256.jsonl`                                                                                                                                                   |
+|         Parameter         |   Type   | Description                                                                                                                                                                                                  |
+|:-------------------------:|:--------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|   `-a` or `--algorithm`   | `String` | Algorithm used to generate the hash sum. Default: `SHA256`.<br/> All options are [written here](https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#messagedigest-algorithms). |
+|    `-o` or `--output`     |  `Path`  | Path to the output file. Default: `classfile.sha256.jsonl`                                                                                                                                                   |
+| `-e` or `--external-jars` |  `Path`  | Configuration file to specify external jars. Default: `null`.                                                                                                                                                |
 
 
 ### Maven plugin
