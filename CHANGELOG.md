@@ -1,4 +1,33 @@
 
+# 0.10.0
+## Changelog
+
+## 🚀 Features
+- 73608d4 feat: add option for external jar in CLI (#59)
+- 52b8ca7 feat: acquit classes that are part of the project itself (#58)
+
+## 🧰 Tasks
+- 7b07fb8 chore: releasing version 0.10.0
+- a0c8f87 chore: setting SNAPSHOT version 0.9.1-SNAPSHOT
+
+## 🛠  Build
+- e4d95c0 ci: update release configuration
+
+## 📝 Documentation
+- cadb51e docs: update diagram
+- da60043 docs: add word of warning
+- b424ee5 docs: update diagram
+- 41cf128 docs: update diagram
+- 1d0299b docs: update diagram
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- GitHub ()
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+- repo-visualizer ()
+
 # 0.9.0
 ## Changelog
 
