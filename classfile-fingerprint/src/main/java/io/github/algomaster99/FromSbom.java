@@ -74,7 +74,9 @@ public class FromSbom implements Runnable {
     public static Map<String, List<Provenance>> getFingerprints(FromSbomOptions options) {
         Bom14Schema sbom = options.getInput();
         Map<String, List<Provenance>> fingerprints = new HashMap<>();
-        processExternalJars(options.getExternalJars().toFile(), fingerprints, options.getAlgorithm());
+        if (options.getExternalJars() != null) {
+            processExternalJars(options.getExternalJars().toFile(), fingerprints, options.getAlgorithm());
+        }
 
         for (Component component : sbom.getComponents()) {
             try {
