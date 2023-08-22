@@ -114,6 +114,9 @@ java -javaagent:<path/to/agent>=fingerprints=<path/to/fingerprints> -jar <path/t
 
 **Optional Parameters**
 
-|   Parameter    |   Type    | Description                                                                             |
-|:--------------:|:---------:|-----------------------------------------------------------------------------------------|
-| `skipShutdown` | `boolean` | If `true`, the JVM will not shutdown if a prohibited class is loaded. Default: `false`. |
+|   Parameter    |   Type    | Description                                                                                      |
+|:--------------:|:---------:|--------------------------------------------------------------------------------------------------|
+| `skipShutdown` | `boolean` | If `true`, the JVM will not shutdown if a prohibited class is loaded. Default: `false`.          |
+|     `sbom`     |  `File`   | Path to an SBOM file. It is used for including the classes of the root project. Default: `null`. |
+
+> `sbom` is a CycloneDX 1.4 JSON file.
