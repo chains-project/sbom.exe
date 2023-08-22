@@ -9,9 +9,6 @@ import io.github.algomaster99.terminator.commons.cyclonedx.Component;
 import io.github.algomaster99.terminator.commons.cyclonedx.CycloneDX;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import io.github.algomaster99.terminator.commons.jar.JarDownloader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,6 +16,8 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Options {
 
@@ -92,7 +91,6 @@ public class Options {
         } else {
             LOGGER.info("Taking fingerprint from file: " + fingerprints);
         }
-
     }
 
     public Map<String, List<Provenance>> getFingerprints() {
