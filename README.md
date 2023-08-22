@@ -21,32 +21,7 @@ The project is structured as follows:
 
 ## `classfile-fingerprint`
 
-### CLI - WILL BE DEPRECATED SOON
-
-> This component is not tested because it runs only jars that are executable
-> and published on maven central.
-> Maybe, in the future, we will add one jar as a resource so that it can be tested.
-
-```shell
-java -jar classfile-fingerprint-0.8.1-SNAPSHOT.jar
-```
-
-#### Required parameters
-
-|     Parameter     |  Type  | Description                                |
-|:-----------------:|:------:|--------------------------------------------|
-| `-i` or `--input` | `File` | Path to the input SBOM in CycloneDX format |
-
-#### Optional parameters
-
-|         Parameter         |   Type   | Description                                                                                                                                                                                                  |
-|:-------------------------:|:--------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|   `-a` or `--algorithm`   | `String` | Algorithm used to generate the hash sum. Default: `SHA256`.<br/> All options are [written here](https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#messagedigest-algorithms). |
-|    `-o` or `--output`     |  `Path`  | Path to the output file. Default: `classfile.sha256.jsonl`                                                                                                                                                   |
-| `-e` or `--external-jars` |  `Path`  | Configuration file to specify external jars. Default: `null`.                                                                                                                                                |
-
-
-### Maven plugin
+### Maven plugin - DEPRECATED
 
 #### Pom Configuration
 
@@ -111,6 +86,30 @@ Run it as follows:
 java -javaagent:<path/to/agent>=fingerprints=<path/to/fingerprints> -jar <path/to/your/executable/jar>
 ```
 
+Works in two ways:
+
+### Generating fingerprint on the fly from SBOM
+
+**Required Parameters**
+
+| Parameter |  Type  | Description            |
+|:---------:|:------:|------------------------|
+|  `sbom`   | `File` | Path to the sbom file. |
+
+
+> `sbom` is a CycloneDX 1.4 JSON file.
+
+**Optional Parameters**
+
+|   Parameter    |   Type    | Description                                                                                                                                                                                                  |
+|:--------------:|:---------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `skipShutdown` | `boolean` | If `true`, the JVM will not shutdown if a prohibited class is loaded. Default: `false`.                                                                                                                      |
+|  `algorithm`   | `String`  | Algorithm used to generate the hash sum. Default: `SHA256`.<br/> All options are [written here](https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#messagedigest-algorithms). |
+| `externalJars` |  `Path`   | Configuration file to specify external jars. Default: `null`.                                                                                                                                                |
+
+
+### Using pre-generated fingerprints from maven plugin - DEPRECATED
+
 **Required Parameters**
 
 |   Parameter    |  Type  | Description                                                         |
@@ -122,6 +121,3 @@ java -javaagent:<path/to/agent>=fingerprints=<path/to/fingerprints> -jar <path/t
 |   Parameter    |   Type    | Description                                                                                      |
 |:--------------:|:---------:|--------------------------------------------------------------------------------------------------|
 | `skipShutdown` | `boolean` | If `true`, the JVM will not shutdown if a prohibited class is loaded. Default: `false`.          |
-|     `sbom`     |  `File`   | Path to an SBOM file. It is used for including the classes of the root project. Default: `null`. |
-
-> `sbom` is a CycloneDX 1.4 JSON file.
