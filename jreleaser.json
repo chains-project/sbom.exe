@@ -35,15 +35,6 @@
   },
 
   "distributions": {
-    "classfile-fingerprint": {
-      "type": "SINGLE_JAR",
-      "stereotype": "CLI",
-      "artifacts": [
-        {
-          "path": "classfile-fingerprint/target/{{distributionName}}-{{projectVersion}}.jar"
-        }
-      ]
-    },
     "watchdog-agent": {
       "type": "SINGLE_JAR",
       "stereotype": "CLI",
