@@ -2,26 +2,42 @@ package io.github.algomaster99;
 
 import static io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper.deserializeFingerprints;
 import static io.github.algomaster99.terminator.commons.jar.JarScanner.goInsideJarAndUpdateFingerprints;
+import static io.github.algomaster99.terminator.commons.jar.JarScanner.processExternalJars;
 
 import io.github.algomaster99.terminator.commons.cyclonedx.Bom14Schema;
 import io.github.algomaster99.terminator.commons.cyclonedx.Component;
 import io.github.algomaster99.terminator.commons.cyclonedx.CycloneDX;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import io.github.algomaster99.terminator.commons.jar.JarDownloader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Options {
-    private Map<String, List<Provenance>> fingerprints;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Options.class);
+    private Map<String, List<Provenance>> fingerprints = new HashMap<>();
 
     private boolean skipShutdown = false;
 
+    private boolean isSbomPassed = false;
+
+    private String algorithm = "SHA-256";
+
+    private Path output = Path.of(String.format("classfile.%s.json", algorithm.toLowerCase()));
+
+    private Path externalJars;
+
     public Options(String agentArgs) {
         String[] args = agentArgs.split(",");
+        Path sbomPath = null;
         for (String arg : args) {
             String[] split = arg.split("=");
             if (split.length != 2) {
@@ -39,41 +55,90 @@ public class Options {
                     break;
                 case "sbom":
                     // If an SBOM is passed included the root component in the fingerprints
-                    Path sbomPath = Path.of(value);
-                    try {
-                        Bom14Schema sbom = CycloneDX.getPOJO(Files.readString(sbomPath));
-                        Component rootComponent = sbom.getMetadata().getComponent();
-                        File jarFile = JarDownloader.getMavenJarFile(
-                                rootComponent.getGroup(), rootComponent.getName(), rootComponent.getVersion());
-                        goInsideJarAndUpdateFingerprints(
-                                jarFile,
-                                fingerprints,
-                                // TODO: Make this configurable
-                                "SHA256",
-                                rootComponent.getGroup(),
-                                rootComponent.getName(),
-                                rootComponent.getVersion());
-                    } catch (InterruptedException e) {
-                        System.err.println("Downloading was interrupted: " + e.getMessage());
-                        System.exit(1);
-                    } catch (IOException e) {
-                        throw new IllegalArgumentException("Failed to read sbom file: " + value);
-                    }
+                    sbomPath = Path.of(value);
+                    isSbomPassed = true;
+                    break;
+                case "algorithm":
+                    algorithm = value;
+                    break;
+                case "output":
+                    output = Path.of(value);
+                    break;
+                case "externalJars":
+                    externalJars = Path.of(value);
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown argument: " + key);
             }
         }
+        if (isSbomPassed) {
+            LOGGER.info("Generating fingerprint from SBOM and external jars");
+            try {
+                Bom14Schema sbom = CycloneDX.getPOJO(Files.readString(sbomPath));
+                LOGGER.debug("Processing root component: " + sbom.getMetadata().getComponent());
+                processRootComponent(sbom);
+                LOGGER.debug("Processing all components");
+                processAllComponents(sbom);
+                if (externalJars != null) {
+                    LOGGER.debug("Processing external jars");
+                    processExternalJars(externalJars.toFile(), fingerprints, algorithm);
+                }
+            } catch (InterruptedException e) {
+                System.err.println("Downloading jars was interrupted: " + e.getMessage());
+                System.exit(1);
+            } catch (IOException e) {
+                throw new IllegalArgumentException("Failed to read sbom file: " + sbomPath);
+            }
+        } else {
+            LOGGER.info("Taking fingerprint from file: " + fingerprints);
+        }
+
     }
 
     public Map<String, List<Provenance>> getFingerprints() {
-        if (fingerprints == null) {
-            throw new IllegalStateException("Fingerprints not set");
-        }
         return fingerprints;
     }
 
     public boolean shouldSkipShutdown() {
         return skipShutdown;
+    }
+
+    public boolean isSbomPassed() {
+        return isSbomPassed;
+    }
+
+    public Path getOutput() {
+        return output;
+    }
+
+    private void processRootComponent(Bom14Schema sbom) throws IOException, InterruptedException {
+        Component rootComponent = sbom.getMetadata().getComponent();
+        File jarFile = JarDownloader.getMavenJarFile(
+                rootComponent.getGroup(), rootComponent.getName(), rootComponent.getVersion());
+        goInsideJarAndUpdateFingerprints(
+                jarFile,
+                fingerprints,
+                algorithm,
+                rootComponent.getGroup(),
+                rootComponent.getName(),
+                rootComponent.getVersion());
+    }
+
+    private void processAllComponents(Bom14Schema sbom) {
+        for (Component component : sbom.getComponents()) {
+            try {
+                File jarFile = JarDownloader.getMavenJarFile(
+                        component.getGroup(), component.getName(), component.getVersion());
+                goInsideJarAndUpdateFingerprints(
+                        jarFile,
+                        fingerprints,
+                        algorithm,
+                        component.getGroup(),
+                        component.getName(),
+                        component.getVersion());
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
