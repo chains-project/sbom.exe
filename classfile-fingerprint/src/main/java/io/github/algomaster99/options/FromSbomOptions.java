@@ -10,11 +10,13 @@ public class FromSbomOptions {
     private final Bom14Schema input;
     private final String algorithm;
     private final Path output;
+    private final Path externalJars;
 
-    public FromSbomOptions(Path input, String algorithm, Path output) throws IOException {
+    public FromSbomOptions(Path input, String algorithm, Path output, Path externalJars) throws IOException {
         this.algorithm = algorithm;
         this.input = CycloneDX.getPOJO(Files.readString(input));
         this.output = output;
+        this.externalJars = externalJars;
     }
 
     public Bom14Schema getInput() {
@@ -27,5 +29,9 @@ public class FromSbomOptions {
 
     public Path getOutput() {
         return output;
+    }
+
+    public Path getExternalJars() {
+        return externalJars;
     }
 }
