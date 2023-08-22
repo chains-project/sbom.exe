@@ -1,4 +1,30 @@
 
+# 0.11.0
+## Changelog
+
+## 🚀 Features
+- 11bf5e9 feat: generate fingerprint within the agent (#60)
+
+## 🧰 Tasks
+- 90b6685 chore: releasing version 0.11.0
+- 6c1a09d chore: fix SNAPSHOT version
+- b1e5b2b chore: setting SNAPSHOT version 0.1.1-SNAPSHOT
+
+## 📝 Documentation
+- d86397d docs: update diagram
+- d7fbcb5 docs: update diagram
+- 57a2fc3 docs: update diagram
+- 897d9bb docs: update diagram
+- 3a2ecfe docs: issue deprecation
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- GitHub ()
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+- repo-visualizer ()
+
 # 0.10.0
 ## Changelog
 
