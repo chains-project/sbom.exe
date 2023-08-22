@@ -65,6 +65,36 @@ public class AgentTest {
         assertThat(exitCode).isEqualTo(1);
     }
 
+    @Test
+    void sorald_0_8_5_shouldExitWith_1() throws IOException, InterruptedException {
+        Path project = Paths.get("src/test/resources/sorald-0.8.5");
+
+        Path sbom = project.resolve("bom.json");
+        Path externalJars = project.resolve("external-jars.json").toAbsolutePath();
+        Path soraldExecutable = project.resolve("sorald-0.8.5-jar-with-dependencies.jar");
+        Path fileWithWarning = project.resolve("App.java").toAbsolutePath();
+
+        String agentArgs = "sbom=" + sbom + ",externalJars=" + externalJars;
+        String[] cmd = {
+            "java",
+            "-javaagent:" + getAgentPath(agentArgs),
+            "-jar",
+            soraldExecutable.toString(),
+            "mine",
+            "--source",
+            fileWithWarning.toString()
+        };
+        ProcessBuilder pb = new ProcessBuilder(cmd);
+        pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
+        pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+        pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+
+        Process p = pb.start();
+        int exitCode = p.waitFor();
+
+        assertThat(exitCode).isEqualTo(1);
+    }
+
     private static void deleteContentsOfFile(String file) throws InterruptedException, IOException {
         String[] deleteFile = {"rm", "-f", file};
         Runtime.getRuntime().exec(deleteFile).waitFor();
