@@ -2,11 +2,8 @@ package io.github.algomaster99;
 
 import static io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer.computeHash;
 import static io.github.algomaster99.terminator.commons.jar.JarScanner.goInsideJarAndUpdateFingerprints;
+import static io.github.algomaster99.terminator.commons.jar.JarScanner.processExternalJars;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.InjectableValues;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.algomaster99.terminator.commons.data.ExternalJar;
 import io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassfileVersion;
@@ -59,7 +56,7 @@ public class GenerateMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         processProjectItself();
         processDependencies();
-        processExternalJars();
+        processExternalJars(externalJars, fingerprints, algorithm);
 
         Path fingerprintFile = getFingerprintFile(project, algorithm);
         ParsingHelper.serialiseFingerprints(fingerprints, fingerprintFile);
@@ -158,33 +155,6 @@ public class GenerateMojo extends AbstractMojo {
         } catch (IOException e) {
             getLog().error("Could not open target/classes directory as well: " + artifactFileOnSystem);
             throw new RuntimeException(e);
-        }
-    }
-
-    private void processExternalJars() {
-        if (externalJars == null) {
-            getLog().info("No external jars are known.");
-            return;
-        }
-
-        ObjectMapper mapper = new ObjectMapper();
-        List<ExternalJar> externalJarList;
-        try {
-            InjectableValues inject = new InjectableValues.Std().addValue("configFile", externalJars.getAbsolutePath());
-            externalJarList = mapper.setInjectableValues(inject)
-                    .readerFor(new TypeReference<List<ExternalJar>>() {})
-                    .readValue(externalJars);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not open external jar file: " + e);
-        }
-
-        for (ExternalJar jar : externalJarList) {
-            getLog().info("Processing external jar" + jar.path().getAbsolutePath());
-            goInsideJarAndUpdateFingerprints(
-                    jar.path().getAbsoluteFile(),
-                    fingerprints,
-                    algorithm,
-                    jar.path().getAbsolutePath());
         }
     }
 

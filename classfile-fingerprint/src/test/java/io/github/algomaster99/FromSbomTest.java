@@ -36,6 +36,6 @@ public class FromSbomTest {
     }
 
     private static FromSbomOptions getDefaultOptions(Path sbomFile) throws IOException {
-        return new FromSbomOptions(sbomFile, "SHA256", null);
+        return new FromSbomOptions(sbomFile, "SHA256", null, null);
     }
 }

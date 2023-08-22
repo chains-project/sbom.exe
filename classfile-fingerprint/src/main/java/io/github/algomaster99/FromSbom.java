@@ -1,6 +1,7 @@
 package io.github.algomaster99;
 
 import static io.github.algomaster99.terminator.commons.jar.JarScanner.goInsideJarAndUpdateFingerprints;
+import static io.github.algomaster99.terminator.commons.jar.JarScanner.processExternalJars;
 
 import io.github.algomaster99.options.FromSbomOptions;
 import io.github.algomaster99.terminator.commons.cyclonedx.Bom14Schema;
@@ -48,6 +49,12 @@ public class FromSbom implements Runnable {
             description = "The output file.")
     private Path output = Path.of(String.format("classfile.%s.json", algorithm.toLowerCase()));
 
+    @CommandLine.Option(
+            names = {"-e", "--external-jars"},
+            required = false,
+            description = "Path to known external jars.")
+    private Path externalJars;
+
     public static void main(String[] args) {
         int exitCode = new CommandLine(new FromSbom()).execute(args);
         System.exit(exitCode);
@@ -56,7 +63,7 @@ public class FromSbom implements Runnable {
     @Override
     public void run() {
         try {
-            FromSbomOptions options = new FromSbomOptions(input, algorithm, output);
+            FromSbomOptions options = new FromSbomOptions(input, algorithm, output, externalJars);
             Map<String, List<Provenance>> fingerprints = getFingerprints(options);
             ParsingHelper.serialiseFingerprints(fingerprints, options.getOutput());
         } catch (IOException e) {
@@ -67,6 +74,10 @@ public class FromSbom implements Runnable {
     public static Map<String, List<Provenance>> getFingerprints(FromSbomOptions options) {
         Bom14Schema sbom = options.getInput();
         Map<String, List<Provenance>> fingerprints = new HashMap<>();
+        if (options.getExternalJars() != null) {
+            processExternalJars(options.getExternalJars().toFile(), fingerprints, options.getAlgorithm());
+        }
+
         for (Component component : sbom.getComponents()) {
             try {
                 File jarFile = JarDownloader.getMavenJarFile(
