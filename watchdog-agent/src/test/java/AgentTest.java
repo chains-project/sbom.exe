@@ -97,7 +97,8 @@ public class AgentTest {
 
     @Test
     void spoon_10_4_0() throws IOException, InterruptedException {
-        // contract: spoon 10.4.0 CLI should be self-contained and its execution should not load any classes outside SBOM
+        // contract: spoon 10.4.0 CLI should be self-contained and its execution should not load any classes outside
+        // SBOM
         Path project = Paths.get("src/test/resources/spoon-10.4.0");
 
         Path sbom = project.resolve("bom.json");
@@ -106,14 +107,14 @@ public class AgentTest {
 
         String agentArgs = "sbom=" + sbom;
         String[] cmd = {
-                "java",
-                "-javaagent:" + getAgentPath(agentArgs),
-                "-jar",
-                spoonExecutable.toString(),
-                "--input",
-                workload.toString(),
-                "--disable-comments", // remove comments and prints in spooned/Main.java
-                "--compile" // prints bytecode in spooned-classes
+            "java",
+            "-javaagent:" + getAgentPath(agentArgs),
+            "-jar",
+            spoonExecutable.toString(),
+            "--input",
+            workload.toString(),
+            "--disable-comments", // remove comments and prints in spooned/Main.java
+            "--compile" // prints bytecode in spooned-classes
         };
         ProcessBuilder pb = new ProcessBuilder(cmd);
         pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
