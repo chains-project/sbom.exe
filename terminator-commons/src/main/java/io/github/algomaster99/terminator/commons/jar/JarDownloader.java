@@ -35,6 +35,7 @@ public class JarDownloader {
                 .filter(c -> c.endsWith(".jar"))
                 .filter(c -> !c.contains("sources"))
                 .filter(c -> !c.contains("javadoc"))
+                .filter(c -> !c.contains("jar-with-dependencies"))
                 .findFirst();
 
         if (artifactJarName.isPresent()) {
