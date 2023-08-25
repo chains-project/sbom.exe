@@ -161,12 +161,15 @@ public class Options {
                 ClassReader classReader = new ClassReader(classfileBytes);
                 String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
                 String hash = HashComputer.computeHash(classfileBytes, algorithm);
-                jdkFingerprints.computeIfAbsent(classReader.getClassName(), k -> new ArrayList<>(List.of((new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm))))));
+                jdkFingerprints.computeIfAbsent(
+                        classReader.getClassName(),
+                        k -> new ArrayList<>(
+                                List.of((new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm))))));
                 jdkFingerprints.computeIfPresent(classReader.getClassName(), (k, v) -> {
                     v.add(new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm)));
                     return v;
                 });
-                if(classReader.getClassName().contains("JrtFileSystemProvider")) {
+                if (classReader.getClassName().contains("JrtFileSystemProvider")) {
                     Files.write(Path.of("moduleFinder.class"), classfileBytes);
                 }
             } catch (NoSuchAlgorithmException e) {

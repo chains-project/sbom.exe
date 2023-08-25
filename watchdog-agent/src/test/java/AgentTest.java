@@ -91,7 +91,6 @@ public class AgentTest {
 
         Process p = pb.start();
         int exitCode = p.waitFor();
-
     }
 
     private static void deleteContentsOfFile(String file) throws InterruptedException, IOException {

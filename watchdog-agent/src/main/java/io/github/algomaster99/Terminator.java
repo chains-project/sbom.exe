@@ -1,20 +1,20 @@
 package io.github.algomaster99;
 
 import static io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer.computeHash;
+
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.RuntimeClass;
+import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.security.NoSuchAlgorithmException;
 import java.security.ProtectionDomain;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.github.algomaster99.terminator.commons.fingerprint.classfile.RuntimeClass;
-import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 
 public class Terminator {
 
@@ -58,7 +58,8 @@ public class Terminator {
                     return classfileBuffer;
                 } else {
                     System.out.println("Hash: " + hash);
-                    System.out.println("Candidate hash: " + candidate.classFileAttributes().hash());
+                    System.out.println(
+                            "Candidate hash: " + candidate.classFileAttributes().hash());
                     try {
                         Files.write(Path.of("foo.class"), classfileBuffer);
                     } catch (IOException e) {
