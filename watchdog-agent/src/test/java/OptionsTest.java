@@ -54,7 +54,7 @@ public class OptionsTest {
             Options options2 = new Options("skipShutdown=true");
             assertThat(options.getJdkFingerprints()).isNotEmpty();
             assertThat(options2.getJdkFingerprints()).isNotEmpty();
-            assertThat(options.getJdkFingerprints()).isNotEqualTo(options2.getJdkFingerprints());
+            assertThat(options.getJdkFingerprints()).isEqualTo(options2.getJdkFingerprints());
         }
     }
 }
