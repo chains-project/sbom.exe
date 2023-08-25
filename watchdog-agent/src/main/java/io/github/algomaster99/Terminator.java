@@ -9,12 +9,16 @@ import java.security.NoSuchAlgorithmException;
 import java.security.ProtectionDomain;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Terminator {
-    private static Options options;
 
-    private static final List<String> INTERNAL_PACKAGES =
-            List.of("java/", "javax/", "jdk/", "sun/", "com/sun/", "org/xml/sax", "org/w3c/dom/");
+    private static final String NOT_WHITELISTED = "[NOT WHITELISTED]: ";
+    private static final String MODIFIED = "[MODIFIED]: ";
+    private static final Logger LOGGER = LoggerFactory.getLogger(Terminator.class);
+    private static Options options;
 
     public static void premain(String agentArgs, Instrumentation inst) {
         options = new Options(agentArgs);
@@ -32,42 +36,71 @@ public class Terminator {
     }
 
     private static byte[] isLoadedClassWhitelisted(String className, byte[] classfileBuffer) {
-        Map<String, List<Provenance>> fingerprints = options.getFingerprints();
-        if (INTERNAL_PACKAGES.stream().anyMatch(className::startsWith)) {
-            return classfileBuffer;
-        }
-        for (String expectedClassName : fingerprints.keySet()) {
-            if (expectedClassName.equals(className)) {
-                List<Provenance> candidates = fingerprints.get(expectedClassName);
-                for (Provenance candidate : candidates) {
-                    String hash;
-                    try {
-                        hash = computeHash(
-                                classfileBuffer, candidate.classFileAttributes().algorithm());
-                    } catch (NoSuchAlgorithmException e) {
-                        System.err.println("No such algorithm: " + e.getMessage());
-                        System.exit(1);
-                        return null;
-                    }
-                    if (hash.equals(candidate.classFileAttributes().hash())) {
-                        return classfileBuffer;
-                    }
-                }
-                System.err.println("[MODIFIED]: " + className);
-                if (options.shouldSkipShutdown()) {
-                    return classfileBuffer;
-                } else {
+        // first check if JDK class
+        if (options.getJdkFingerprints().containsKey(className)) {
+            List<Provenance> candidates = options.getJdkFingerprints().get(className);
+            for (Provenance candidate : candidates) {
+                String hash = computeHashForProvance(candidate, classfileBuffer).orElse(null);
+                if (hash == null) {
+                    System.err.println("Error computing hash for " + className);
                     System.exit(1);
                     return null;
                 }
+                if (hash.equals(candidate.classFileAttributes().hash())) {
+                    return classfileBuffer;
+                }
+            }
+            System.err.println(MODIFIED + className);
+            if (options.shouldSkipShutdown()) {
+                return classfileBuffer;
+            } else {
+                System.exit(1);
+                return null;
             }
         }
-        System.err.println("[NOT WHITELISTED]: " + className);
+        // now check if it is a dependency or application class
+        if (options.getFingerprints().containsKey(className)) {
+            List<Provenance> candidates = options.getJdkFingerprints().get(className);
+            for (Provenance candidate : candidates) {
+                String hash = computeHashForProvance(candidate, classfileBuffer).orElse(null);
+                if (hash == null) {
+                    System.err.println("Error computing hash for " + className);
+                    System.exit(1);
+                    return null;
+                }
+                if (hash.equals(candidate.classFileAttributes().hash())) {
+                    return classfileBuffer;
+                }
+            }
+            System.err.println(MODIFIED + className);
+            if (options.shouldSkipShutdown()) {
+                return classfileBuffer;
+            } else {
+                System.exit(1);
+                return null;
+            }
+        }
+        System.err.println(NOT_WHITELISTED + className);
         if (options.shouldSkipShutdown()) {
             return classfileBuffer;
         } else {
             System.exit(1);
             return null;
+        }
+    }
+    /**
+     * Computes the hash of the classfile buffer using the algorithm specified in the provenance.
+     * @param provenance  The provenance of the classfile.
+     * @param classfileBuffer  The classfile buffer.
+     * @return  The hash of the classfile buffer.
+     */
+    private static Optional<String> computeHashForProvance(Provenance provenance, byte[] classfileBuffer) {
+        try {
+            return Optional.ofNullable(computeHash(
+                    classfileBuffer, provenance.classFileAttributes().algorithm()));
+        } catch (NoSuchAlgorithmException e) {
+            LOGGER.atDebug().log("No such algorithm: " + e.getMessage());
+            return Optional.empty();
         }
     }
 }
