@@ -16,6 +16,7 @@ import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenan
 import io.github.algomaster99.terminator.commons.jar.JarDownloader;
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
@@ -155,25 +156,34 @@ public class Options {
     private void processJdk() {
         JdkIndexer.listJdkClasses().forEach(resource -> {
             try {
-
-                byte[] classfileBytes = resource.load();
+                byte[] classfileBytes = toArray(resource.bytes());
                 ClassReader classReader = new ClassReader(classfileBytes);
-
                 String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
                 String hash = HashComputer.computeHash(classfileBytes, algorithm);
                 jdkFingerprints.put(
                         classReader.getClassName(),
                         List.of(new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm))));
-            } catch (IOException e) {
-                LOGGER.error("Failed to load classfile bytes for: " + resource, e);
-                throw new RuntimeException(e);
             } catch (NoSuchAlgorithmException e) {
                 LOGGER.error("Failed to compute hash with algorithm: " + algorithm, e);
                 throw new RuntimeException(e);
             } catch (Exception e) {
                 LOGGER.error("Failed to compute hash for: " + resource, e);
-                System.out.println("Failed to compute hash for: " + resource.getPath());
             }
         });
+    }
+
+    /**
+     * Converts a bytebuffer to a byte array. If the buffer has an array, it returns it, otherwise it copies the bytes. This is needed because the buffer is not guaranteed to have an array.
+     * See {@link java.nio.ByteBuffer#hasArray()} and {@link java.nio.DirectByteBuffer}.
+     * @param buffer  the buffer to convert
+     * @return  the byte array
+     */
+    private byte[] toArray(ByteBuffer buffer) {
+        if (buffer.hasArray()) {
+            return buffer.array();
+        }
+        byte[] bytes = new byte[buffer.remaining()];
+        buffer.get(bytes);
+        return bytes;
     }
 }
