@@ -39,7 +39,7 @@ public class Terminator {
     }
 
     private static byte[] isLoadedClassWhitelisted(String className, byte[] classfileBuffer) {
-        if (RuntimeClass.isProxyClass(classfileBuffer) || RuntimeClass.isSynthetic(classfileBuffer)) {
+        if (RuntimeClass.isProxyClass(classfileBuffer)) {
             return classfileBuffer;
         }
 
@@ -47,7 +47,7 @@ public class Terminator {
             List<Provenance> candidates = options.getJdkFingerprints().get(className);
             System.out.println("Candidates: " + candidates.size());
             for (Provenance candidate : candidates) {
-                
+
                 String hash = computeHashForProvance(candidate, classfileBuffer).orElse(null);
                 if (hash == null) {
                     System.err.println("Error computing hash for " + className);
