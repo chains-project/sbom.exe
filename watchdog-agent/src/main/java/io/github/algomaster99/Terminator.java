@@ -2,6 +2,7 @@ package io.github.algomaster99;
 
 import static io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer.computeHash;
 
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.RuntimeClass;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
@@ -35,7 +36,10 @@ public class Terminator {
     }
 
     private static byte[] isLoadedClassWhitelisted(String className, byte[] classfileBuffer) {
-        // first check if JDK class
+         if (RuntimeClass.isProxyClass(classfileBuffer) || RuntimeClass.isSynthetic(classfileBuffer)) {
+            return classfileBuffer;
+        }
+
         if (options.getJdkFingerprints().containsKey(className)) {
             List<Provenance> candidates = options.getJdkFingerprints().get(className);
             for (Provenance candidate : candidates) {
