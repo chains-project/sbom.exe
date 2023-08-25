@@ -39,7 +39,8 @@ public class Terminator {
     }
 
     private static byte[] isLoadedClassWhitelisted(String className, byte[] classfileBuffer) {
-        if (RuntimeClass.isProxyClass(classfileBuffer)) {
+        if (RuntimeClass.isProxyClass(classfileBuffer)
+                || RuntimeClass.isGeneratedClassExtendingMagicAccessor(classfileBuffer)) {
             return classfileBuffer;
         }
 

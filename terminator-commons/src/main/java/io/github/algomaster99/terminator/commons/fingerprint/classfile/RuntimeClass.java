@@ -20,4 +20,21 @@ public class RuntimeClass {
         ClassReader reader = new ClassReader(classfileBytes);
         return (reader.getAccess() & Opcodes.ACC_SYNTHETIC) != 0;
     }
+
+    /**
+     * Skip classes inherited from {@link jdk.internal.reflect.MagicAccessorImpl} because they are generated at runtime using ASM.
+     */
+    public static boolean isGeneratedClassExtendingMagicAccessor(byte[] classfileBytes) {
+        ClassReader reader = new ClassReader(classfileBytes);
+        try {
+            return RuntimeClass.class
+                    .getClassLoader()
+                    .loadClass(reader.getSuperName().replace("/", "."))
+                    .getSuperclass()
+                    .getName()
+                    .equals("jdk.internal.reflect.MagicAccessorImpl");
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
 }
