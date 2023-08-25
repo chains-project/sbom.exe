@@ -52,6 +52,8 @@ public class OptionsTest {
             // generating 2 times the jdk fingerprint should result in the same fingerprint
             Options options = new Options("skipShutdown=true");
             Options options2 = new Options("skipShutdown=true");
+            assertThat(options.getJdkFingerprints()).isNotEmpty();
+            assertThat(options2.getJdkFingerprints()).isNotEmpty();
             assertThat(options.getJdkFingerprints()).isNotEqualTo(options2.getJdkFingerprints());
         }
     }

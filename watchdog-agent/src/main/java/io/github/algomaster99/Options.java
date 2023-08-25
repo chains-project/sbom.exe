@@ -43,7 +43,7 @@ public class Options {
     private Path externalJars;
 
     public Options(String agentArgs) {
-        String[] args = agentArgs.split(",", -1);
+        String[] args = agentArgs.split(",");
         Path sbomPath = null;
         for (String arg : args) {
             String[] split = arg.split("=");
