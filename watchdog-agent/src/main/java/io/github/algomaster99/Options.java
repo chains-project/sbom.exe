@@ -7,15 +7,22 @@ import static io.github.algomaster99.terminator.commons.jar.JarScanner.processEx
 import io.github.algomaster99.terminator.commons.cyclonedx.Bom14Schema;
 import io.github.algomaster99.terminator.commons.cyclonedx.Component;
 import io.github.algomaster99.terminator.commons.cyclonedx.CycloneDX;
+import io.github.algomaster99.terminator.commons.fingerprint.JdkIndexer;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassfileVersion;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
+import io.github.algomaster99.terminator.commons.fingerprint.provenance.Jdk;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import io.github.algomaster99.terminator.commons.jar.JarDownloader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.bytebuddy.jar.asm.ClassReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +30,7 @@ public class Options {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Options.class);
     private Map<String, List<Provenance>> fingerprints = new HashMap<>();
-
+    private Map<String, List<Provenance>> jdkFingerprints = new HashMap<>();
     private boolean skipShutdown = false;
 
     private boolean isSbomPassed = false;
@@ -35,7 +42,7 @@ public class Options {
     private Path externalJars;
 
     public Options(String agentArgs) {
-        String[] args = agentArgs.split(",");
+        String[] args = agentArgs.split(",", -1);
         Path sbomPath = null;
         for (String arg : args) {
             String[] split = arg.split("=");
@@ -91,10 +98,15 @@ public class Options {
         } else {
             LOGGER.info("Taking fingerprint from file: " + fingerprints);
         }
+        processJdk();
     }
 
     public Map<String, List<Provenance>> getFingerprints() {
         return fingerprints;
+    }
+
+    public Map<String, List<Provenance>> getJdkFingerprints() {
+        return jdkFingerprints;
     }
 
     public boolean shouldSkipShutdown() {
@@ -138,5 +150,30 @@ public class Options {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private void processJdk() {
+        JdkIndexer.listJdkClasses().forEach(resource -> {
+            try {
+
+                byte[] classfileBytes = resource.load();
+                ClassReader classReader = new ClassReader(classfileBytes);
+
+                String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
+                String hash = HashComputer.computeHash(classfileBytes, algorithm);
+                jdkFingerprints.put(
+                        classReader.getClassName(),
+                        List.of(new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm))));
+            } catch (IOException e) {
+                LOGGER.error("Failed to load classfile bytes for: " + resource, e);
+                throw new RuntimeException(e);
+            } catch (NoSuchAlgorithmException e) {
+                LOGGER.error("Failed to compute hash with algorithm: " + algorithm, e);
+                throw new RuntimeException(e);
+            } catch (Exception e) {
+                LOGGER.error("Failed to compute hash for: " + resource, e);
+                System.out.println("Failed to compute hash for: " + resource.getPath());
+            }
+        });
     }
 }

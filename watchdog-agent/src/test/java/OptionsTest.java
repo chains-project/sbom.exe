@@ -1,6 +1,7 @@
 import static io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper.deserializeFingerprints;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.github.algomaster99.Options;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Jar;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Maven;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
@@ -44,6 +45,14 @@ public class OptionsTest {
                     .hasSize(2)
                     .hasAtLeastOneElementOfType(Maven.class)
                     .hasAtLeastOneElementOfType(Jar.class);
+        }
+
+        @Test
+        void parse_jdk() throws Exception {
+            // generating 2 times the jdk fingerprint should result in the same fingerprint
+            Options options = new Options("skipShutdown=true");
+            Options options2 = new Options("skipShutdown=true");
+            assertThat(options.getJdkFingerprints()).isNotEqualTo(options2.getJdkFingerprints());
         }
     }
 }
