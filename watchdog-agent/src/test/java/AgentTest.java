@@ -92,7 +92,7 @@ public class AgentTest {
         Process p = pb.start();
         int exitCode = p.waitFor();
 
-        assertThat(exitCode).isEqualTo(1);
+        assertThat(exitCode).isEqualTo(0);
     }
 
     private static void deleteContentsOfFile(String file) throws InterruptedException, IOException {
