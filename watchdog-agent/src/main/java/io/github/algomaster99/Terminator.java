@@ -34,7 +34,7 @@ public class Terminator {
 
     private static byte[] isLoadedClassWhitelisted(String className, byte[] classfileBuffer) {
         Map<String, List<Provenance>> fingerprints = options.getFingerprints();
-        if (RuntimeClass.isProxyClass(classfileBuffer) || RuntimeClass.isSynthetic(classfileBuffer)) {
+        if (RuntimeClass.isProxyClass(classfileBuffer)) {
             return classfileBuffer;
         }
         if (INTERNAL_PACKAGES.stream().anyMatch(className::startsWith)) {
