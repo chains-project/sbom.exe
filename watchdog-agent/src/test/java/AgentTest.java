@@ -151,6 +151,14 @@ public class AgentTest {
             assertThat(runPDFBoxWithSbom(project.resolve("bom.json"), output)).isEqualTo(1);
         }
 
+        @Test
+        void pdfbox_3_0_0_depscan_4_2_2(@TempDir Path dir) throws IOException, InterruptedException {
+            // contract: pdfbox-tools 3.0.0 should not execute as the SBOM has no root component
+            Path output = dir.resolve("output.txt");
+            assertThat(runPDFBoxWithSbom(project.resolve("sbom-universal.json"), output))
+                    .isEqualTo(1);
+        }
+
         private int runPDFBoxWithSbom(Path sbom, Path output) throws IOException, InterruptedException {
             Path appWhichContainsExecutable = project.resolve("pdfbox-tools-3.0.0.jar");
             String mainClass = "org.apache.pdfbox.tools.PDFBox";
