@@ -21,6 +21,7 @@ import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class AgentTest {
     @Disabled("Should be worked upon after we know what java version is used by the application")
@@ -98,7 +99,7 @@ public class AgentTest {
 
     // level 1: fat jar
     @Nested
-    class Level1FatJar {
+    class Level1_FatJar {
         private final Path project = Paths.get("src/test/resources/spoon-10.4.0");
 
         @Test
@@ -128,6 +129,47 @@ public class AgentTest {
                 workload.toString(),
                 "--disable-comments", // remove comments and prints in spooned/Main.java
                 "--compile" // prints bytecode in spooned-classes
+            };
+            ProcessBuilder pb = new ProcessBuilder(cmd);
+            pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
+            pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+            pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+
+            Process p = pb.start();
+            return p.waitFor();
+        }
+    }
+
+    @Nested
+    class Level2_CompositeJar {
+        private final Path project = Path.of("src/test/resources/pdfbox-3.0.0");
+
+        @Test
+        void pdfbox_3_0_0_cyclonedx_2_7_4(@TempDir Path dir) throws IOException, InterruptedException {
+            // contract: pdfbox-tools 3.0.0 should not execute as the SBOM has no dependencies
+            Path output = dir.resolve("output.txt");
+            assertThat(runPDFBoxWithSbom(project.resolve("bom.json"), output)).isEqualTo(1);
+        }
+
+        private int runPDFBoxWithSbom(Path sbom, Path output) throws IOException, InterruptedException {
+            Path appWhichContainsExecutable = project.resolve("pdfbox-tools-3.0.0.jar");
+            String mainClass = "org.apache.pdfbox.tools.PDFBox";
+            Path workload = project.resolve("2303.11102.pdf").toAbsolutePath();
+
+            Path dependency = project.resolve("dependency");
+            String agentArgs = "sbom=" + sbom;
+            String[] cmd = {
+                "java",
+                "-javaagent:" + getAgentPath(agentArgs),
+                "-cp",
+                appWhichContainsExecutable + ":" + dependency + "/*",
+                // convert PDFs to text file
+                mainClass,
+                "export:text",
+                "--input",
+                workload.toString(),
+                "--output",
+                output.toString()
             };
             ProcessBuilder pb = new ProcessBuilder(cmd);
             pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
