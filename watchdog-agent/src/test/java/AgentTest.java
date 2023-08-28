@@ -103,16 +103,22 @@ public class AgentTest {
         private final Path project = Paths.get("src/test/resources/spoon-10.4.0");
 
         @Test
-        void spoon_10_4_0_correctSbom() throws IOException, InterruptedException {
+        void spoon_10_4_0_cyclonedx_2_7_4_correctSbom() throws IOException, InterruptedException {
             // contract: spoon 10.4.0 CLI should be self-contained in a fat jar and its execution should not load any
             // classes outside SBOM
             assertThat(runSpoonWithSbom(project.resolve("bom.json"))).isEqualTo(0);
         }
 
         @Test
-        void spoon_10_4_0_wrongSbom() throws IOException, InterruptedException {
+        void spoon_10_4_0_cyclonedx_2_7_4_wrongSbom() throws IOException, InterruptedException {
             // contract: spoon should not execute as the incorrect SBOM is passed (spoon-core is changed to 10.3.0)
             assertThat(runSpoonWithSbom(project.resolve("wrong-bom.json"))).isEqualTo(1);
+        }
+
+        @Test
+        void spoon_10_4_0_depscan_4_2_2() throws IOException, InterruptedException {
+            // contract: spoon should execute as the root component is within component list
+            assertThat(runSpoonWithSbom(project.resolve("sbom-universal.json"))).isEqualTo(0);
         }
 
         private int runSpoonWithSbom(Path sbom) throws IOException, InterruptedException {

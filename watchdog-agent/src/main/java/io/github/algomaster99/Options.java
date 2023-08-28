@@ -131,6 +131,14 @@ public class Options {
             try {
                 File jarFile = JarDownloader.getMavenJarFile(
                         component.getGroup(), component.getName(), component.getVersion());
+                if (jarFile == null) {
+                    LOGGER.warn(
+                            "Could not find jar for {}:{}:{}",
+                            component.getGroup(),
+                            component.getName(),
+                            component.getVersion());
+                    continue;
+                }
                 goInsideJarAndUpdateFingerprints(
                         jarFile,
                         fingerprints,
