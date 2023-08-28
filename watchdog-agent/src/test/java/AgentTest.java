@@ -95,10 +95,11 @@ public class AgentTest {
         assertThat(exitCode).isEqualTo(0);
     }
 
+    // level 1: fat jar
     @Test
     void spoon_10_4_0() throws IOException, InterruptedException {
-        // contract: spoon 10.4.0 CLI should be self-contained and its execution should not load any classes outside
-        // SBOM
+        // contract: spoon 10.4.0 CLI should be self-contained in a fat jar and its execution should not load any
+        // classes outside SBOM
         Path project = Paths.get("src/test/resources/spoon-10.4.0");
 
         Path sbom = project.resolve("bom.json");
