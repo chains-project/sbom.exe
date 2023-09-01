@@ -4,11 +4,8 @@ import static io.github.algomaster99.terminator.commons.fingerprint.classfile.Ha
 
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.RuntimeClass;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
-import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.security.ProtectionDomain;
 import java.util.List;
@@ -28,11 +25,19 @@ public class Terminator {
         inst.addTransformer(new ClassFileTransformer() {
             @Override
             public byte[] transform(
+                    Module module,
                     ClassLoader loader,
                     String className,
                     Class<?> classBeingRedefined,
                     ProtectionDomain protectionDomain,
                     byte[] classfileBuffer) {
+                if (classBeingRedefined.isLocalClass()
+                        || classBeingRedefined.isAnonymousClass()
+                        || classBeingRedefined.isMemberClass()
+                        || classBeingRedefined.isSynthetic()) {
+                    // TODO: we need hashes for inner classe
+                    return classfileBuffer;
+                }
                 return isLoadedClassWhitelisted(className, classfileBuffer);
             }
         });
@@ -46,9 +51,7 @@ public class Terminator {
 
         if (options.getJdkFingerprints().containsKey(className)) {
             List<Provenance> candidates = options.getJdkFingerprints().get(className);
-            System.out.println("Candidates: " + candidates.size());
             for (Provenance candidate : candidates) {
-
                 String hash = computeHashForProvance(candidate, classfileBuffer).orElse(null);
                 if (hash == null) {
                     System.err.println("Error computing hash for " + className);
@@ -57,21 +60,10 @@ public class Terminator {
                 }
                 if (hash.equals(candidate.classFileAttributes().hash())) {
                     return classfileBuffer;
-                } else {
-                    System.out.println("Hash: " + hash);
-                    System.out.println(
-                            "Candidate hash: " + candidate.classFileAttributes().hash());
-                    try {
-                        Files.write(Path.of("foo.class"), classfileBuffer);
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
                 }
             }
             System.err.println(MODIFIED + className);
             System.err.println("Fingerprint: " + options.getJdkFingerprints().get(className));
-
             if (options.shouldSkipShutdown()) {
                 return classfileBuffer;
             } else {

@@ -169,9 +169,6 @@ public class Options {
                     v.add(new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm)));
                     return v;
                 });
-                if (classReader.getClassName().contains("JrtFileSystemProvider")) {
-                    Files.write(Path.of("moduleFinder.class"), classfileBytes);
-                }
             } catch (NoSuchAlgorithmException e) {
                 LOGGER.error("Failed to compute hash with algorithm: " + algorithm, e);
                 throw new RuntimeException(e);

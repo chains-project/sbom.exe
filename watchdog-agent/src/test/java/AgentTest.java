@@ -66,7 +66,7 @@ public class AgentTest {
     }
 
     @Test
-    void sorald_0_8_5_shouldExitWith_1() throws IOException, InterruptedException {
+    void sorald_0_8_5_shouldExitWith_0() throws IOException, InterruptedException {
         Path project = Paths.get("src/test/resources/sorald-0.8.5");
 
         Path sbom = project.resolve("bom.json");
@@ -91,6 +91,7 @@ public class AgentTest {
 
         Process p = pb.start();
         int exitCode = p.waitFor();
+        assertThat(exitCode).isEqualTo(0);
     }
 
     private static void deleteContentsOfFile(String file) throws InterruptedException, IOException {
