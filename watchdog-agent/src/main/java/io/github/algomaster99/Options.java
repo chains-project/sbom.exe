@@ -125,6 +125,10 @@ public class Options {
 
     private void processRootComponent(Bom14Schema sbom) throws IOException, InterruptedException {
         Component rootComponent = sbom.getMetadata().getComponent();
+        if (rootComponent == null) {
+            LOGGER.warn("Root component is not present.");
+            return;
+        }
         File jarFile = JarDownloader.getMavenJarFile(
                 rootComponent.getGroup(), rootComponent.getName(), rootComponent.getVersion());
         goInsideJarAndUpdateFingerprints(
@@ -141,6 +145,14 @@ public class Options {
             try {
                 File jarFile = JarDownloader.getMavenJarFile(
                         component.getGroup(), component.getName(), component.getVersion());
+                if (jarFile == null) {
+                    LOGGER.warn(
+                            "Could not find jar for {}:{}:{}",
+                            component.getGroup(),
+                            component.getName(),
+                            component.getVersion());
+                    continue;
+                }
                 goInsideJarAndUpdateFingerprints(
                         jarFile,
                         fingerprints,

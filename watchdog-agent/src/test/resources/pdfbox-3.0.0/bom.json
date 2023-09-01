@@ -1,0 +1,90 @@
+{
+  "bomFormat" : "CycloneDX",
+  "specVersion" : "1.4",
+  "serialNumber" : "urn:uuid:b7fa278b-0491-45f6-9988-4f96cbcb9453",
+  "version" : 1,
+  "metadata" : {
+    "timestamp" : "2023-08-28T15:17:43Z",
+    "tools" : [
+      {
+        "vendor" : "OWASP Foundation",
+        "name" : "CycloneDX Maven plugin",
+        "version" : "2.7.4",
+        "hashes" : [
+          {
+            "alg" : "MD5",
+            "content" : "1c0045824ba8b7c3459faf37fadb5ca4"
+          },
+          {
+            "alg" : "SHA-1",
+            "content" : "c0259ad78634a65918e328d793d2ea0b8a9c2220"
+          },
+          {
+            "alg" : "SHA-256",
+            "content" : "47bd0e0176ba679b66739820bc52880a9e667c57c8b7301de698c0ce7e271bb1"
+          },
+          {
+            "alg" : "SHA-512",
+            "content" : "e8b72acd176d5d3e13646c2422d6fac1e47d369162cbde8796afa567d36bd182a5f8f4cbdc46185f3607a71e92c410ab0eacd87ab8c17b38e352eb3077a46ecb"
+          },
+          {
+            "alg" : "SHA-384",
+            "content" : "8759a5908a1dbd6797ce597bba7d67a073d63129e1affd9b827482581ee85815b118fb4e950991b9d6793a5d70e8b901"
+          },
+          {
+            "alg" : "SHA3-384",
+            "content" : "7721f8119070762eed34e1d7fbe0eb2f590130a62f9ebcf15dbb9d3321ef25ba2b0709eb6f3e922b59f7203554db555c"
+          },
+          {
+            "alg" : "SHA3-256",
+            "content" : "3fc2ede35393130c22e8ea1985092c498f51f88c67925701906c910829aaac1e"
+          },
+          {
+            "alg" : "SHA3-512",
+            "content" : "7f54ea340410b97d5ccf4b417928359ea30be0d71d4aaa859389f308407e9d94fa3617d395f7e81e00881da67143aa8910fdae2dd01a8fc9c9a07b8bc03fb3b1"
+          }
+        ]
+      }
+    ],
+    "component" : {
+      "publisher" : "The Apache Software Foundation",
+      "group" : "org.apache.pdfbox",
+      "name" : "pdfbox-tools",
+      "version" : "3.0.0",
+      "description" : "The Apache PDFBox library is an open source Java tool for working with PDF documents. This artefact contains commandline tools using Apache PDFBox.",
+      "licenses" : [
+        {
+          "license" : {
+            "id" : "Apache-2.0",
+            "url" : "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ],
+      "purl" : "pkg:maven/org.apache.pdfbox/pdfbox-tools@3.0.0?type=jar",
+      "externalReferences" : [
+        {
+          "type" : "website",
+          "url" : "https://www.apache.org/pdfbox-parent/pdfbox-tools/"
+        },
+        {
+          "type" : "distribution",
+          "url" : "https://repository.apache.org/service/local/staging/deploy/maven2"
+        },
+        {
+          "type" : "issue-tracker",
+          "url" : "https://issues.apache.org/jira/browse/PDFBOX"
+        },
+        {
+          "type" : "mailing-list",
+          "url" : "https://mail-archives.apache.org/mod_mbox/www-announce/"
+        },
+        {
+          "type" : "vcs",
+          "url" : "https://github.com/apache/maven-apache-parent/tree/apache-29/pdfbox-parent/tags/3.0.0/pdfbox-parent/pdfbox-tools"
+        }
+      ],
+      "type" : "library",
+      "bom-ref" : "pkg:maven/org.apache.pdfbox/pdfbox-tools@3.0.0?type=jar"
+    }
+  }
+}

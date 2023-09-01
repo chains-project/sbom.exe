@@ -41,3 +41,6 @@ JRELEASER_VERSION
 
 ### Deployment files ###
 semver-*
+
+### Spoon workload files ###
+spooned*
