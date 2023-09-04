@@ -1,10 +1,16 @@
 package io.github.algomaster99.terminator.commons.fingerprint.classfile;
 
+import java.util.List;
 import java.util.Objects;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 
 public class RuntimeClass {
+
+    private static List<String> whitelistedClasses = List.of(
+            "jdk/internal/reflect/UnsafeQualifiedStaticFieldAccessorImpl",
+            "jdk/internal/reflect/UnsafeStaticFieldAccessorImpl",
+            "jdk/internal/reflect/UnsafeFieldAccessorImpl");
 
     private RuntimeClass() {}
 
@@ -42,21 +48,18 @@ public class RuntimeClass {
     public static boolean isUnsafeQualifiedStaticAccess(byte[] classfileBytes) {
         ClassReader reader = new ClassReader(classfileBytes);
         try {
-            return RuntimeClass.class
+            return whitelistedClasses.contains(RuntimeClass.class
                     .getClassLoader()
                     .loadClass(reader.getSuperName().replace("/", "."))
                     .getSuperclass()
-                    .getName()
-                    .equals("jdk.internal.reflect.UnsafeQualifiedStaticFieldAccessorImpl") ||
-                    RuntimeClass.class
-                            .getClassLoader()
-                            .loadClass(reader.getSuperName().replace("/", "."))
-                            .getSuperclass()
-                            .getName()
-                            .equals("jdk.internal.reflect.UnsafeStaticFieldAccessorImpl");
+                    .getName());
         } catch (ClassNotFoundException e) {
             System.err.println("Class not found: " + e.getMessage());
             return false;
         }
+    }
+
+    public static boolean isWhitelistedClass(String className) {
+        return whitelistedClasses.contains(className);
     }
 }
