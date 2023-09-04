@@ -121,11 +121,8 @@ public class AgentTest {
         }
 
         private int runSpoonWithSbom(Path sbom) throws IOException, InterruptedException {
-            Path spoonExecutable = project.resolve("spoon-core-10.4.0-jar-with-dependencies.jar");
+            Path spoonExecutable = project.resolve("spoon-core-10.4.0-jar-with-dependencies.jar").toAbsolutePath();
             Path workload = project.resolve("Main.java").toAbsolutePath();
-            if (Files.exists(spoonExecutable) || Files.exists(workload)) {
-                throw new RuntimeException("spoonExecutable or workload does not exist");
-            }
             String agentArgs = "sbom=" + sbom;
             String[] cmd = {
                 "java",
@@ -137,6 +134,7 @@ public class AgentTest {
                 "--disable-comments", // remove comments and prints in spooned/Main.java
                 "--compile" // prints bytecode in spooned-classes
             };
+            System.out.println(String.join(" ", cmd));
             ProcessBuilder pb = new ProcessBuilder(cmd);
             pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
             pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
@@ -186,6 +184,7 @@ public class AgentTest {
                 "--output",
                 output.toString()
             };
+            System.out.println(String.join(" ", cmd));
             ProcessBuilder pb = new ProcessBuilder(cmd);
             pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
             pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
@@ -207,7 +206,9 @@ public class AgentTest {
     private static String getAgentPath(String agentArgs) throws IOException {
         String tempDir = System.getProperty("java.io.tmpdir");
         Path traceCollector = Path.of(tempDir, "watchdog-agent.jar");
-
+        if (!traceCollector.toFile().exists()) {
+            throw new AssertionError("watchdog-agent.jar does not exist. Run mvn install first.");
+        }
         try (InputStream traceCollectorStream = Terminator.class.getResourceAsStream("/watchdog-agent.jar")) {
             Files.copy(traceCollectorStream, traceCollector, StandardCopyOption.REPLACE_EXISTING);
         }

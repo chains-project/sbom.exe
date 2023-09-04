@@ -33,8 +33,7 @@ public class Terminator {
                     byte[] classfileBuffer) {
                 if (classBeingRedefined.isLocalClass()
                         || classBeingRedefined.isAnonymousClass()
-                        || classBeingRedefined.isMemberClass()
-                        || classBeingRedefined.isSynthetic()) {
+                        || classBeingRedefined.isMemberClass()) {
                     // TODO: we need hashes for inner classe
                     return classfileBuffer;
                 }
