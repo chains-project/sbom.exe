@@ -5,10 +5,14 @@ import io.github.algomaster99.Options;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Jar;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Maven;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ScanResult;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import nonapi.io.github.classgraph.classpath.SystemJarFinder;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -56,5 +60,24 @@ public class OptionsTest {
             assertThat(options2.getJdkFingerprints()).isNotEmpty();
             assertThat(options.getJdkFingerprints()).isEqualTo(options2.getJdkFingerprints());
         }
+    }
+
+    public static void main(String[] args) {
+        Set<String> systemJarFinder = SystemJarFinder.getJreLibOrExtJars();
+        systemJarFinder.forEach(System.out::println);
+        ScanResult scanResult = new ClassGraph()
+                .enableAllInfo()
+                .enableSystemJarsAndModules()
+                .acceptLibOrExtJars()
+                .acceptPackages("java.*", "jdk.*", "sun.*", "oracle.*", "javax.*", "*")
+                .ignoreClassVisibility()
+                .enableMemoryMapping()
+                .scan();
+        System.out.println(scanResult.getAllClasses().size());
+        var result = scanResult.getAllClasses().stream()
+                        .filter(v -> v.getName().contains("JrtFileSystemProvider"))
+                //.filter(v -> v.getClassfileMajorVersion() != 64)
+                .toList();
+        System.out.println(result.stream().map(v -> v.getClassfileMajorVersion()).toList());
     }
 }
