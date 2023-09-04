@@ -54,7 +54,6 @@ public class RuntimeClass {
                     .getSuperclass()
                     .getName());
         } catch (ClassNotFoundException e) {
-            System.err.println("Class not found: " + e.getMessage());
             return false;
         }
     }
