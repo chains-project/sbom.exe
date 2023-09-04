@@ -38,7 +38,6 @@ public class Terminator {
             return classfileBuffer;
         }
         if (className.contains("$")) {
-            System.err.println("[INNER CLASS]: " + className);
             // FIXME: we need to check inner classes without loading them. Maybe add the hashes for inner classes in the
             // fingerprints?
             return classfileBuffer;
@@ -61,19 +60,6 @@ public class Terminator {
                     }
                 }
                 System.err.println("[MODIFIED]: " + className);
-                System.err.println("Hash is different from the expected one");
-                System.err.println("Expected: "
-                        + candidates.stream()
-                                .map(v -> v.classFileAttributes().hash())
-                                .toList());
-                try {
-                    System.err.println("Actual: "
-                            + computeHash(
-                                    classfileBuffer,
-                                    candidates.get(0).classFileAttributes().algorithm()));
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
                 if (options.shouldSkipShutdown()) {
                     return classfileBuffer;
                 } else {
@@ -82,7 +68,6 @@ public class Terminator {
                 }
             }
         }
-        System.err.println("Unknown class: " + className);
         System.err.println("[NOT WHITELISTED]: " + className);
         if (options.shouldSkipShutdown()) {
             return classfileBuffer;
