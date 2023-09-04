@@ -28,7 +28,6 @@ public class JdkIndexer {
         try (ScanResult scanResult = new ClassGraph()
                 .enableSystemJarsAndModules()
                 .acceptLibOrExtJars()
-                .acceptPackages("java.*", "jdk.*", "sun.*", "oracle.*", "javax.*")
                 .ignoreClassVisibility()
                 .enableMemoryMapping()
                 .scan(); ) {
