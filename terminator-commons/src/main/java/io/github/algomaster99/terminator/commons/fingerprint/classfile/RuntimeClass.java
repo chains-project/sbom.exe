@@ -37,4 +37,19 @@ public class RuntimeClass {
             return false;
         }
     }
+
+    // will be removed in the future https://github.com/openjdk/jdk/commit/9bfe415f66cc169249d83fc161c9c4496fe239f6
+    public static boolean isUnsafeQualifiedStaticAccess(byte[] classfileBytes) {
+        ClassReader reader = new ClassReader(classfileBytes);
+        try {
+            return RuntimeClass.class
+                    .getClassLoader()
+                    .loadClass(reader.getSuperName().replace("/", "."))
+                    .getSuperclass()
+                    .getName()
+                    .equals("jdk.internal.reflect.UnsafeFieldAccessorImpl");
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
 }

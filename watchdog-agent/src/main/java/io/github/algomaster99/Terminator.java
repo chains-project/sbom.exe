@@ -33,7 +33,8 @@ public class Terminator {
     private static byte[] isLoadedClassWhitelisted(String className, byte[] classfileBuffer) {
         Map<String, List<Provenance>> fingerprints = options.getFingerprints();
         if (RuntimeClass.isProxyClass(classfileBuffer)
-                || RuntimeClass.isGeneratedClassExtendingMagicAccessor(classfileBuffer)) {
+                || RuntimeClass.isGeneratedClassExtendingMagicAccessor(classfileBuffer)
+                || RuntimeClass.isUnsafeQualifiedStaticAccess(classfileBuffer)) {
             return classfileBuffer;
         }
         if (className.contains("$")) {
@@ -48,8 +49,8 @@ public class Terminator {
                 for (Provenance candidate : candidates) {
                     String hash;
                     try {
-                        hash = computeHash(classfileBuffer,
-                                candidate.classFileAttributes().algorithm());
+                        hash = computeHash(
+                                classfileBuffer, candidate.classFileAttributes().algorithm());
                     } catch (NoSuchAlgorithmException e) {
                         System.err.println("No such algorithm: " + e.getMessage());
                         System.exit(1);
@@ -62,10 +63,14 @@ public class Terminator {
                 System.err.println("[MODIFIED]: " + className);
                 System.err.println("Hash is different from the expected one");
                 System.err.println("Expected: "
-                        + candidates.stream().map(v -> v.classFileAttributes().hash()).toList());
+                        + candidates.stream()
+                                .map(v -> v.classFileAttributes().hash())
+                                .toList());
                 try {
-                    System.err.println("Actual: " + computeHash(classfileBuffer,
-                            candidates.get(0).classFileAttributes().algorithm()));
+                    System.err.println("Actual: "
+                            + computeHash(
+                                    classfileBuffer,
+                                    candidates.get(0).classFileAttributes().algorithm()));
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 }
