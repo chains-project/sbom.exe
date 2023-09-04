@@ -22,6 +22,7 @@ public class JdkIndexer {
         List<JdkClass> jdkClasses = new ArrayList<>();
         try (ScanResult scanResult = new ClassGraph()
                 .enableSystemJarsAndModules()
+                .acceptLibOrExtJars()
                 .ignoreClassVisibility()
                 .enableMemoryMapping()
                 .scan()) {
@@ -31,7 +32,8 @@ public class JdkIndexer {
                     byte[] byteBuffer;
                     try {
                         byteBuffer = resource.load();
-                        jdkClasses.add(new JdkClass(classInfo.getName().replace("/", "."), ByteBuffer.wrap(byteBuffer)));
+                        jdkClasses.add(
+                                new JdkClass(classInfo.getName().replaceAll("\\.", "/"), ByteBuffer.wrap(byteBuffer)));
                     } catch (IOException e) {
                         System.err.println("Error loading resource " + resource + ": " + e);
                     }

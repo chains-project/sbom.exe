@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.bytebuddy.jar.asm.ClassReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -170,22 +169,21 @@ public class Options {
         JdkIndexer.listJdkClasses().forEach(resource -> {
             try {
                 byte[] classfileBytes = toArray(resource.bytes());
-                ClassReader classReader = new ClassReader(classfileBytes);
                 String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
                 String hash = HashComputer.computeHash(classfileBytes, algorithm);
                 jdkFingerprints.computeIfAbsent(
-                        classReader.getClassName(),
+                        resource.name(),
                         k -> new ArrayList<>(
                                 List.of((new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm))))));
-                jdkFingerprints.computeIfPresent(classReader.getClassName(), (k, v) -> {
+                jdkFingerprints.computeIfPresent(resource.name(), (k, v) -> {
                     v.add(new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm)));
                     return v;
                 });
                 fingerprints.computeIfAbsent(
-                        classReader.getClassName(),
+                        resource.name(),
                         k -> new ArrayList<>(
                                 List.of((new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm))))));
-                fingerprints.computeIfPresent(classReader.getClassName(), (k, v) -> {
+                fingerprints.computeIfPresent(resource.name(), (k, v) -> {
                     v.add(new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm)));
                     return v;
                 });
