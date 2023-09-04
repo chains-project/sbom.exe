@@ -2,7 +2,6 @@ package io.github.algomaster99;
 
 import static io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer.computeHash;
 
-import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassUtils;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.RuntimeClass;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import java.lang.instrument.ClassFileTransformer;
@@ -37,10 +36,11 @@ public class Terminator {
                 || RuntimeClass.isGeneratedClassExtendingMagicAccessor(classfileBuffer)) {
             return classfileBuffer;
         }
-        if (ClassUtils.isInnerClass(className, classfileBuffer)) {
-            System.out.println("[INNER CLASS]: " + className);
-            className = ClassUtils.getOutermostClass(classfileBuffer);
-            System.out.println("[OUTERMOST CLASS]: " + className);
+        if (className.contains("$")) {
+            System.err.println("[INNER CLASS]: " + className);
+            // FIXME: we need to check inner classes without loading them. Maybe add the hashes for inner classes in the
+            // fingerprints?
+            return classfileBuffer;
         }
         for (String expectedClassName : fingerprints.keySet()) {
             if (expectedClassName.equals(className)) {
