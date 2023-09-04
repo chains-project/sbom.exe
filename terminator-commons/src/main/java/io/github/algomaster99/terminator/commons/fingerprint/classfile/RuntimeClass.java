@@ -46,6 +46,9 @@ public class RuntimeClass {
 
     // will be removed in the future https://github.com/openjdk/jdk/commit/9bfe415f66cc169249d83fc161c9c4496fe239f6
     public static boolean isUnsafeQualifiedStaticAccess(byte[] classfileBytes) {
+        if (classfileBytes != null) {
+            return false;
+        }
         ClassReader reader = new ClassReader(classfileBytes);
         try {
             return whitelistedClasses.contains(RuntimeClass.class

@@ -122,7 +122,7 @@ public class AgentTest {
 
         private int runSpoonWithSbom(Path sbom) throws IOException, InterruptedException {
             Path spoonExecutable = project.resolve("spoon-core-10.4.0-jar-with-dependencies.jar");
-                        Path workload = project.resolve("Main.java").toAbsolutePath();
+            Path workload = project.resolve("Main.java").toAbsolutePath();
             String agentArgs = "sbom=" + sbom;
             String[] cmd = {
                 "java",
