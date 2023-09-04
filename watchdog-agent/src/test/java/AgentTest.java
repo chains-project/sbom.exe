@@ -207,14 +207,11 @@ public class AgentTest {
     private static String getAgentPath(String agentArgs) throws IOException {
         String tempDir = System.getProperty("java.io.tmpdir");
         Path traceCollector = Path.of(tempDir, "watchdog-agent.jar");
-        if (!traceCollector.toAbsolutePath().toFile().exists()) {
-            throw new AssertionError("watchdog-agent.jar does not exist. Run mvn install first. "
-                    + Files.list(traceCollector.toAbsolutePath().getParent()).toList());
-        }
-        try (InputStream traceCollectorStream = Terminator.class.getResourceAsStream("/watchdog-agent.jar")) {
+        try (InputStream traceCollectorStream =
+                Terminator.class.getResourceAsStream("/watchdog-agent.jar")) {
             Files.copy(traceCollectorStream, traceCollector, StandardCopyOption.REPLACE_EXISTING);
         }
-
+        System.out.println("Agent path: " + traceCollector.toAbsolutePath() + "exists: " + Files.exists(traceCollector));
         return traceCollector.toAbsolutePath() + "=" + agentArgs;
     }
 
