@@ -42,16 +42,18 @@ public class RuntimeClass {
     public static boolean isUnsafeQualifiedStaticAccess(byte[] classfileBytes) {
         ClassReader reader = new ClassReader(classfileBytes);
         try {
-            System.err.println(RuntimeClass.class
-                    .getClassLoader()
-                    .loadClass(reader.getSuperName().replace("/", "."))
-                    .getSuperclass());
             return RuntimeClass.class
                     .getClassLoader()
                     .loadClass(reader.getSuperName().replace("/", "."))
                     .getSuperclass()
                     .getName()
-                    .equals("jdk.internal.reflect.UnsafeQualifiedStaticFieldAccessorImpl");
+                    .equals("jdk.internal.reflect.UnsafeQualifiedStaticFieldAccessorImpl") ||
+                    RuntimeClass.class
+                            .getClassLoader()
+                            .loadClass(reader.getSuperName().replace("/", "."))
+                            .getSuperclass()
+                            .getName()
+                            .equals("jdk.internal.reflect.UnsafeStaticFieldAccessorImpl");
         } catch (ClassNotFoundException e) {
             System.err.println("Class not found: " + e.getMessage());
             return false;
