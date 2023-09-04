@@ -121,7 +121,8 @@ public class AgentTest {
         }
 
         private int runSpoonWithSbom(Path sbom) throws IOException, InterruptedException {
-            Path spoonExecutable = project.resolve("spoon-core-10.4.0-jar-with-dependencies.jar").toAbsolutePath();
+            Path spoonExecutable = project.resolve("spoon-core-10.4.0-jar-with-dependencies.jar")
+                    .toAbsolutePath();
             Path workload = project.resolve("Main.java").toAbsolutePath();
             String agentArgs = "sbom=" + sbom;
             String[] cmd = {
@@ -206,8 +207,9 @@ public class AgentTest {
     private static String getAgentPath(String agentArgs) throws IOException {
         String tempDir = System.getProperty("java.io.tmpdir");
         Path traceCollector = Path.of(tempDir, "watchdog-agent.jar");
-        if (!traceCollector.toFile().exists()) {
-            throw new AssertionError("watchdog-agent.jar does not exist. Run mvn install first.");
+        if (!traceCollector.toAbsolutePath().toFile().exists()) {
+            throw new AssertionError("watchdog-agent.jar does not exist. Run mvn install first. "
+                    + Files.list(traceCollector.toAbsolutePath().getParent()).toList());
         }
         try (InputStream traceCollectorStream = Terminator.class.getResourceAsStream("/watchdog-agent.jar")) {
             Files.copy(traceCollectorStream, traceCollector, StandardCopyOption.REPLACE_EXISTING);
