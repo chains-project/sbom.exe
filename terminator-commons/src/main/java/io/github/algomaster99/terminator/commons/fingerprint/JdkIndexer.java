@@ -1,5 +1,8 @@
 package io.github.algomaster99.terminator.commons.fingerprint;
 
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.Resource;
+import io.github.classgraph.ScanResult;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -8,9 +11,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.Resource;
-import io.github.classgraph.ScanResult;
 import nonapi.io.github.classgraph.classpath.SystemJarFinder;
 
 /**
@@ -25,18 +25,21 @@ public class JdkIndexer {
      */
     public static List<JdkClass> listJdkClasses() {
         List<JdkClass> jdkClasses = new ArrayList<>();
-        try (ScanResult scanResult =
-                new ClassGraph().enableSystemJarsAndModules().acceptLibOrExtJars()
-                        .acceptPackages("java.*", "jdk.*", "sun.*", "oracle.*", "javax.*")
-                        .ignoreClassVisibility().enableMemoryMapping().scan();) {
+        try (ScanResult scanResult = new ClassGraph()
+                .enableSystemJarsAndModules()
+                .acceptLibOrExtJars()
+                .acceptPackages("java.*", "jdk.*", "sun.*", "oracle.*", "javax.*")
+                .ignoreClassVisibility()
+                .enableMemoryMapping()
+                .scan(); ) {
             scanResult.getAllClasses().forEach(classInfo -> {
                 Resource resource = classInfo.getResource();
                 if (resource != null) {
                     byte[] byteBuffer;
                     try {
                         byteBuffer = resource.load();
-                        jdkClasses.add(new JdkClass(classInfo.getName().replaceAll("\\.", "/"),
-                                ByteBuffer.wrap(byteBuffer)));
+                        jdkClasses.add(
+                                new JdkClass(classInfo.getName().replaceAll("\\.", "/"), ByteBuffer.wrap(byteBuffer)));
                     } catch (IOException e) {
                         System.err.println("Error loading resource " + resource + ": " + e);
                     }
@@ -46,7 +49,12 @@ public class JdkIndexer {
         jdkClasses.addAll(indexJrt());
         return jdkClasses;
     }
-    
+
+    /**
+     * Creates an index of the external Jrt jar. This jar provides an API for older jvms to access the modules in the JDK.
+     * The jvm itself does not need this jar.
+     * @return  the list of external jrt jdk classes
+     */
     private static List<JdkClass> indexJrt() {
         List<JdkClass> jdkClasses = new ArrayList<>();
         Set<String> jreLibOrExtJars = SystemJarFinder.getJreLibOrExtJars();
@@ -59,7 +67,8 @@ public class JdkIndexer {
         }
         return jdkClasses;
     }
-        private static  List<JdkClass> readJarFile(String jarFilePath) throws IOException {
+
+    private static List<JdkClass> readJarFile(String jarFilePath) throws IOException {
         List<JdkClass> jdkClasses = new ArrayList<>();
         try (JarFile jarFile = new JarFile(jarFilePath)) {
             Enumeration<JarEntry> entries = jarFile.entries();
@@ -67,8 +76,7 @@ public class JdkIndexer {
                 JarEntry entry = entries.nextElement();
                 if (entry.getName().endsWith(".class")) {
                     byte[] byteBuffer = jarFile.getInputStream(entry).readAllBytes();
-                    jdkClasses.add(new JdkClass(entry.getName().replace(".class", ""),
-                            ByteBuffer.wrap(byteBuffer)));
+                    jdkClasses.add(new JdkClass(entry.getName().replace(".class", ""), ByteBuffer.wrap(byteBuffer)));
                 }
             }
         }
