@@ -60,6 +60,19 @@ public class Terminator {
                     }
                 }
                 System.err.println("[MODIFIED]: " + className);
+                System.err.println("Hash is different from the expected one");
+                System.err.println("Expected: "
+                        + candidates.stream()
+                                .map(v -> v.classFileAttributes().hash())
+                                .toList());
+                try {
+                    System.err.println("Actual: "
+                            + computeHash(
+                                    classfileBuffer,
+                                    candidates.get(0).classFileAttributes().algorithm()));
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
                 if (options.shouldSkipShutdown()) {
                     return classfileBuffer;
                 } else {
