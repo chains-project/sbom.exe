@@ -69,6 +69,8 @@ public class AgentTest {
 
     @Test
     void sorald_0_8_5_shouldExitWith_1() throws IOException, InterruptedException {
+        // contract: sorald 0.8.5 should exit with 1 as it loads a class (org/xml/sax/SAXException) which is supposed to
+        // be internal, but it is not detected.
         Path project = Paths.get("src/test/resources/sorald-0.8.5");
 
         Path sbom = project.resolve("bom.json");
