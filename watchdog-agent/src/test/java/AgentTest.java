@@ -1,6 +1,7 @@
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.algomaster99.Terminator;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -135,14 +136,17 @@ public class AgentTest {
                 "--disable-comments", // remove comments and prints in spooned/Main.java
                 "--compile" // prints bytecode in spooned-classes
             };
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             System.out.println(String.join(" ", cmd));
             ProcessBuilder pb = new ProcessBuilder(cmd);
-            pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
-            pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-            pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+            pb.redirectErrorStream(true);
 
             Process p = pb.start();
-            return p.waitFor();
+            p.waitFor();
+            p.getInputStream().transferTo(outputStream);
+            p.getErrorStream().transferTo(outputStream);
+            System.out.println(outputStream.toString());
+            return p.exitValue();
         }
     }
 
@@ -207,11 +211,11 @@ public class AgentTest {
     private static String getAgentPath(String agentArgs) throws IOException {
         String tempDir = System.getProperty("java.io.tmpdir");
         Path traceCollector = Path.of(tempDir, "watchdog-agent.jar");
-        try (InputStream traceCollectorStream =
-                Terminator.class.getResourceAsStream("/watchdog-agent.jar")) {
+        try (InputStream traceCollectorStream = Terminator.class.getResourceAsStream("/watchdog-agent.jar")) {
             Files.copy(traceCollectorStream, traceCollector, StandardCopyOption.REPLACE_EXISTING);
         }
-        System.out.println("Agent path: " + traceCollector.toAbsolutePath() + "exists: " + Files.exists(traceCollector));
+        System.out.println(
+                "Agent path: " + traceCollector.toAbsolutePath() + " exists: " + Files.exists(traceCollector));
         return traceCollector.toAbsolutePath() + "=" + agentArgs;
     }
 

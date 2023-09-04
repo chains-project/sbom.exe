@@ -74,6 +74,9 @@ public class Terminator {
         if (options.getFingerprints().containsKey(className)) {
             List<Provenance> candidates = options.getJdkFingerprints().get(className);
             for (Provenance candidate : candidates) {
+                if (className.equals("spoon/Launcher")) {
+                    System.out.println("We found: " + candidates.size());
+                }
                 String hash = computeHashForProvance(candidate, classfileBuffer).orElse(null);
                 if (hash == null) {
                     System.err.println("Error computing hash for " + className);
