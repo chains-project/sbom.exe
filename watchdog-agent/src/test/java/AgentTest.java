@@ -136,17 +136,13 @@ public class AgentTest {
                 "--disable-comments", // remove comments and prints in spooned/Main.java
                 "--compile" // prints bytecode in spooned-classes
             };
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            System.out.println(String.join(" ", cmd));
             ProcessBuilder pb = new ProcessBuilder(cmd);
-            pb.redirectErrorStream(true);
-            pb.inheritIO();
+            pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
+            pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+            pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+
             Process p = pb.start();
-            p.waitFor();
-            p.getInputStream().transferTo(outputStream);
-            p.getErrorStream().transferTo(outputStream);
-            System.out.println(outputStream.toString());
-            return p.exitValue();
+            return p.waitFor();
         }
     }
 
