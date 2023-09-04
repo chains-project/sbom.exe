@@ -48,8 +48,8 @@ public class Terminator {
                 for (Provenance candidate : candidates) {
                     String hash;
                     try {
-                        hash = computeHash(
-                                classfileBuffer, candidate.classFileAttributes().algorithm());
+                        hash = computeHash(classfileBuffer,
+                                candidate.classFileAttributes().algorithm());
                     } catch (NoSuchAlgorithmException e) {
                         System.err.println("No such algorithm: " + e.getMessage());
                         System.exit(1);
@@ -62,14 +62,10 @@ public class Terminator {
                 System.err.println("[MODIFIED]: " + className);
                 System.err.println("Hash is different from the expected one");
                 System.err.println("Expected: "
-                        + candidates.stream()
-                                .map(v -> v.classFileAttributes().hash())
-                                .toList());
+                        + candidates.stream().map(v -> v.classFileAttributes().hash()).toList());
                 try {
-                    System.err.println("Actual: "
-                            + computeHash(
-                                    classfileBuffer,
-                                    candidates.get(0).classFileAttributes().algorithm()));
+                    System.err.println("Actual: " + computeHash(classfileBuffer,
+                            candidates.get(0).classFileAttributes().algorithm()));
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 }
@@ -81,6 +77,7 @@ public class Terminator {
                 }
             }
         }
+        System.err.println("Unknown class: " + className);
         System.err.println("[NOT WHITELISTED]: " + className);
         if (options.shouldSkipShutdown()) {
             return classfileBuffer;
