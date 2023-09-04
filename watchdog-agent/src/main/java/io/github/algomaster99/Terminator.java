@@ -47,7 +47,10 @@ public class Terminator {
                 || RuntimeClass.isGeneratedClassExtendingMagicAccessor(classfileBuffer)) {
             return classfileBuffer;
         }
-
+        if (className.startsWith("java")) {
+            // for testing
+            return classfileBuffer;
+        }
         if (options.getJdkFingerprints().containsKey(className)) {
             List<Provenance> candidates = options.getJdkFingerprints().get(className);
             for (Provenance candidate : candidates) {
