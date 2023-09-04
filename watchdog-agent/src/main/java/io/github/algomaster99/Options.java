@@ -181,6 +181,14 @@ public class Options {
                     v.add(new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm)));
                     return v;
                 });
+                fingerprints.computeIfAbsent(
+                        classReader.getClassName(),
+                        k -> new ArrayList<>(
+                                List.of((new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm))))));
+                fingerprints.computeIfPresent(classReader.getClassName(), (k, v) -> {
+                    v.add(new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm)));
+                    return v;
+                });
             } catch (NoSuchAlgorithmException e) {
                 LOGGER.error("Failed to compute hash with algorithm: " + algorithm, e);
                 throw new RuntimeException(e);
