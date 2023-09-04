@@ -210,8 +210,6 @@ public class AgentTest {
         try (InputStream traceCollectorStream = Terminator.class.getResourceAsStream("/watchdog-agent.jar")) {
             Files.copy(traceCollectorStream, traceCollector, StandardCopyOption.REPLACE_EXISTING);
         }
-        System.out.println(
-                "Agent path: " + traceCollector.toAbsolutePath() + " exists: " + Files.exists(traceCollector));
         return traceCollector.toAbsolutePath() + "=" + agentArgs;
     }
 
