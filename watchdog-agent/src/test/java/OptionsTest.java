@@ -46,15 +46,15 @@ public class OptionsTest {
                     .hasAtLeastOneElementOfType(Maven.class)
                     .hasAtLeastOneElementOfType(Jar.class);
         }
+    }
 
-        @Test
-        void parse_jdk() throws Exception {
-            // generating 2 times the jdk fingerprint should result in the same fingerprint
-            Options options = new Options("skipShutdown=true");
-            Options options2 = new Options("skipShutdown=true");
-            assertThat(options.getJdkFingerprints()).isNotEmpty();
-            assertThat(options2.getJdkFingerprints()).isNotEmpty();
-            assertThat(options.getJdkFingerprints()).isEqualTo(options2.getJdkFingerprints());
-        }
+    @Test
+    void verifyIfJdkIndexerFindsJdkClassesDeterministically() throws Exception {
+        // generating 2 times the jdk fingerprint should result in the same fingerprint
+        Options options = new Options("skipShutdown=true");
+        Options options2 = new Options("skipShutdown=true");
+        assertThat(options.getJdkFingerprints()).isNotEmpty();
+        assertThat(options2.getJdkFingerprints()).isNotEmpty();
+        assertThat(options.getJdkFingerprints()).isEqualTo(options2.getJdkFingerprints());
     }
 }
