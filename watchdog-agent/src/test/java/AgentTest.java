@@ -140,7 +140,7 @@ public class AgentTest {
             System.out.println(String.join(" ", cmd));
             ProcessBuilder pb = new ProcessBuilder(cmd);
             pb.redirectErrorStream(true);
-
+            pb.inheritIO();
             Process p = pb.start();
             p.waitFor();
             p.getInputStream().transferTo(outputStream);
