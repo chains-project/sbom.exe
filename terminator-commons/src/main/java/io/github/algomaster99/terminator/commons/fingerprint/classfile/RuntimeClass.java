@@ -48,11 +48,6 @@ public class RuntimeClass {
     public static boolean isUnsafeQualifiedStaticAccess(byte[] classfileBytes) {
         ClassReader reader = new ClassReader(classfileBytes);
         try {
-            System.err.println(RuntimeClass.class
-                    .getClassLoader()
-                    .loadClass(reader.getSuperName().replace("/", "."))
-                    .getSuperclass()
-                    .getName());
             return whitelistedClasses.contains(RuntimeClass.class
                     .getClassLoader()
                     .loadClass(reader.getSuperName().replace("/", "."))
