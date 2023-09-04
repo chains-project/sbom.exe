@@ -31,7 +31,7 @@ public class JdkIndexer {
                     byte[] byteBuffer;
                     try {
                         byteBuffer = resource.load();
-                        jdkClasses.add(new JdkClass(classInfo.getName(), ByteBuffer.wrap(byteBuffer)));
+                        jdkClasses.add(new JdkClass(classInfo.getName().replace("/", "."), ByteBuffer.wrap(byteBuffer)));
                     } catch (IOException e) {
                         System.err.println("Error loading resource " + resource + ": " + e);
                     }
