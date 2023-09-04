@@ -14,9 +14,6 @@ import java.util.Map;
 public class Terminator {
     private static Options options;
 
-    private static final List<String> INTERNAL_PACKAGES =
-            List.of("java/", "javax/", "jdk/", "sun/", "com/sun/", "org/xml/sax", "org/w3c/dom/");
-
     public static void premain(String agentArgs, Instrumentation inst) {
         options = new Options(agentArgs);
         inst.addTransformer(new ClassFileTransformer() {
@@ -35,9 +32,6 @@ public class Terminator {
     private static byte[] isLoadedClassWhitelisted(String className, byte[] classfileBuffer) {
         Map<String, List<Provenance>> fingerprints = options.getFingerprints();
         if (RuntimeClass.isProxyClass(classfileBuffer)) {
-            return classfileBuffer;
-        }
-        if (INTERNAL_PACKAGES.stream().anyMatch(className::startsWith)) {
             return classfileBuffer;
         }
         for (String expectedClassName : fingerprints.keySet()) {

@@ -7,15 +7,11 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The JdkIndexer class provides a utility to list all JDK classes by scanning the JDK used for the execution of the application.
  */
 public class JdkIndexer {
-
-    private static final Logger logger = LoggerFactory.getLogger(JdkIndexer.class);
 
     /**
      * Returns a list of all JDK classes. The list is populated by scanning the JDK used for the execution of this application.
