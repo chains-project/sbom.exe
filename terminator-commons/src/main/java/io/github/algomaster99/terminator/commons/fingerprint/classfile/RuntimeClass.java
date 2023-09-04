@@ -8,9 +8,9 @@ import org.objectweb.asm.Opcodes;
 public class RuntimeClass {
 
     private static List<String> whitelistedClasses = List.of(
-            "jdk/internal/reflect/UnsafeQualifiedStaticFieldAccessorImpl",
-            "jdk/internal/reflect/UnsafeStaticFieldAccessorImpl",
-            "jdk/internal/reflect/UnsafeFieldAccessorImpl");
+            "jdk.internal.reflect.UnsafeQualifiedStaticFieldAccessorImpl",
+            "jdk.internal.reflect.UnsafeStaticFieldAccessorImpl",
+            "jdk.internal.reflect.UnsafeFieldAccessorImpl");
 
     private RuntimeClass() {}
 
