@@ -22,6 +22,8 @@ public class JdkIndexer {
         List<JdkClass> jdkClasses = new ArrayList<>();
         try (ScanResult scanResult = new ClassGraph()
                 .enableSystemJarsAndModules()
+                .ignoreClassVisibility()
+                .enableMemoryMapping()
                 .scan()) {
             scanResult.getAllClasses().forEach(classInfo -> {
                 Resource resource = classInfo.getResource();
