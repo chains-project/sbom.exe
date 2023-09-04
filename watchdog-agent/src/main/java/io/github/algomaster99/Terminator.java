@@ -2,6 +2,7 @@ package io.github.algomaster99;
 
 import static io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer.computeHash;
 
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassUtils;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.RuntimeClass;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import java.lang.instrument.ClassFileTransformer;
@@ -24,6 +25,7 @@ public class Terminator {
                     Class<?> classBeingRedefined,
                     ProtectionDomain protectionDomain,
                     byte[] classfileBuffer) {
+
                 return isLoadedClassWhitelisted(className, classfileBuffer);
             }
         });
@@ -34,6 +36,11 @@ public class Terminator {
         if (RuntimeClass.isProxyClass(classfileBuffer)
                 || RuntimeClass.isGeneratedClassExtendingMagicAccessor(classfileBuffer)) {
             return classfileBuffer;
+        }
+        if (ClassUtils.isInnerClass(className, classfileBuffer)) {
+            System.out.println("[INNER CLASS]: " + className);
+            className = ClassUtils.getOutermostClass(classfileBuffer);
+            System.out.println("[OUTERMOST CLASS]: " + className);
         }
         for (String expectedClassName : fingerprints.keySet()) {
             if (expectedClassName.equals(className)) {
