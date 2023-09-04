@@ -1,7 +1,6 @@
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.algomaster99.Terminator;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

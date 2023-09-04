@@ -31,7 +31,8 @@ public class Terminator {
 
     private static byte[] isLoadedClassWhitelisted(String className, byte[] classfileBuffer) {
         Map<String, List<Provenance>> fingerprints = options.getFingerprints();
-        if (RuntimeClass.isProxyClass(classfileBuffer)) {
+        if (RuntimeClass.isProxyClass(classfileBuffer)
+                || RuntimeClass.isGeneratedClassExtendingMagicAccessor(classfileBuffer)) {
             return classfileBuffer;
         }
         for (String expectedClassName : fingerprints.keySet()) {
