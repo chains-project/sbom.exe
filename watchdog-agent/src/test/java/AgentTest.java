@@ -185,7 +185,6 @@ public class AgentTest {
                 "--output",
                 output.toString()
             };
-            System.out.println(String.join(" ", cmd));
             ProcessBuilder pb = new ProcessBuilder(cmd);
             pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
             pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
