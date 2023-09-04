@@ -47,8 +47,9 @@ public class RuntimeClass {
                     .loadClass(reader.getSuperName().replace("/", "."))
                     .getSuperclass()
                     .getName()
-                    .equals("jdk.internal.reflect.UnsafeFieldAccessorImpl");
+                    .equals("jdk.internal.reflect.UnsafeQualifiedStaticFieldAccessorImpl");
         } catch (ClassNotFoundException e) {
+            System.err.println("Class not found: " + e.getMessage());
             return false;
         }
     }
