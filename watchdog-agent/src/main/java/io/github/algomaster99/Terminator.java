@@ -96,8 +96,10 @@ public class Terminator {
                 + "           '._) \n"
                 + "\n"
                 + "\n"
+                + "A fatal error has been detected by the Java Runtime Environment:\n"
+                + "\n"
                 + classViolation
-                + "\n" + "\n";
+                + "\n";
 
         System.out.println(BACKGROUND_LIGHT_BLUE + BOLD + WHITE);
         System.out.println(message);
