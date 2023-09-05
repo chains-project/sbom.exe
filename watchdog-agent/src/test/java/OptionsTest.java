@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -56,5 +57,14 @@ public class OptionsTest {
         assertThat(options.getJdkFingerprints()).isNotEmpty();
         assertThat(options2.getJdkFingerprints()).isNotEmpty();
         assertThat(options.getJdkFingerprints()).isEqualTo(options2.getJdkFingerprints());
+        System.out.println(options.getJdkFingerprints().size());
+    }
+
+    @Test
+    void verifyJdkIndexerFindsOrgXmlSax() throws Exception {
+        Options options = new Options("skipShutdown=true");
+        var var = options.getJdkFingerprints().keySet().stream().collect(Collectors.toSet());
+        var.stream().filter(v -> v.contains("$")).forEach(System.out::println);
+        assertThat(var).contains("org/xml/sax/helpers/NamespaceSupport");
     }
 }

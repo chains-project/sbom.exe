@@ -27,8 +27,10 @@ public class JdkIndexer {
         List<JdkClass> jdkClasses = new ArrayList<>();
         try (ScanResult scanResult = new ClassGraph()
                 .enableSystemJarsAndModules()
+                .disableDirScanning()
+                .disableJarScanning()
                 .acceptLibOrExtJars()
-                .acceptPackages("java.*", "jdk.*", "sun.*", "oracle.*", "javax.*")
+                .acceptModules("jdk.*", "java.*")
                 .ignoreClassVisibility()
                 .enableMemoryMapping()
                 .scan(); ) {
