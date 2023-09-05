@@ -4,11 +4,8 @@ import static io.github.algomaster99.terminator.commons.fingerprint.classfile.Ha
 
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.RuntimeClass;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
-import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.security.ProtectionDomain;
 import java.util.List;

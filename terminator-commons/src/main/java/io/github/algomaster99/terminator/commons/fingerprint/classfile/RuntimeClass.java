@@ -27,8 +27,11 @@ public class RuntimeClass {
     public static boolean isGeneratedClassExtendingMagicAccessor(byte[] classfileBytes) {
         ClassReader reader = new ClassReader(classfileBytes);
         try {
-            return RuntimeClass.class.getClassLoader()
-                    .loadClass(reader.getSuperName().replace("/", ".")).getSuperclass().getName()
+            return RuntimeClass.class
+                    .getClassLoader()
+                    .loadClass(reader.getSuperName().replace("/", "."))
+                    .getSuperclass()
+                    .getName()
                     .equals("jdk.internal.reflect.MagicAccessorImpl");
         } catch (ClassNotFoundException e) {
             return false;
