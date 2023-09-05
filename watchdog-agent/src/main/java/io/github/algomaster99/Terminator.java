@@ -4,8 +4,11 @@ import static io.github.algomaster99.terminator.commons.fingerprint.classfile.Ha
 
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.RuntimeClass;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.security.ProtectionDomain;
 import java.util.List;
@@ -33,12 +36,8 @@ public class Terminator {
     private static byte[] isLoadedClassWhitelisted(String className, byte[] classfileBuffer) {
         Map<String, List<Provenance>> fingerprints = options.getFingerprints();
         if (RuntimeClass.isProxyClass(classfileBuffer)
-                || RuntimeClass.isGeneratedClassExtendingMagicAccessor(classfileBuffer)) {
-            return classfileBuffer;
-        }
-        if (className.contains("$")) {
-            // FIXME: we need to check inner classes without loading them. Maybe add the hashes for inner classes in the
-            // fingerprints?
+                || RuntimeClass.isGeneratedClassExtendingMagicAccessor(classfileBuffer)
+                || RuntimeClass.isBoundMethodHandle(classfileBuffer)) {
             return classfileBuffer;
         }
         for (String expectedClassName : fingerprints.keySet()) {
