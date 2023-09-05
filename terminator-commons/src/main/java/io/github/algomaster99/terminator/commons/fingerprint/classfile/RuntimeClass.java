@@ -27,14 +27,23 @@ public class RuntimeClass {
     public static boolean isGeneratedClassExtendingMagicAccessor(byte[] classfileBytes) {
         ClassReader reader = new ClassReader(classfileBytes);
         try {
-            return RuntimeClass.class
-                    .getClassLoader()
-                    .loadClass(reader.getSuperName().replace("/", "."))
-                    .getSuperclass()
-                    .getName()
+            return RuntimeClass.class.getClassLoader()
+                    .loadClass(reader.getSuperName().replace("/", ".")).getSuperclass().getName()
                     .equals("jdk.internal.reflect.MagicAccessorImpl");
         } catch (ClassNotFoundException e) {
             return false;
         }
+    }
+
+    /**
+     * During the runtime the jvm binds methodhandles to the class {@link java.lang.invoke.BoundMethodHandle}.
+     * These classes are generated at runtime and should be ignored. We can identify them by checking if the super class is {@link java.lang.invoke.BoundMethodHandle}.
+     * @param classfileBytes  the class file bytes
+     * @return  true if the class is a bound method handle, false otherwise.
+     */
+    public static boolean isBoundMethodHandle(byte[] classfileBytes) {
+        ClassReader reader = new ClassReader(classfileBytes);
+        System.err.println(reader.getSuperName());
+        return reader.getSuperName().equals("java/lang/invoke/BoundMethodHandle");
     }
 }

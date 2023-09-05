@@ -66,4 +66,11 @@ public class OptionsTest {
         var var = options.getJdkFingerprints().keySet().stream().collect(Collectors.toSet());
         assertThat(var).contains("org/xml/sax/helpers/NamespaceSupport");
     }
+
+    @Test
+    void verifyJdkIndexerFindsMethodHandle() throws Exception {
+        Options options = new Options("skipShutdown=true");
+        boolean containsKey = options.getJdkFingerprints().containsKey("java/lang/invoke/BoundMethodHandle");
+        assertThat(containsKey).isTrue();
+    }
 }
