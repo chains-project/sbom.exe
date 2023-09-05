@@ -33,12 +33,8 @@ public class Terminator {
     private static byte[] isLoadedClassWhitelisted(String className, byte[] classfileBuffer) {
         Map<String, List<Provenance>> fingerprints = options.getFingerprints();
         if (RuntimeClass.isProxyClass(classfileBuffer)
-                || RuntimeClass.isGeneratedClassExtendingMagicAccessor(classfileBuffer)) {
-            return classfileBuffer;
-        }
-        if (className.contains("$")) {
-            // FIXME: we need to check inner classes without loading them. Maybe add the hashes for inner classes in the
-            // fingerprints?
+                || RuntimeClass.isGeneratedClassExtendingMagicAccessor(classfileBuffer)
+                || RuntimeClass.isBoundMethodHandle(classfileBuffer)) {
             return classfileBuffer;
         }
         for (String expectedClassName : fingerprints.keySet()) {
