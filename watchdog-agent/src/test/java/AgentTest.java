@@ -68,9 +68,8 @@ public class AgentTest {
     }
 
     @Test
-    void sorald_0_8_5_shouldExitWith_1() throws IOException, InterruptedException {
-        // contract: sorald 0.8.5 should exit with 1 as it loads a class (org/xml/sax/SAXException) which is supposed to
-        // be internal, but it is not detected.
+    void sorald_0_8_5_shouldExitWith_0() throws IOException, InterruptedException {
+        // contract: sorald 0.8.5 should execute as the SBOM + external jars has every dependency.
         Path project = Paths.get("src/test/resources/sorald-0.8.5");
 
         Path sbom = project.resolve("bom.json");
@@ -95,7 +94,7 @@ public class AgentTest {
 
         Process p = pb.start();
         int exitCode = p.waitFor();
-        assertThat(exitCode).isEqualTo(1);
+        assertThat(exitCode).isEqualTo(0);
     }
 
     // level 1: fat jar
