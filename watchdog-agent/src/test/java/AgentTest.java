@@ -292,7 +292,7 @@ public class AgentTest {
             pb.redirectError(errorLog.toFile());
 
             Process p = pb.start();
-            TimeUnit.SECONDS.sleep(42);
+            TimeUnit.MINUTES.sleep(1);
             p.destroy();
             p.destroyForcibly();
             String errorContent = Files.readString(errorLog);
