@@ -67,36 +67,6 @@ public class AgentTest {
         assertThat(exitCode).isEqualTo(1);
     }
 
-    @Test
-    void sorald_0_8_5_shouldExitWith_0() throws IOException, InterruptedException {
-        // contract: sorald 0.8.5 should execute as the SBOM + external jars has every dependency.
-        Path project = Paths.get("src/test/resources/sorald-0.8.5");
-
-        Path sbom = project.resolve("bom.json");
-        Path externalJars = project.resolve("external-jars.json").toAbsolutePath();
-        Path soraldExecutable = project.resolve("sorald-0.8.5-jar-with-dependencies.jar");
-        Path fileWithWarning = project.resolve("App.java").toAbsolutePath();
-
-        String agentArgs = "sbom=" + sbom + ",externalJars=" + externalJars;
-        String[] cmd = {
-            "java",
-            "-javaagent:" + getAgentPath(agentArgs),
-            "-jar",
-            soraldExecutable.toString(),
-            "mine",
-            "--source",
-            fileWithWarning.toString()
-        };
-        ProcessBuilder pb = new ProcessBuilder(cmd);
-        pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
-        pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-        pb.redirectError(ProcessBuilder.Redirect.INHERIT);
-
-        Process p = pb.start();
-        int exitCode = p.waitFor();
-        assertThat(exitCode).isEqualTo(0);
-    }
-
     // level 1: fat jar
     @Nested
     class Level1_FatJar {
@@ -191,6 +161,107 @@ public class AgentTest {
 
             Process p = pb.start();
             return p.waitFor();
+        }
+    }
+
+    @Nested
+    class Level3_ApplicationLevelClassLoading {
+        private final Path project = Path.of("src/test/resources/sorald-0.8.5");
+
+        @Test
+        void sorald_0_8_5_depscan_4_2_2_fromCompositeJar() throws IOException, InterruptedException {
+            // contract: sorald 0.8.5 should not execute as the SBOM + external jars has every dependency, except there
+            // is no root component in the SBOM so we don't have classes of sorald-0.8.5 itself.
+
+            Path sbom = project.resolve("sbom-universal.json");
+            Path externalJars = project.resolve("external-jars.json").toAbsolutePath();
+            Path appWhichContainsExecutable = project.resolve("sorald-0.8.5.jar");
+            String mainClass = "sorald.Main";
+            Path dependency = project.resolve("dependency");
+            Path fileWithWarning = project.resolve("App.java").toAbsolutePath();
+
+            String agentArgs = "sbom=" + sbom + ",externalJars=" + externalJars;
+            String[] cmd = {
+                "java",
+                "-javaagent:" + getAgentPath(agentArgs),
+                "-cp",
+                appWhichContainsExecutable + ":" + dependency + "/*",
+                mainClass,
+                "mine",
+                "--source",
+                fileWithWarning.toString()
+            };
+            ProcessBuilder pb = new ProcessBuilder(cmd);
+            pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
+            pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+            pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+
+            Process p = pb.start();
+            int exitCode = p.waitFor();
+            assertThat(exitCode).isEqualTo(1);
+        }
+
+        @Test
+        void sorald_0_8_5_cyclonedx_2_7_4_fromCompositeJar() throws IOException, InterruptedException {
+            // contract: sorald 0.8.5 should fail as the SBOM misses all the dependencies.
+            // For example, it cannot find picocli.CommandLine.
+
+            Path sbom = project.resolve("bom.json");
+            Path externalJars = project.resolve("external-jars.json").toAbsolutePath();
+            Path appWhichContainsExecutable = project.resolve("sorald-0.8.5.jar");
+            String mainClass = "sorald.Main";
+            Path fileWithWarning = project.resolve("App.java").toAbsolutePath();
+
+            String agentArgs = "sbom=" + sbom + ",externalJars=" + externalJars;
+            String[] cmd = {
+                "java",
+                "-javaagent:" + getAgentPath(agentArgs),
+                "-cp",
+                // we exclude dependencies as CycloneDX SBOM misses all the dependencies
+                appWhichContainsExecutable.toString(),
+                mainClass,
+                "mine",
+                "--source",
+                fileWithWarning.toString()
+            };
+            ProcessBuilder pb = new ProcessBuilder(cmd);
+            pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
+            pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+            pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+
+            Process p = pb.start();
+            int exitCode = p.waitFor();
+            assertThat(exitCode).isEqualTo(1);
+        }
+
+        @Test
+        void sorald_0_8_5_cyclonedx_2_7_4_fromFatJar() throws IOException, InterruptedException {
+            // contract: sorald 0.8.5 should execute as the fat jar + external jars has every dependency.
+            Path project = Paths.get("src/test/resources/sorald-0.8.5");
+
+            Path sbom = project.resolve("bom.json");
+            Path externalJars = project.resolve("external-jars.json").toAbsolutePath();
+            Path soraldExecutable = project.resolve("sorald-0.8.5-jar-with-dependencies.jar");
+            Path fileWithWarning = project.resolve("App.java").toAbsolutePath();
+
+            String agentArgs = "sbom=" + sbom + ",externalJars=" + externalJars;
+            String[] cmd = {
+                "java",
+                "-javaagent:" + getAgentPath(agentArgs),
+                "-jar",
+                soraldExecutable.toString(),
+                "mine",
+                "--source",
+                fileWithWarning.toString()
+            };
+            ProcessBuilder pb = new ProcessBuilder(cmd);
+            pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
+            pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+            pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+
+            Process p = pb.start();
+            int exitCode = p.waitFor();
+            assertThat(exitCode).isEqualTo(0);
         }
     }
 
