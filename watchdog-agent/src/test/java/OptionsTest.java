@@ -64,7 +64,6 @@ public class OptionsTest {
     void verifyJdkIndexerFindsOrgXmlSax() throws Exception {
         Options options = new Options("skipShutdown=true");
         var var = options.getJdkFingerprints().keySet().stream().collect(Collectors.toSet());
-        var.stream().filter(v -> v.contains("$")).forEach(System.out::println);
         assertThat(var).contains("org/xml/sax/helpers/NamespaceSupport");
     }
 }
