@@ -12,6 +12,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.DefaultInvoker;
 import org.apache.maven.shared.invoker.InvocationRequest;
@@ -262,6 +263,41 @@ public class AgentTest {
             Process p = pb.start();
             int exitCode = p.waitFor();
             assertThat(exitCode).isEqualTo(0);
+        }
+    }
+
+    @Nested
+    class Level4_SpringBoot {
+        private final Path project =
+                Path.of("src/test/resources/spring-petclinic-3.1.0-4926e292700f79260a58d6faf55b232ce075b70e");
+
+        @Test
+        void springBoot_petClinic_3_1_0_SNAPSHOT_depscan_4_2_2(@TempDir Path tempDir)
+                throws IOException, InterruptedException {
+            // contract: Execution of pet clinic should result in multiple unknown classes
+            Path errorLog = tempDir.resolve("error.log");
+            Path sbom = project.resolve("sbom-universal.json");
+            Path executable = project.resolve("spring-petclinic-3.1.0-SNAPSHOT.jar");
+            Path externalJars = project.resolve("external-jars.json").toAbsolutePath();
+
+            // we also have to pass the jar as external jar as spring-petclinic-3.1.0-SNAPSHOT.jar is not on maven
+            // central
+            String agentArgs = "sbom=" + sbom + ",externalJars=" + externalJars + ",skipShutdown=true";
+            String[] cmd = {
+                "java", "-javaagent:" + getAgentPath(agentArgs), "-jar", executable.toString(),
+            };
+            ProcessBuilder pb = new ProcessBuilder(cmd);
+            pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
+            pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+            pb.redirectError(errorLog.toFile());
+
+            Process p = pb.start();
+            TimeUnit.SECONDS.sleep(42);
+            p.destroy();
+            p.destroyForcibly();
+            String errorContent = Files.readString(errorLog);
+
+            assertThat(errorContent).contains("[NOT WHITELISTED]").doesNotContain("[MODIFIED]");
         }
     }
 
