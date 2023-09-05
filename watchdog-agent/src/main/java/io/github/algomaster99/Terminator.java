@@ -58,21 +58,51 @@ public class Terminator {
                         return classfileBuffer;
                     }
                 }
-                System.err.println("[MODIFIED]: " + className);
                 if (options.shouldSkipShutdown()) {
+                    System.err.println("[MODIFIED]: " + className);
                     return classfileBuffer;
                 } else {
+                    blueScreenOfDeath("[MODIFIED]: " + className);
                     System.exit(1);
                     return null;
                 }
             }
         }
-        System.err.println("[NOT WHITELISTED]: " + className);
         if (options.shouldSkipShutdown()) {
+            System.err.println("[NOT WHITELISTED]: " + className);
             return classfileBuffer;
         } else {
+            blueScreenOfDeath("[NOT WHITELISTED]: " + className);
             System.exit(1);
             return null;
         }
+    }
+
+    private static void blueScreenOfDeath(String classViolation) {
+        final String WHITE = "\u001B[97m";
+        final String BOLD = "\u001B[1m";
+        final String BACKGROUND_LIGHT_BLUE = "\u001B[104m";
+
+        String message = "                \n" + "             _  \n"
+                + "           .' ) \n"
+                + " ,.--.    / .'  \n"
+                + "//    \\  / /    \n"
+                + "\\\\    / / /     \n"
+                + " `'--' . '      \n"
+                + " ,.--. | |      \n"
+                + "//   \\' '      \n"
+                + "\\\\    / \\ \\     \n"
+                + " `'--'   \\ \\    \n"
+                + "          \\ '.  \n"
+                + "           '._) \n"
+                + "\n"
+                + "\n"
+                + "A fatal error has been detected by the Java Runtime Environment:\n"
+                + "\n"
+                + classViolation
+                + "\n";
+
+        System.out.println(BACKGROUND_LIGHT_BLUE + BOLD + WHITE);
+        System.out.println(message);
     }
 }
