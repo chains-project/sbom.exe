@@ -68,7 +68,8 @@ public class AgentTest {
     }
 
     @Test
-    void sorald_0_8_5_shouldExitWith_1() throws IOException, InterruptedException {
+    void sorald_0_8_5_shouldExitWith_0() throws IOException, InterruptedException {
+        // contract: sorald 0.8.5 should execute as the SBOM + external jars has every dependency.
         Path project = Paths.get("src/test/resources/sorald-0.8.5");
 
         Path sbom = project.resolve("bom.json");
@@ -93,7 +94,6 @@ public class AgentTest {
 
         Process p = pb.start();
         int exitCode = p.waitFor();
-
         assertThat(exitCode).isEqualTo(0);
     }
 
@@ -124,7 +124,6 @@ public class AgentTest {
         private int runSpoonWithSbom(Path sbom) throws IOException, InterruptedException {
             Path spoonExecutable = project.resolve("spoon-core-10.4.0-jar-with-dependencies.jar");
             Path workload = project.resolve("Main.java").toAbsolutePath();
-
             String agentArgs = "sbom=" + sbom;
             String[] cmd = {
                 "java",
@@ -206,11 +205,9 @@ public class AgentTest {
     private static String getAgentPath(String agentArgs) throws IOException {
         String tempDir = System.getProperty("java.io.tmpdir");
         Path traceCollector = Path.of(tempDir, "watchdog-agent.jar");
-
         try (InputStream traceCollectorStream = Terminator.class.getResourceAsStream("/watchdog-agent.jar")) {
             Files.copy(traceCollectorStream, traceCollector, StandardCopyOption.REPLACE_EXISTING);
         }
-
         return traceCollector.toAbsolutePath() + "=" + agentArgs;
     }
 

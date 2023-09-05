@@ -14,9 +14,6 @@ import java.util.Map;
 public class Terminator {
     private static Options options;
 
-    private static final List<String> INTERNAL_PACKAGES =
-            List.of("java/", "javax/", "jdk/", "sun/", "com/sun/", "org/xml/sax", "org/w3c/dom/");
-
     public static void premain(String agentArgs, Instrumentation inst) {
         options = new Options(agentArgs);
         inst.addTransformer(new ClassFileTransformer() {
@@ -27,6 +24,7 @@ public class Terminator {
                     Class<?> classBeingRedefined,
                     ProtectionDomain protectionDomain,
                     byte[] classfileBuffer) {
+
                 return isLoadedClassWhitelisted(className, classfileBuffer);
             }
         });
@@ -34,10 +32,13 @@ public class Terminator {
 
     private static byte[] isLoadedClassWhitelisted(String className, byte[] classfileBuffer) {
         Map<String, List<Provenance>> fingerprints = options.getFingerprints();
-        if (RuntimeClass.isProxyClass(classfileBuffer)) {
+        if (RuntimeClass.isProxyClass(classfileBuffer)
+                || RuntimeClass.isGeneratedClassExtendingMagicAccessor(classfileBuffer)) {
             return classfileBuffer;
         }
-        if (INTERNAL_PACKAGES.stream().anyMatch(className::startsWith)) {
+        if (className.contains("$")) {
+            // FIXME: we need to check inner classes without loading them. Maybe add the hashes for inner classes in the
+            // fingerprints?
             return classfileBuffer;
         }
         for (String expectedClassName : fingerprints.keySet()) {

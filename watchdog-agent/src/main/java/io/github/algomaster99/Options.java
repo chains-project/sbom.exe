@@ -7,12 +7,20 @@ import static io.github.algomaster99.terminator.commons.jar.JarScanner.processEx
 import io.github.algomaster99.terminator.commons.cyclonedx.Bom14Schema;
 import io.github.algomaster99.terminator.commons.cyclonedx.Component;
 import io.github.algomaster99.terminator.commons.cyclonedx.CycloneDX;
+import io.github.algomaster99.terminator.commons.fingerprint.JdkIndexer;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassfileVersion;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
+import io.github.algomaster99.terminator.commons.fingerprint.provenance.Jdk;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import io.github.algomaster99.terminator.commons.jar.JarDownloader;
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +31,7 @@ public class Options {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Options.class);
     private Map<String, List<Provenance>> fingerprints = new HashMap<>();
-
+    private Map<String, List<Provenance>> jdkFingerprints = new HashMap<>();
     private boolean skipShutdown = false;
 
     private boolean isSbomPassed = false;
@@ -91,10 +99,15 @@ public class Options {
         } else {
             LOGGER.info("Taking fingerprint from file: " + fingerprints);
         }
+        processJdk();
     }
 
     public Map<String, List<Provenance>> getFingerprints() {
         return fingerprints;
+    }
+
+    public Map<String, List<Provenance>> getJdkFingerprints() {
+        return jdkFingerprints;
     }
 
     public boolean shouldSkipShutdown() {
@@ -150,5 +163,51 @@ public class Options {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private void processJdk() {
+        JdkIndexer.listJdkClasses().forEach(resource -> {
+            try {
+                byte[] classfileBytes = toArray(resource.bytes());
+                String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
+                String hash = HashComputer.computeHash(classfileBytes, algorithm);
+                jdkFingerprints.computeIfAbsent(
+                        resource.name(),
+                        k -> new ArrayList<>(
+                                List.of((new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm))))));
+                jdkFingerprints.computeIfPresent(resource.name(), (k, v) -> {
+                    v.add(new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm)));
+                    return v;
+                });
+                fingerprints.computeIfAbsent(
+                        resource.name(),
+                        k -> new ArrayList<>(
+                                List.of((new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm))))));
+                fingerprints.computeIfPresent(resource.name(), (k, v) -> {
+                    v.add(new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm)));
+                    return v;
+                });
+            } catch (NoSuchAlgorithmException e) {
+                LOGGER.error("Failed to compute hash with algorithm: " + algorithm, e);
+                throw new RuntimeException(e);
+            } catch (Exception e) {
+                LOGGER.error("Failed to compute hash for: " + resource, e);
+            }
+        });
+    }
+
+    /**
+     * Converts a bytebuffer to a byte array. If the buffer has an array, it returns it, otherwise it copies the bytes. This is needed because the buffer is not guaranteed to have an array.
+     * See {@link java.nio.ByteBuffer#hasArray()} and {@link java.nio.DirectByteBuffer}.
+     * @param buffer  the buffer to convert
+     * @return  the byte array
+     */
+    private byte[] toArray(ByteBuffer buffer) {
+        if (buffer.hasArray()) {
+            return buffer.array();
+        }
+        byte[] bytes = new byte[buffer.remaining()];
+        buffer.get(bytes);
+        return bytes;
     }
 }
