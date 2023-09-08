@@ -46,7 +46,6 @@ public class RuntimeClass {
      */
     public static boolean isBoundMethodHandle(byte[] classfileBytes) {
         ClassReader reader = new ClassReader(classfileBytes);
-        System.err.println(reader.getSuperName());
         return reader.getSuperName().equals("java/lang/invoke/BoundMethodHandle");
     }
 }
