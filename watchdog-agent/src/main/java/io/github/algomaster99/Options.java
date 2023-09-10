@@ -82,7 +82,7 @@ public class Options {
             LOGGER.info("Generating fingerprint from SBOM and external jars");
             try {
                 Bom14Schema sbom = CycloneDX.getPOJO(Files.readString(sbomPath));
-                LOGGER.debug("Processing root component: " + sbom.getMetadata().getComponent());
+                LOGGER.debug("Processing root component");
                 processRootComponent(sbom);
                 LOGGER.debug("Processing all components");
                 processAllComponents(sbom);
