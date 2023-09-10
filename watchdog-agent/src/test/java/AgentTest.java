@@ -84,6 +84,13 @@ public class AgentTest {
                         .isEqualTo(0);
             }
 
+            @Test
+            void pdfbox_3_0_0_buildInfoGo_1_9_9(@TempDir Path tempDir) throws IOException, InterruptedException {
+                Path output = tempDir.resolve("output.txt");
+                assertThat(runPDFBoxWithSbom(project.resolve("build-info-go.json"), output))
+                        .isEqualTo(0);
+            }
+
             private int runPDFBoxWithSbom(Path sbom, Path output) throws IOException, InterruptedException {
                 Path pdfboxExecutable = project.resolve("pdfbox-app-3.0.0.jar");
                 Path workload = project.resolve("2303.11102.pdf").toAbsolutePath();
