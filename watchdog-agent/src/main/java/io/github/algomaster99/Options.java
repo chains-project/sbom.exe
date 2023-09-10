@@ -7,6 +7,7 @@ import static io.github.algomaster99.terminator.commons.jar.JarScanner.processEx
 import io.github.algomaster99.terminator.commons.cyclonedx.Bom14Schema;
 import io.github.algomaster99.terminator.commons.cyclonedx.Component;
 import io.github.algomaster99.terminator.commons.cyclonedx.CycloneDX;
+import io.github.algomaster99.terminator.commons.cyclonedx.Metadata;
 import io.github.algomaster99.terminator.commons.fingerprint.JdkIndexer;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassfileVersion;
@@ -123,7 +124,12 @@ public class Options {
     }
 
     private void processRootComponent(Bom14Schema sbom) throws IOException, InterruptedException {
-        Component rootComponent = sbom.getMetadata().getComponent();
+        Metadata metadata = sbom.getMetadata();
+        if (metadata == null) {
+            LOGGER.warn("Metadata is not present.");
+            return;
+        }
+        Component rootComponent = metadata.getComponent();
         if (rootComponent == null) {
             LOGGER.warn("Root component is not present.");
             return;
