@@ -40,6 +40,7 @@ public class JarDownloader {
         if (artifactJarName.isPresent()) {
             return url + artifactJarName.get();
         } else {
+            System.err.println("Could not find jar for " + url);
             LOGGER.warn("Could not find jar for {}:{}:{}", groupId, artifactId, version);
             return null;
         }
