@@ -76,16 +76,17 @@ public class AgentTest {
             private final Path project = Paths.get("src/test/resources/pdfbox-3.0.0");
 
             @Test
-            void pdfbox_3_0_0_cyclonedx_2_7_4_correctSbom(@TempDir Path tempDir)
-                    throws IOException, InterruptedException {
-                // contract: pdfbox 3.0.0 should execute as the SBOM has every dependency
+            void pdfbox_3_0_0_depscan_4_2_2(@TempDir Path tempDir) throws IOException, InterruptedException {
+                // contract: pdfbox 3.0.0 should fail to execute as the SBOM missed dependency. For example,
+                // picocli/CommandLine$ParameterException
                 Path output = tempDir.resolve("output.txt");
                 assertThat(runPDFBoxWithSbom(project.resolve("depscan_pdfbox-app.json"), output))
-                        .isEqualTo(0);
+                        .isEqualTo(1);
             }
 
             @Test
             void pdfbox_3_0_0_buildInfoGo_1_9_9(@TempDir Path tempDir) throws IOException, InterruptedException {
+                // contract: pdfbox 3.0.0 should execute as the SBOM has every dependency
                 Path output = tempDir.resolve("output.txt");
                 assertThat(runPDFBoxWithSbom(project.resolve("build-info-go.json"), output))
                         .isEqualTo(0);
