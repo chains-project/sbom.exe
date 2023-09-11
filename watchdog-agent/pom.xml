@@ -73,6 +73,10 @@
               <pattern>com.fasterxml.jackson</pattern>
               <shadedPattern>rtf.com.fasterxml.jackson</shadedPattern>
             </relocation>
+            <relocation>
+              <pattern>org.apache.log4j</pattern>
+              <shadedPattern>rtf.org.apache.log4j</shadedPattern>
+            </relocation>
           </relocations>
         </configuration>
         <executions>

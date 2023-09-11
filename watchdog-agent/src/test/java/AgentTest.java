@@ -70,48 +70,100 @@ public class AgentTest {
     // level 1: fat jar
     @Nested
     class Level1_FatJar {
-        private final Path project = Paths.get("src/test/resources/spoon-10.4.0");
 
-        @Test
-        void spoon_10_4_0_cyclonedx_2_7_4_correctSbom() throws IOException, InterruptedException {
-            // contract: spoon 10.4.0 CLI should be self-contained in a fat jar and its execution should not load any
-            // classes outside SBOM
-            assertThat(runSpoonWithSbom(project.resolve("bom.json"))).isEqualTo(0);
+        @Nested
+        class PDFBox {
+            private final Path project = Paths.get("src/test/resources/pdfbox-3.0.0");
+
+            @Test
+            void pdfbox_3_0_0_depscan_4_2_2(@TempDir Path tempDir) throws IOException, InterruptedException {
+                // contract: pdfbox 3.0.0 should fail to execute as the SBOM missed dependency. For example,
+                // picocli/CommandLine$ParameterException
+                Path output = tempDir.resolve("output.txt");
+                assertThat(runPDFBoxWithSbom(project.resolve("depscan_pdfbox-app.json"), output))
+                        .isEqualTo(1);
+            }
+
+            @Test
+            void pdfbox_3_0_0_buildInfoGo_1_9_9(@TempDir Path tempDir) throws IOException, InterruptedException {
+                // contract: pdfbox 3.0.0 should execute as the SBOM has every dependency
+                Path output = tempDir.resolve("output.txt");
+                assertThat(runPDFBoxWithSbom(project.resolve("build-info-go.json"), output))
+                        .isEqualTo(0);
+            }
+
+            private int runPDFBoxWithSbom(Path sbom, Path output) throws IOException, InterruptedException {
+                Path pdfboxExecutable = project.resolve("pdfbox-app-3.0.0.jar");
+                Path workload = project.resolve("2303.11102.pdf").toAbsolutePath();
+                String agentArgs = "sbom=" + sbom;
+                String[] cmd = {
+                    "java",
+                    "-javaagent:" + getAgentPath(agentArgs),
+                    "-jar",
+                    pdfboxExecutable.toString(),
+                    "export:text",
+                    "--input",
+                    workload.toString(),
+                    "--output",
+                    output.toString()
+                };
+                ProcessBuilder pb = new ProcessBuilder(cmd);
+                pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
+                pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+
+                Process p = pb.start();
+                return p.waitFor();
+            }
         }
 
-        @Test
-        void spoon_10_4_0_cyclonedx_2_7_4_wrongSbom() throws IOException, InterruptedException {
-            // contract: spoon should not execute as the incorrect SBOM is passed (spoon-core is changed to 10.3.0)
-            assertThat(runSpoonWithSbom(project.resolve("wrong-bom.json"))).isEqualTo(1);
-        }
+        @Nested
+        class Spoon {
+            private final Path project = Paths.get("src/test/resources/spoon-10.4.0");
 
-        @Test
-        void spoon_10_4_0_depscan_4_2_2() throws IOException, InterruptedException {
-            // contract: spoon should execute as the root component is within component list
-            assertThat(runSpoonWithSbom(project.resolve("sbom-universal.json"))).isEqualTo(0);
-        }
+            @Test
+            void spoon_10_4_0_cyclonedx_2_7_4_correctSbom() throws IOException, InterruptedException {
+                // contract: spoon 10.4.0 CLI should be self-contained in a fat jar and its execution should not load
+                // any
+                // classes outside SBOM
+                assertThat(runSpoonWithSbom(project.resolve("bom.json"))).isEqualTo(0);
+            }
 
-        private int runSpoonWithSbom(Path sbom) throws IOException, InterruptedException {
-            Path spoonExecutable = project.resolve("spoon-core-10.4.0-jar-with-dependencies.jar");
-            Path workload = project.resolve("Main.java").toAbsolutePath();
-            String agentArgs = "sbom=" + sbom;
-            String[] cmd = {
-                "java",
-                "-javaagent:" + getAgentPath(agentArgs),
-                "-jar",
-                spoonExecutable.toString(),
-                "--input",
-                workload.toString(),
-                "--disable-comments", // remove comments and prints in spooned/Main.java
-                "--compile" // prints bytecode in spooned-classes
-            };
-            ProcessBuilder pb = new ProcessBuilder(cmd);
-            pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
-            pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-            pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+            @Test
+            void spoon_10_4_0_cyclonedx_2_7_4_wrongSbom() throws IOException, InterruptedException {
+                // contract: spoon should not execute as the incorrect SBOM is passed (spoon-core is changed to 10.3.0)
+                assertThat(runSpoonWithSbom(project.resolve("wrong-bom.json"))).isEqualTo(1);
+            }
 
-            Process p = pb.start();
-            return p.waitFor();
+            @Test
+            void spoon_10_4_0_depscan_4_2_2() throws IOException, InterruptedException {
+                // contract: spoon should execute as the root component is within component list
+                assertThat(runSpoonWithSbom(project.resolve("sbom-universal.json")))
+                        .isEqualTo(0);
+            }
+
+            private int runSpoonWithSbom(Path sbom) throws IOException, InterruptedException {
+                Path spoonExecutable = project.resolve("spoon-core-10.4.0-jar-with-dependencies.jar");
+                Path workload = project.resolve("Main.java").toAbsolutePath();
+                String agentArgs = "sbom=" + sbom;
+                String[] cmd = {
+                    "java",
+                    "-javaagent:" + getAgentPath(agentArgs),
+                    "-jar",
+                    spoonExecutable.toString(),
+                    "--input",
+                    workload.toString(),
+                    "--disable-comments", // remove comments and prints in spooned/Main.java
+                    "--compile" // prints bytecode in spooned-classes
+                };
+                ProcessBuilder pb = new ProcessBuilder(cmd);
+                pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
+                pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+
+                Process p = pb.start();
+                return p.waitFor();
+            }
         }
     }
 

@@ -1,0 +1,3428 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "version": 1,
+  "components": [
+    {
+      "bom-ref": "org.gephi:ui-components:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "ui-components",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:project-api:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "project-api",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:utils:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "utils",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-libs-flatlaf:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-libs-flatlaf",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "55a132384a758777f434f4c5eb8bced181836962a04a33e63c6a233bf773098f"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "7b1c948fd44fde40fbd2ed4dd59dff0dd8d411c8"
+        },
+        {
+          "alg": "MD5",
+          "content": "25e5cdc5f5b1daae2ec077d762bc2584"
+        }
+      ]
+    },
+    {
+      "bom-ref": "it.unimi.dsi:fastutil:8.5.11",
+      "type": "library",
+      "group": "it.unimi.dsi",
+      "name": "fastutil",
+      "version": "8.5.11",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a4093c53d1b0ce2dfe9b3d9edd4f55c9b41dc32a827932a76e2558246ad98410"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "db3dbb47a54c65230c7a3ed00b1e695eae08872a"
+        },
+        {
+          "alg": "MD5",
+          "content": "3d3de46ca61c725be4d67af295f05131"
+        }
+      ]
+    },
+    {
+      "bom-ref": "net.java.dev:timingframework:1.1",
+      "type": "library",
+      "group": "net.java.dev",
+      "name": "timingframework",
+      "version": "1.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ea24f5c3f3a86285a3d27b5ddfba8ed92d7dc9b7ce87704fde4a0846a8179700"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "ed8566033079b3cde264eceb776984e3881387e9"
+        },
+        {
+          "alg": "MD5",
+          "content": "62c0c7f40a6b2677c8c9fb996f800346"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.swinglabs.swingx:swingx-all:1.6.5-1",
+      "type": "library",
+      "group": "org.swinglabs.swingx",
+      "name": "swingx-all",
+      "version": "1.6.5-1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2a4f82979cd16d8f1c9eea232a985dff62bf69c4794a37b96099b20d322907c0"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "1ea704cd8779f8df8a3d345ee1344239e7774d52"
+        },
+        {
+          "alg": "MD5",
+          "content": "8f978c9184e5864ea90914052a781b1d"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-openide-awt:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-openide-awt",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "e731247ea233d6afb7d7198a54b1fd4f6fd5238961d37992c105b04c37b0a8ab"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "1a5b831e8d747a19ea4b8c654822703f9bb6025a"
+        },
+        {
+          "alg": "MD5",
+          "content": "62836cb5ce157c78df40b3f6f4ccc769"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.connectina.swing:fontchooser:1.0",
+      "type": "library",
+      "group": "com.connectina.swing",
+      "name": "fontchooser",
+      "version": "1.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b357b68727935d6570261377100670ce2c586d2286b45f4af6e45b7f8eb55bce"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "1142b846d114d06fdc1eb0a48048453d5ea4dcb1"
+        },
+        {
+          "alg": "MD5",
+          "content": "2e227b9bd5e9e0a50eaa3453cb5f762e"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-api-annotations-common:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-api-annotations-common",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "67224c393629396865399e4b50b7bfdc373bf447112e56857675fb1282f5a9c0"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "504413155f310b897b0fb3b8a40d183868c06bdc"
+        },
+        {
+          "alg": "MD5",
+          "content": "428dbc3537592f6723b6dc108e7ba121"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:ui-library-wrapper:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "ui-library-wrapper",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "joda-time:joda-time:2.12.2",
+      "type": "library",
+      "group": "joda-time",
+      "name": "joda-time",
+      "version": "2.12.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8d4d807adc8e92a83913d9ccd61e634b4907c78d88f3016d06b3b3d2b4795a02"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "78e18a7b4180e911dafba0a412adfa82c1e3d14b"
+        },
+        {
+          "alg": "MD5",
+          "content": "62b2ddc8dd3948b263779b05f43eab89"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.pdfbox:pdfbox:2.0.27",
+      "type": "library",
+      "group": "org.apache.pdfbox",
+      "name": "pdfbox",
+      "version": "2.0.27",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a25ad2a0be6b0bf9eb0e972abd09c34c0e797a3ce2a980d5ff035ff4cf078037"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "416a9dfce3714116bfdf793b15368df04266845f"
+        },
+        {
+          "alg": "MD5",
+          "content": "ddd46402b1692eed9e5c73b4a94c45d8"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.github.insubstantial:flamingo:7.3",
+      "type": "library",
+      "group": "com.github.insubstantial",
+      "name": "flamingo",
+      "version": "7.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "34d6de93ea398b6fd2df742f00dc07b7d997c75f36e4f37400857ed6c3f50f81"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "9a9bd6bd3943cdba3bee7cbcbb961eb8fb1a5d61"
+        },
+        {
+          "alg": "MD5",
+          "content": "083ed5cdb641974e109b26ff5fb3baa0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-openide-util-ui:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-openide-util-ui",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "5c296617fc3b4a2af1a986554839851873a9209148059f9fb5ea0af922f76b23"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "9399b1ffe06f5fcf9a0b6f5f4ce14be4e38bad3b"
+        },
+        {
+          "alg": "MD5",
+          "content": "14e5d6fad30cc4cc0e8b074d46ac6903"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.miglayout:miglayout:3.7.4",
+      "type": "library",
+      "group": "com.miglayout",
+      "name": "miglayout",
+      "version": "3.7.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f3bf5ab4041767da532e11e78a49a183da499d1a54ba539232d833b75f965667"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "9cafd0bc5a567fe6514219e96dc62619471cd4e5"
+        },
+        {
+          "alg": "MD5",
+          "content": "9c9d6eec22be11045a4fb4cb1409c48e"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-api-progress:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-api-progress",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3191dbc30f0439cfe3a26e8ab636beed41b8880d3a568e6322d1e96aac67bf94"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "fd6b28ca62bf21012f63c22029283d6eec9e0b92"
+        },
+        {
+          "alg": "MD5",
+          "content": "e3319a5295ab367d8df246c85fd55cc7"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-openide-dialogs:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-openide-dialogs",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6d89ed275d55f232dd2eb687589b9a83e3a9351b5ea0e3502bb2dff923995cf2"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "606aafb589d8a7fde4f92083e5a17df66d4bca4a"
+        },
+        {
+          "alg": "MD5",
+          "content": "2d0c7f8abf439f58ada7b88816337b22"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-openide-nodes:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-openide-nodes",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c0da18b01f5ce6bf93c6bed91cf6fc298edac6e545ceb44f68ac5784a0832183"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "4db6f4c353297afdddf4a177709563a09a8a131d"
+        },
+        {
+          "alg": "MD5",
+          "content": "e2e9dc97f3261bf24d2fd7f9879657a0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.commons:commons-compress:1.22",
+      "type": "library",
+      "group": "org.apache.commons",
+      "name": "commons-compress",
+      "version": "1.22",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "53d04a0efc7223baecaa303bd5d298eb0600e6b82b4076f9cecd558b97ba760b"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "691a8b4e6cf4248c3bc72c8b719337d5cb7359fa"
+        },
+        {
+          "alg": "MD5",
+          "content": "f1e4db16fee4291212d91409313a8086"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.commons:commons-math3:3.6.1",
+      "type": "library",
+      "group": "org.apache.commons",
+      "name": "commons-math3",
+      "version": "3.6.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1e56d7b058d28b65abd256b8458e3885b674c1d588fa43cd7d1cbb9c7ef2b308"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "e4ba98f1d4b3c80ec46392f25e094a6a2e58fcbf"
+        },
+        {
+          "alg": "MD5",
+          "content": "5b730d97e4e6368069de1983937c508e"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:graphstore:0.6.14",
+      "type": "library",
+      "group": "org.gephi",
+      "name": "graphstore",
+      "version": "0.6.14",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c7b00ac8e675b91e8fba02ad51ca240c2162c29b69d96bd34873387b8fef46fb"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "f663cffd317cf9d4c1a50beba15d59a4776b1c7e"
+        },
+        {
+          "alg": "MD5",
+          "content": "1faac4c7aaf8f2a850a2a7a678507c27"
+        }
+      ]
+    },
+    {
+      "bom-ref": "commons-codec:commons-codec:1.15",
+      "type": "library",
+      "group": "commons-codec",
+      "name": "commons-codec",
+      "version": "1.15",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b3e9f6d63a790109bf0d056611fbed1cf69055826defeb9894a71369d246ed63"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "49d94806b6e3dc933dacbd8acb0fdbab8ebd1e5d"
+        },
+        {
+          "alg": "MD5",
+          "content": "303baf002ce6d382198090aedd9d79a2"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.github.insubstantial:trident:7.3",
+      "type": "library",
+      "group": "com.github.insubstantial",
+      "name": "trident",
+      "version": "7.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "7f05679e36e6e2efa391720fe885ba1cc7a4fe82efcef1c396ad500ad9e4b888"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "abb32556f8874b7985bb4034a9d23b75467390dc"
+        },
+        {
+          "alg": "MD5",
+          "content": "7fc6deef68f293d7c8006bffa70d67c0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.formdev:flatlaf-swingx:2.6",
+      "type": "library",
+      "group": "com.formdev",
+      "name": "flatlaf-swingx",
+      "version": "2.6",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f255238f0455fdc40dfe1984722d35de75c761076c87fb40f18497ba2e2c0e4e"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "6bc793e45aeec1d77eec7d0fdc6d682b26ee91c3"
+        },
+        {
+          "alg": "MD5",
+          "content": "032e6a91d654f0bdad2adf97b90c02d5"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-openide-util-lookup:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-openide-util-lookup",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "dba8af02b12e448dde1ac6805afb4aef08afe75008b2f78ec5dfd242ffd71f2a"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "7a4f98db476e131095d15be841daff1deb3a73c6"
+        },
+        {
+          "alg": "MD5",
+          "content": "44a5ab77a6cfde0ce3e8aa97778ce022"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-openide-util:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-openide-util",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3ccad8a778213e45083c3d7eb32849e31feeb666da74ff99717eb56815b95109"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "03b03ae417f7239f5332e90797c8ac5176e8623b"
+        },
+        {
+          "alg": "MD5",
+          "content": "2c17a27ae137473bef9b4a5b1309f259"
+        }
+      ]
+    },
+    {
+      "bom-ref": "commons-logging:commons-logging:1.2",
+      "type": "library",
+      "group": "commons-logging",
+      "name": "commons-logging",
+      "version": "1.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "daddea1ea0be0f56978ab3006b8ac92834afeefbd9b7e4e6316fca57df0fa636"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "4bfc12adfe4842bf07b657f0369c4cb522955686"
+        },
+        {
+          "alg": "MD5",
+          "content": "040b4b4d8eac886f6b4a2a3bd2f31b00"
+        }
+      ]
+    },
+    {
+      "bom-ref": "net.java.dev:stax-utils:snapshot-20100402",
+      "type": "library",
+      "group": "net.java.dev",
+      "name": "stax-utils",
+      "version": "snapshot-20100402",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c87706a5d88c106473e55d7a2da506b21439d3c75014df3d2a4fd972a7da6dcd"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "9627cfc2fad0e08faaddd616453fc54afe30cc9e"
+        },
+        {
+          "alg": "MD5",
+          "content": "b07df3a0c9d7a886859aaa1b3ff42a13"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.mastfrog:simplevalidation:1.14.1",
+      "type": "library",
+      "group": "com.mastfrog",
+      "name": "simplevalidation",
+      "version": "1.14.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0ad4bcfb04f4c2217987ca26b311513ab130baf7ffce34196825b49f239aaa23"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "b9503419d8c0894b686ff9b5a9e75df250ca4f4b"
+        },
+        {
+          "alg": "MD5",
+          "content": "42fe758fe62900803c92ade8c7b256de"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:ui-utils:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "ui-utils",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:graph-api:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "graph-api",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.jfree:jfreechart:1.0.19",
+      "type": "library",
+      "group": "org.jfree",
+      "name": "jfreechart",
+      "version": "1.0.19",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "153d077d6399776a45de97c555ad026eb6201d4bd8af86cfce7b8b4ccfa66263"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "ba9ee7dbb2e4c57a6901c79f614ed2dea9cc0e20"
+        },
+        {
+          "alg": "MD5",
+          "content": "4ff3762bd04a7239cfb98de542134bec"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-api-progress-nb:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-api-progress-nb",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a54b1655b4e86e5bf75f574c2c6bce619caacce629bf507bcc99ae30813748d5"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "244cb047a47c63ab60b0d0017e31363942584529"
+        },
+        {
+          "alg": "MD5",
+          "content": "ad6a932000f2ae6c9e73c6c052f95152"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.jdesktop:beansbinding:1.2.1",
+      "type": "library",
+      "group": "org.jdesktop",
+      "name": "beansbinding",
+      "version": "1.2.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2c7b4e8d3af02d7410e350e20da92e65aa48c69250b855387721705f7dccfd99"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "5a34143743fc23e24b27e7cb7042ff0fb710a69b"
+        },
+        {
+          "alg": "MD5",
+          "content": "47346b34ce98fb73392207b80ad112f1"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.google.code.gson:gson:2.10",
+      "type": "library",
+      "group": "com.google.code.gson",
+      "name": "gson",
+      "version": "2.10",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0cdd163ce3598a20fc04eee71b140b24f6f2a3b35f0a499dbbdd9852e83fbfaf"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "dd9b193aef96e973d5a11ab13cd17430c2e4306b"
+        },
+        {
+          "alg": "MD5",
+          "content": "76644f361fe16dc8026486635d157b39"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.commons:commons-csv:1.9.0",
+      "type": "library",
+      "group": "org.apache.commons",
+      "name": "commons-csv",
+      "version": "1.9.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c418d6aab4db4f1f70983d355de8d7c1e755c754820a92294da2e5f5081022cc"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "b59d8f64cd0b83ee1c04ff1748de2504457018c1"
+        },
+        {
+          "alg": "MD5",
+          "content": "75559edcb39c783299289690c5a45816"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:core-library-wrapper:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "core-library-wrapper",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.jfree:jcommon:1.0.23",
+      "type": "library",
+      "group": "org.jfree",
+      "name": "jcommon",
+      "version": "1.0.23",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1e670402809484c71ec74d55b40022a4c4939c7911bd39ee5a0cfb3aaf56397c"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "a316f336ca996e0c6bec4e4fbd49be8f5e1c3968"
+        },
+        {
+          "alg": "MD5",
+          "content": "1b059adc60fef2da40b7130f9a67f977"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.pdfbox:fontbox:2.0.27",
+      "type": "library",
+      "group": "org.apache.pdfbox",
+      "name": "fontbox",
+      "version": "2.0.27",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "dc7429868aaf3d313c524b9aab846a405e89ca4927f35762ca4d1a60bce1d7f4"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "d08c064d18b2b149da937d15c0d1708cba03f29d"
+        },
+        {
+          "alg": "MD5",
+          "content": "587744efe2a82d3584c2f3969fa4dca0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-openide-filesystems:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-openide-filesystems",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b3b919cc6fc0bf61b72877879a209663293928b80770624507bd5c8745da8e89"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "39835f96e9673921b5a6c81724974ebcf17f605d"
+        },
+        {
+          "alg": "MD5",
+          "content": "0a243fc05ccf8f6ac2fb21ef527b99cb"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:desktop-icons:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "desktop-icons",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "colt:colt:1.2.0",
+      "type": "library",
+      "group": "colt",
+      "name": "colt",
+      "version": "1.2.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "e1fcbfbdd0d0caedadfb59febace5a62812db3b9425f3a03ef4c4cbba3ed0ee3"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "0abc984f3adc760684d49e0f11ddf167ba516d4f"
+        },
+        {
+          "alg": "MD5",
+          "content": "f6be558e44de25df08b9f515b2a7ffee"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.mastfrog:simplevalidation-swing:1.14.1",
+      "type": "library",
+      "group": "com.mastfrog",
+      "name": "simplevalidation-swing",
+      "version": "1.14.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "af077e10b36218cd99fc650e6479ba2f15d2506674211686230ea6967f562a88"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "2190474615d65226604933a16ca783d4475f7332"
+        },
+        {
+          "alg": "MD5",
+          "content": "f73d68f734e3c85b3b33c7e582a27c78"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.formdev:flatlaf:2.6",
+      "type": "library",
+      "group": "com.formdev",
+      "name": "flatlaf",
+      "version": "2.6",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6a897cac19c4f48b22884a21a7ddcbfa47c7fda266dba69804a6f847ab9e97c8"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "4dd2ba228e3c57eb3d80e3927b5a6a33265eb69b"
+        },
+        {
+          "alg": "MD5",
+          "content": "8c4f71bf62708fa7881b82c62579824f"
+        }
+      ]
+    },
+    {
+      "bom-ref": "concurrent:concurrent:1.3.4",
+      "type": "library",
+      "group": "concurrent",
+      "name": "concurrent",
+      "version": "1.3.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "12639def9a5b5ebf56040ab764bd42b7e662523d3b983e5d5da04bf37be152f9"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "1cf394c2a388199db550cda311174a4c6a7d117c"
+        },
+        {
+          "alg": "MD5",
+          "content": "f29b9d930d3426ebc56919eba10fbd4d"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-openide-modules:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-openide-modules",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c188d972c047e4d831aae126c190a6156e7547b61f0e3c8b7e01cbba4c9930a0"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "eda288179f1582080054d71d5b4b2a2edd95a152"
+        },
+        {
+          "alg": "MD5",
+          "content": "00bd94e4661ccaddcc7fb01b267c3fb7"
+        }
+      ]
+    },
+    {
+      "bom-ref": "net.sf.trove4j:trove4j:3.0.3",
+      "type": "library",
+      "group": "net.sf.trove4j",
+      "name": "trove4j",
+      "version": "3.0.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3c8616203d61a12a7e3487e8b34f3c198c2b5ba9e90da0c7ea32d99cd4958012"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "42ccaf4761f0dfdfa805c9e340d99a755907e2dd"
+        },
+        {
+          "alg": "MD5",
+          "content": "8fc4d4e0129244f9fd39650c5f30feb2"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.mastfrog:colorchooser:1.4",
+      "type": "library",
+      "group": "com.mastfrog",
+      "name": "colorchooser",
+      "version": "1.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "093cd6db980d20c7c0ebb27c713c1d6d711124c28d2545dd9483dd5a57344eb1"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "05b61de1f2748cecaac28e2d0a5157ac71a9debf"
+        },
+        {
+          "alg": "MD5",
+          "content": "da79668c8e39e671f4045c2c5c08fd3a"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:utils-longtask:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "utils-longtask",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-openide-windows:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-openide-windows",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0f53e0925b6be811bc0ef2bccc5a4030f5934f241644910bb953b5a478a43ece"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "23dd050666f1fb83317e2904e1321aff3a7d3712"
+        },
+        {
+          "alg": "MD5",
+          "content": "fdb2bda098e7747c4176f3ae247d6c10"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:statistics-plugin-ui:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "statistics-plugin-ui",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:statistics-plugin:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "statistics-plugin",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:statistics-api:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "statistics-api",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:io-importer-api:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "io-importer-api",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.postgresql:postgresql:42.4.3",
+      "type": "library",
+      "group": "org.postgresql",
+      "name": "postgresql",
+      "version": "42.4.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "70b65eaec096450921c600c426fe407325332fab441769a51900569f5c83dbc5"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "94866dd0f9ea533c61b29261673ac0616e3a6517"
+        },
+        {
+          "alg": "MD5",
+          "content": "e13fc27c395f5542967ec846e1f0dc71"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.mysql:mysql-connector-j:8.0.31",
+      "type": "library",
+      "group": "com.mysql",
+      "name": "mysql-connector-j",
+      "version": "8.0.31",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "5249e3dc6d6531b37790e3f61845b96db5e41e891d3d8edb0e2e3a1b53ca2f4f"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "3fd5850719d7e82d50705d34cc6a0037fab5731f"
+        },
+        {
+          "alg": "MD5",
+          "content": "15a3a312bda04a4463a118ce8b460c82"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.xerial:sqlite-jdbc:3.36.0.3",
+      "type": "library",
+      "group": "org.xerial",
+      "name": "sqlite-jdbc",
+      "version": "3.36.0.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "af3a3376391e186a0fed63ecd414b72a882bf452667b490a0be3abf85b637d3f"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "7fa71c4dfab806490cb909714fb41373ec552c29"
+        },
+        {
+          "alg": "MD5",
+          "content": "f56cac7afb2eb1b994f5c06b358827a2"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:db-drivers:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "db-drivers",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "com.google.protobuf:protobuf-java:3.19.4",
+      "type": "library",
+      "group": "com.google.protobuf",
+      "name": "protobuf-java",
+      "version": "3.19.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "e8f524c2ad5965aae31b0527bf9d4e3bc19b0dfba8c05aef114fccc7f057c94d"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "748e4e0b9e4fa6b9b1fe65690aa04a9db56cfc4d"
+        },
+        {
+          "alg": "MD5",
+          "content": "1697b144988cbe6529fd3c4ad56fe882"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.microsoft.sqlserver:mssql-jdbc:11.2.1.jre11",
+      "type": "library",
+      "group": "com.microsoft.sqlserver",
+      "name": "mssql-jdbc",
+      "version": "11.2.1.jre11",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "37cf56f17d39a85294875709a469f6701dab4c41e8f63e81b1e7be277faa9804"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "5fdbd154f97cde9779120aae93f9f6dadf3b0363"
+        },
+        {
+          "alg": "MD5",
+          "content": "1b0f969fb7f99a9161e70efe80aa3577"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:tools-api:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "tools-api",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:appearance-plugin-ui:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "appearance-plugin-ui",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:appearance-api:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "appearance-api",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:appearance-plugin:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "appearance-plugin",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:mostrecentfiles-api:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "mostrecentfiles-api",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:desktop-datalab:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "desktop-datalab",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-openide-loaders:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-openide-loaders",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "de4e080d123f2afeeb8c0017a0b9e008bc3a2f7b206ae04a15603a0abf24ae71"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "e9a978e3be69f323ed51a1d41d7cc4431bfeb4c8"
+        },
+        {
+          "alg": "MD5",
+          "content": "81f33c4b7214ff1292c280a4cb5c54c9"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-openide-explorer:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-openide-explorer",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ee0c6b14e59e674c5a35c232616dd25ea441947527996c2c172e1e9deab80adb"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "67527c0c03ef838431949a6c7725351560ae4d97"
+        },
+        {
+          "alg": "MD5",
+          "content": "48361df80254f40809c1cc3523cd5b1d"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-api-templates:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-api-templates",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "5f666bc397ab30439c978bf1e927f4726fb56e9073faa7ff35904c4966376b04"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "1460befbc52bfd1fe51373d751e149b551d27e29"
+        },
+        {
+          "alg": "MD5",
+          "content": "2fc87d81439c5a53d9551fa08894843a"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-modules-settings:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-modules-settings",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ab950c64ccdb8541ad57448760bb8a93ab9ac40c3f7495e45390572272aaa439"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "1cbf1664d21b9af29d4e5da42a6f8fda873f745d"
+        },
+        {
+          "alg": "MD5",
+          "content": "2b96adb8ec19f422574a492d58382dde"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-modules-editor-mimelookup:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-modules-editor-mimelookup",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "01ac60382d7270def852c51781de35690f4b74d198e42d99b037148a16d59ee4"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "8b593a0c75eeb682714af5dd2aa5663628e2848b"
+        },
+        {
+          "alg": "MD5",
+          "content": "d28fb1ddbb3af2039fe81cf239daa436"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-openide-actions:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-openide-actions",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "37ba6ce662dc3402cb3e20b1cc55fffbd0d461afcc10c9eb35f3877c7fbe50b1"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "e329f759be4b35372a847a573078496d2dcc26bb"
+        },
+        {
+          "alg": "MD5",
+          "content": "a6a1cecf0b6435acc9e960e45fe76668"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:desktop-io-export:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "desktop-io-export",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-api-scripting:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-api-scripting",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2689bd3ab20c23bd20da25f0405841112809482f0b7ef17ec95b8b855a0009ab"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "a03fffa47fbed8d0166a532ac9ae8b7909b0062b"
+        },
+        {
+          "alg": "MD5",
+          "content": "cb3f761d1eeebd5b340e64cabd341e55"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:desktop-project:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "desktop-project",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-openide-filesystems-nb:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-openide-filesystems-nb",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ac42e7456f3857b9358e849a172db4c07a54e7ee1d5c01f57d280f7e6c49282d"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "e4cd3e901a7a0425610603234e11dd94bee6d117"
+        },
+        {
+          "alg": "MD5",
+          "content": "16425f7a7126de3eb6000f4a719d092d"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-openide-text:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-openide-text",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "eed7ca228df7ebe451e04ee930f50af4ddaadf97d4cb3edce8a25407864a660b"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "78e6432472db417970d6acb84f8a5c6eadb0a489"
+        },
+        {
+          "alg": "MD5",
+          "content": "b9814b19bfc1c9a0f9848a4bfdbf19cf"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-modules-queries:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-modules-queries",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6d8686cd4c93a23a4e6afe348cc73f08e33a4f92091fc18657e5b1d20fd436bd"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "901267952e8cf7448815fc227a6c0a19040bd8c0"
+        },
+        {
+          "alg": "MD5",
+          "content": "761c8d4643ea398fa3845c1f5b878812"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-swing-tabcontrol:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-swing-tabcontrol",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c05f32940cf3be64b2fe562f0caecd1497e5dcc86598f34bddbaacffa5eb92d1"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "0b7f397aed27361e25f44b91671036ff94672442"
+        },
+        {
+          "alg": "MD5",
+          "content": "e5727fa434a0aa0659dc8056af04d732"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-swing-outline:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-swing-outline",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "09e3a2cc262e517b481d73b553ed03a0440f5e62c400202a095f5c74f12ef807"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "c600e28bb04800d63434830343205f2f5423808e"
+        },
+        {
+          "alg": "MD5",
+          "content": "0b4a8be1a82fc40500bd6e3338974c6a"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:datalab-api:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "datalab-api",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:io-exporter-api:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "io-exporter-api",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:io-exporter-plugin:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "io-exporter-plugin",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:desktop-filters:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "desktop-filters",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:filters-api:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "filters-api",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:io-generator-plugin:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "io-generator-plugin",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:io-generator-api:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "io-generator-api",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:desktop-branding:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "desktop-branding",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-openide-io:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-openide-io",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3366514a586ac8be342101d2c38969e3bd9683ed21e11a9b5ece310ded037097"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "56cc18a3ed9328b51c949e0a962f8a76cdf2b84e"
+        },
+        {
+          "alg": "MD5",
+          "content": "fbb7a7d2fc204424d35c617df52f2d9f"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-modules-options-api:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-modules-options-api",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8e037c5fd066c8f2c53cee6d6f5da569e12c012e9535e53aeb2345a395e5cc4f"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "31226563cbf33d9876e396c6b77f41d367d50039"
+        },
+        {
+          "alg": "MD5",
+          "content": "18326bc2550e19550563b885ced2979a"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-modules-autoupdate-services:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-modules-autoupdate-services",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "bdd005bd145749da2dce1f7ee7d12413ad592ae9edbb0b50daf4a7d60c6ef2e9"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "7aae0c356f28c241669d9d1e6ce2c1d5faf12f5d"
+        },
+        {
+          "alg": "MD5",
+          "content": "c8f70d4511b023f010ce280c8d1e38a5"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.jogamp.jogl:jogl-all-natives-macosx-universal:v2.4.0-rc4",
+      "type": "library",
+      "group": "org.jogamp.jogl",
+      "name": "jogl-all-natives-macosx-universal",
+      "version": "v2.4.0-rc4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3befff1dba50d743e2191f27513f1927816eda4a23f2e77c9792e2115b874fa6"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "7fc81138da3bce41c6996e8287546eef4e94f698"
+        },
+        {
+          "alg": "MD5",
+          "content": "afd4066f80974bb5ddd435a6a76242e6"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.jogamp.gluegen:gluegen-rt:v2.4.0-rc4",
+      "type": "library",
+      "group": "org.jogamp.gluegen",
+      "name": "gluegen-rt",
+      "version": "v2.4.0-rc4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1a196212a1dd07b708d5039805a040f00b2b3b975ad332009ac5fc8b4d2b418f"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "f17f418a5ab24367196254de3d433c90b52f91c0"
+        },
+        {
+          "alg": "MD5",
+          "content": "2c04ce77205a7dedf399b60c70294c4e"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:desktop-window:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "desktop-window",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-swing-plaf:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-swing-plaf",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d59f9d279b92c5c35e505bebc7762d8f7558c77837f0ef2f5980c3e5b61bdc2b"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "ccf4898b2fc475725ae36658daa55af4a3087e1c"
+        },
+        {
+          "alg": "MD5",
+          "content": "f13199672c6961aac2a4c64c682a9537"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:visualization:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "visualization",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:visualization-api:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "visualization-api",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.jogamp.gluegen:gluegen-rt-natives-windows-i586:v2.4.0-rc4",
+      "type": "library",
+      "group": "org.jogamp.gluegen",
+      "name": "gluegen-rt-natives-windows-i586",
+      "version": "v2.4.0-rc4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "985eeb02eb0152297cc72b596c4a7ad883242f4f1def4e35e0e7cc49f5f551f9"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "633e57b15e917f3cdc09af24858f42e9a60fad72"
+        },
+        {
+          "alg": "MD5",
+          "content": "39226603b75fe1cd1acbfcca8f964226"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.external:updater:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.external",
+      "name": "updater",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "98ef0960e2cf8c46600c13c3d4cbc58c8cc8690f57acfde3730b6c10c1de9db6"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "b24c2d07ba928ab14fef3c8bdab8e4994a84226a"
+        },
+        {
+          "alg": "MD5",
+          "content": "714f29bc13e542a556013e8ff48f4147"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-api-io:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-api-io",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6de1fa8853d19863d1644477499d58a2e9a002e726c3dc72d1f99fc147d78c8c"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "d5b5e1a0431532a770eb93fb92f7570d9751a111"
+        },
+        {
+          "alg": "MD5",
+          "content": "55c4b7d07781e8ddef6be159ed7e5850"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.jogamp.jogl:jogl-all-natives-linux-amd64:v2.4.0-rc4",
+      "type": "library",
+      "group": "org.jogamp.jogl",
+      "name": "jogl-all-natives-linux-amd64",
+      "version": "v2.4.0-rc4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "595df3e5afa85877947faf2574ca9aea96414750c32c79040a952a2165fcfe1e"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "94ac20dcc8ad941fe01546a75318412aed357daf"
+        },
+        {
+          "alg": "MD5",
+          "content": "ca30ad636fe84a0d63685f62fa4208fa"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.jogamp.jogl:jogl-all-natives-linux-i586:v2.4.0-rc4",
+      "type": "library",
+      "group": "org.jogamp.jogl",
+      "name": "jogl-all-natives-linux-i586",
+      "version": "v2.4.0-rc4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "781992c3f35e610481edacdcc13f87f4eacb6c08605fda05695c1ca90bf7c956"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "2f2cf07eea99c07bbacebf3f697ff75b02c6a4a9"
+        },
+        {
+          "alg": "MD5",
+          "content": "9d05fd60b6176bc22fa65b0f0af634d6"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.jogamp.jogl:jogl-all-natives-windows-i586:v2.4.0-rc4",
+      "type": "library",
+      "group": "org.jogamp.jogl",
+      "name": "jogl-all-natives-windows-i586",
+      "version": "v2.4.0-rc4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3cf5d9f4ae33eef98762e49ac4592549b3dcf2c265653fcb44912742ca648458"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "7a0ee4592709ea513631d4301180010f16c8e6a0"
+        },
+        {
+          "alg": "MD5",
+          "content": "4dd382f1dabde7268bfb3e415248a7f0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.jogamp.jogl:jogl-all:2.4.0-rc-20221118",
+      "type": "library",
+      "group": "org.jogamp.jogl",
+      "name": "jogl-all",
+      "version": "2.4.0-rc-20221118",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "4e2aa3188aead0aa699b302da872bc1a9be7e5b368a3a6b3e37f88b5953cf2e5"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "0e0c456fdbbe6e8a46b3665ed436bf45182f6406"
+        },
+        {
+          "alg": "MD5",
+          "content": "4d1f58665263601cf6fc11091a62fc61"
+        }
+      ]
+    },
+    {
+      "bom-ref": "io.sentry:sentry:5.7.3",
+      "type": "library",
+      "group": "io.sentry",
+      "name": "sentry",
+      "version": "5.7.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "94a414c661ffe8b70bc835b37e7133a7d5d5ca322c898dbd219778872dc327bb"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "7ee79f4ac3c71374399bad7827391fd43acdd248"
+        },
+        {
+          "alg": "MD5",
+          "content": "8c8ac38d02b82377e7a9b1b07efc9d4d"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-modules-sendopts:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-modules-sendopts",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "cf7269a3fad5f46493f1d564a4f6d1cb7cd344df28b8317a633fbf2ee84d0d44"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "e1b1483a0fcce34c187729647e4b63ee2e482272"
+        },
+        {
+          "alg": "MD5",
+          "content": "14e7e38635038975415b87fbd0651651"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.jogamp.gluegen:gluegen-rt-natives-linux-amd64:v2.4.0-rc4",
+      "type": "library",
+      "group": "org.jogamp.gluegen",
+      "name": "gluegen-rt-natives-linux-amd64",
+      "version": "v2.4.0-rc4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "062b6cd9a1cddb3e38b63c824d4aeab1067319e9bd908ac18439abf3cd795b69"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "64beef0c05e2c8439e7c585bed2bcb2793197a1a"
+        },
+        {
+          "alg": "MD5",
+          "content": "46c9c32296b19148d9e22414041963c4"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.modules:org-netbeans-core-output2:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.modules",
+      "name": "org-netbeans-core-output2",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ca1666a764090941b635fe5ea156588c8a62962ea9ace192b2a3cfcbc1fd23a3"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "c1e03aa45317c58af05be9b5bee682a52d2b301d"
+        },
+        {
+          "alg": "MD5",
+          "content": "ca873deb84b78c62915fc2c975e6d432"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.jogamp.gluegen:gluegen-rt-natives-macosx-universal:v2.4.0-rc4",
+      "type": "library",
+      "group": "org.jogamp.gluegen",
+      "name": "gluegen-rt-natives-macosx-universal",
+      "version": "v2.4.0-rc4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "64246cf4a4245093b4cd879a546cba41bdb3fe937f2efca062bda168f0cc8269"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "cf8bc8107c5728252f6883ff39266c82acf25e42"
+        },
+        {
+          "alg": "MD5",
+          "content": "ffadcb49085512a453108908446090a7"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.modules:org-netbeans-modules-options-keymap:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.modules",
+      "name": "org-netbeans-modules-options-keymap",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ca3fdfcd0463b39779e0fa73c3edbb28ebdebafeb1e7a09098427781fb334b43"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "9f88828f4181fb819cf2b644c3d25da2456dd94d"
+        },
+        {
+          "alg": "MD5",
+          "content": "e068d51b062b46f4cd4a394f5267c03d"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-spi-quicksearch:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-spi-quicksearch",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d2ac6970219ea031489572c0b375d918983c8a9e028a6f9d7f57890ff6461dba"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "c9955d3812f4ef1c63f1bfcacb26624712f06135"
+        },
+        {
+          "alg": "MD5",
+          "content": "8cea655bc3286687f3f94ec7a911588c"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-api-intent:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-api-intent",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d670e0db705d9f9228dc984621df26647386658e7b5d1757fe2cc3b3c55ebefa"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "e408be204c8f420ee9a7b9b79708ebca9d88699f"
+        },
+        {
+          "alg": "MD5",
+          "content": "54846f82dd166a48bf26716231794efa"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:perspective-api:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "perspective-api",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.jogamp.gluegen:gluegen-rt-natives-linux-i586:v2.4.0-rc4",
+      "type": "library",
+      "group": "org.jogamp.gluegen",
+      "name": "gluegen-rt-natives-linux-i586",
+      "version": "v2.4.0-rc4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "77aac24b47d9b0df2d9be750c9c57e73d5cd425e371757167dfa1559ca3b7b5b"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "a04eb29b62e834c4b51e18ddee09ac89dde7e73e"
+        },
+        {
+          "alg": "MD5",
+          "content": "76644fcb54af577baaedb23aab2a88a7"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.jogamp.jogl:jogl-all-natives-windows-amd64:v2.4.0-rc4",
+      "type": "library",
+      "group": "org.jogamp.jogl",
+      "name": "jogl-all-natives-windows-amd64",
+      "version": "v2.4.0-rc4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "47466cdc925dbb18e5e6222fa6c0b3c99233fd7996f71a341cebc4d525fe4dc1"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "5c41aec221dbba353ea3207c41b8e4b5e33aaba2"
+        },
+        {
+          "alg": "MD5",
+          "content": "b9e25c43bbb7d4df3a32ba90807aaead"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.jogamp.gluegen:gluegen-rt-natives-windows-amd64:v2.4.0-rc4",
+      "type": "library",
+      "group": "org.jogamp.gluegen",
+      "name": "gluegen-rt-natives-windows-amd64",
+      "version": "v2.4.0-rc4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "dd2a4bceb583290575ee3d0ff4e90dff2b9d9c5c10f2f5981680dbeae0a6ea31"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "52d1b149cfc0ee5f8cc0dbda4d1e1e07b5e69639"
+        },
+        {
+          "alg": "MD5",
+          "content": "7e3472f1c054efad31ec712f2dfe3b1e"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:desktop-preview:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "desktop-preview",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.apache.xmlgraphics:batik-css:1.16",
+      "type": "library",
+      "group": "org.apache.xmlgraphics",
+      "name": "batik-css",
+      "version": "1.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1f7e51c703813f21de58e9be4e6d907cef3a5540d23047507af9c4c5dc396419"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "9151bffd3799b8f55fb27b81f06156183ffeb307"
+        },
+        {
+          "alg": "MD5",
+          "content": "018b3911720074464552b09acb09187e"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.xmlgraphics:batik-svg-dom:1.16",
+      "type": "library",
+      "group": "org.apache.xmlgraphics",
+      "name": "batik-svg-dom",
+      "version": "1.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "701ee2e9c14ff7d39759db8fa8a8dd04398cbf9d38c75ad5ca178f05d99f4406"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "d16a96149c33cde0eb5ed688308abf067e73e5a4"
+        },
+        {
+          "alg": "MD5",
+          "content": "ee7f7021afdfbe71b209871159da5765"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.xmlgraphics:batik-anim:1.16",
+      "type": "library",
+      "group": "org.apache.xmlgraphics",
+      "name": "batik-anim",
+      "version": "1.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "93d2948dfc9837c392cb9c97d5ddaa4db95845e3061974b4ab94148f1587ddbf"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "aa73e4fff38898d9a4f85e662bd2d40fd71dbc0d"
+        },
+        {
+          "alg": "MD5",
+          "content": "ef2d01e77dc121a894a6da6c5028e8dc"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:batik-wrapper:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "batik-wrapper",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "xml-apis:xml-apis-ext:1.3.04",
+      "type": "library",
+      "group": "xml-apis",
+      "name": "xml-apis-ext",
+      "version": "1.3.04",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d0b4887dc34d57de49074a58affad439a013d0baffa1a8034f8ef2a5ea191646"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "41a8b86b358e87f3f13cf46069721719105aff66"
+        },
+        {
+          "alg": "MD5",
+          "content": "bcb07d3b8d2397db7a3013b6465d347b"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.xmlgraphics:batik-shared-resources:1.16",
+      "type": "library",
+      "group": "org.apache.xmlgraphics",
+      "name": "batik-shared-resources",
+      "version": "1.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "318543fe05ee0d118938d9302b2fce137d040f31d71e042d2ca02406e386974a"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "75809160dd805a8ce29b655671cd29e47da43efd"
+        },
+        {
+          "alg": "MD5",
+          "content": "d6b1e374064c15ad7cd1a5b06d9ee1a9"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.xmlgraphics:batik-transcoder:1.16",
+      "type": "library",
+      "group": "org.apache.xmlgraphics",
+      "name": "batik-transcoder",
+      "version": "1.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "eaf365c90f758ab95deedf4d21331d5cdf0fa4e00df715df0240ab8f6653ff1e"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "ddcb38dfddffa775bbda3340e44eddff9ef95451"
+        },
+        {
+          "alg": "MD5",
+          "content": "1290ebbcaf1ebbef5e16750eb639d54c"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.xmlgraphics:batik-dom:1.16",
+      "type": "library",
+      "group": "org.apache.xmlgraphics",
+      "name": "batik-dom",
+      "version": "1.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "968dbc4bd291bb3c0074dc4b60223c4a95e0455c7b8c2a51ce5fe92aa68e15a1"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "2d0d63c9177d5c25b52061464457478e9f74363a"
+        },
+        {
+          "alg": "MD5",
+          "content": "3a8e777a8777513a2b80ec91d06252da"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.xmlgraphics:batik-script:1.16",
+      "type": "library",
+      "group": "org.apache.xmlgraphics",
+      "name": "batik-script",
+      "version": "1.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a66febdb41d9bade0e11e6320ed4914ea2799aa6b814c5ec7f35589b370733dc"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "ba120da776d0ecb18c2280c6d9f503484dc1c12c"
+        },
+        {
+          "alg": "MD5",
+          "content": "bfcf216f539f5718c7345322e0f060fc"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:preview-api:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "preview-api",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.apache.xmlgraphics:batik-gvt:1.16",
+      "type": "library",
+      "group": "org.apache.xmlgraphics",
+      "name": "batik-gvt",
+      "version": "1.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2232cfd309c30c5ee2d37d9efbacc8c708da091af747a77c4fc04287e234bd41"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "aeee5beb6f1eaa4304bf7e9d4c185b126b743d8c"
+        },
+        {
+          "alg": "MD5",
+          "content": "fe24bef455f4d6820321210574ea209b"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.xmlgraphics:batik-util:1.16",
+      "type": "library",
+      "group": "org.apache.xmlgraphics",
+      "name": "batik-util",
+      "version": "1.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a8306eda7a840685da7a730cdd99a63f8145ceb543017779d438c9d67550bfa2"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "cc144a6a69fac333e5ed10ac3169768ceff2b840"
+        },
+        {
+          "alg": "MD5",
+          "content": "d8f93a8809db85573d4f8c576ff2ad2f"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.xmlgraphics:batik-i18n:1.16",
+      "type": "library",
+      "group": "org.apache.xmlgraphics",
+      "name": "batik-i18n",
+      "version": "1.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "94fc90806f7cb823dabc0d292012ed97d637207329dc8d2f351f52e0a9107d9a"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "6e45a40b5e67f89d528bb511d7d938c161dcbc1f"
+        },
+        {
+          "alg": "MD5",
+          "content": "b2ac749b22077fb0f46ec912da8bfdde"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.xmlgraphics:batik-constants:1.16",
+      "type": "library",
+      "group": "org.apache.xmlgraphics",
+      "name": "batik-constants",
+      "version": "1.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0bdc9ac3e0b93f26cafd3fd8e3065d13fe678865115fc162f4d627fa0af35ad5"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "924370bb08a8ef1d3983d5ea587a17c7845d9af6"
+        },
+        {
+          "alg": "MD5",
+          "content": "dbb70585ab60d60fee6b42b814756023"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.xmlgraphics:batik-ext:1.16",
+      "type": "library",
+      "group": "org.apache.xmlgraphics",
+      "name": "batik-ext",
+      "version": "1.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a12be0ba0f20a9f57ca16f76685366485b8c3119eaf5a2da4a34008d4947db73"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "3114e178d00db9053498f23cc46668b93c44dbc5"
+        },
+        {
+          "alg": "MD5",
+          "content": "88db233e758febe33059f2be9f7c7fc8"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.xmlgraphics:batik-xml:1.16",
+      "type": "library",
+      "group": "org.apache.xmlgraphics",
+      "name": "batik-xml",
+      "version": "1.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "56f1ed597857bc81f5db7e669d15caa7d9497887e2710f0f98eea4b3e3f8ddaa"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "3055a9f0b0ee5b327c35c62749189b1c4683bc56"
+        },
+        {
+          "alg": "MD5",
+          "content": "3147e6cfe396df25489c8c5899213d0d"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.xmlgraphics:batik-awt-util:1.16",
+      "type": "library",
+      "group": "org.apache.xmlgraphics",
+      "name": "batik-awt-util",
+      "version": "1.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "dc0409227230b21a69ac3e79359385e2300df76728ec26081c6ed6c4373d3f13"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "2f884535c65e892cfe14c7cdc660274528ec15f0"
+        },
+        {
+          "alg": "MD5",
+          "content": "5493fc13976389ff705f96f8670f5cb8"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.xmlgraphics:xmlgraphics-commons:2.7",
+      "type": "library",
+      "group": "org.apache.xmlgraphics",
+      "name": "xmlgraphics-commons",
+      "version": "2.7",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1fe37a1927bdd699730f0ad39f50a699c9ab4dff0ad047dff1e846cb120ae2b1"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "336ddd6d0a244cdebf26a298fb7c3a5fd45449db"
+        },
+        {
+          "alg": "MD5",
+          "content": "ec712218e2391e64672fd8ed1e9e1d71"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.xmlgraphics:batik-svggen:1.16",
+      "type": "library",
+      "group": "org.apache.xmlgraphics",
+      "name": "batik-svggen",
+      "version": "1.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "4bb25e0267d80765a4f87063ff3cac77688b045dafe8e903452c6b3fae9b249c"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "714b527914c8295bc1f479b60b0d257357c1318c"
+        },
+        {
+          "alg": "MD5",
+          "content": "48657fb48029f0427b01e34eb20a6884"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.xmlgraphics:batik-parser:1.16",
+      "type": "library",
+      "group": "org.apache.xmlgraphics",
+      "name": "batik-parser",
+      "version": "1.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "98257ac1b9daf378d917d7ac005ec9d85a17cfbb88fa744d0fed0d176e403220"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "8217bd068a48dc79c207c95821fe5c0d3d4c8b62"
+        },
+        {
+          "alg": "MD5",
+          "content": "62c4e0778339752a1f6f4d53ea3aef2f"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.xmlgraphics:batik-bridge:1.16",
+      "type": "library",
+      "group": "org.apache.xmlgraphics",
+      "name": "batik-bridge",
+      "version": "1.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a96031c2664599b43eee89ada011b6f20fb1d940bf70d1e830fbf780e7e2c86d"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "d5384b5f1eba4050a2ebe129a9ab686b97d667ac"
+        },
+        {
+          "alg": "MD5",
+          "content": "67eb64799e6d69a8d9ac19ccc5a8f2d9"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:layout-plugin:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "layout-plugin",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:layout-api:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "layout-api",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:desktop-appearance:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "desktop-appearance",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:desktop-import:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "desktop-import",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:desktop-layout:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "desktop-layout",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:desktop-tools:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "desktop-tools",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:datalab-plugin:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "datalab-plugin",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:export-plugin-ui:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "export-plugin-ui",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:filters-impl:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "filters-impl",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:desktop-statistics:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "desktop-statistics",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:io-exporter-preview:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "io-exporter-preview",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:io-importer-plugin:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "io-importer-plugin",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.apache.poi:poi-ooxml:5.2.3",
+      "type": "library",
+      "group": "org.apache.poi",
+      "name": "poi-ooxml",
+      "version": "5.2.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "9b8ff6ecf562836299ce15997796e3d47fe063a5956c1c7d3f6e2a4bf6e60b79"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "02efd11c940adb18c03eb9ce7ad88fc40ee6a196"
+        },
+        {
+          "alg": "MD5",
+          "content": "4874ead60c5e3aa7fcf29d3ad351eefa"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.github.virtuald:curvesapi:1.07",
+      "type": "library",
+      "group": "com.github.virtuald",
+      "name": "curvesapi",
+      "version": "1.07",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b31539cdcf189d9e68a1f6998cba09ea912f99f5f24bcd0650212b1af9d355a2"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "863654849995f9d4f0ed2ed1a3870da3a108473c"
+        },
+        {
+          "alg": "MD5",
+          "content": "79e44d3a323887fba21a34202b8eb1f9"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.logging.log4j:log4j-api:2.18.0",
+      "type": "library",
+      "group": "org.apache.logging.log4j",
+      "name": "log4j-api",
+      "version": "2.18.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b977057233153b242ac58cc5b7d3121136b9c34c86c1e191c042ba4a828144c5"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "c72ad9b1d8d42e4ea7befd8248bf05877af4c63d"
+        },
+        {
+          "alg": "MD5",
+          "content": "38d29af13312d716f8d1d8fd79736f05"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.xmlbeans:xmlbeans:5.1.1",
+      "type": "library",
+      "group": "org.apache.xmlbeans",
+      "name": "xmlbeans",
+      "version": "5.1.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "5f484a78bed71cbffe3709678b6bdd3463781a7c61c6d9872330aecbf150762a"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "48a369df0eccb509d46203104e4df9cb00f0f68b"
+        },
+        {
+          "alg": "MD5",
+          "content": "6f137af5334fbd77a2d64f5de8bf6ff6"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.poi:poi-ooxml-lite:5.2.3",
+      "type": "library",
+      "group": "org.apache.poi",
+      "name": "poi-ooxml-lite",
+      "version": "5.2.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "35a200a9bd110b176450179170887bb9eac2dcba47a09d93c91e83afe70b7147"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "db113c8e9051b0ff967f4911fa20336c8325a7c5"
+        },
+        {
+          "alg": "MD5",
+          "content": "95016533b766ce1e4e5d8da783efff57"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.zaxxer:SparseBitSet:1.2",
+      "type": "library",
+      "group": "com.zaxxer",
+      "name": "SparseBitSet",
+      "version": "1.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "91e6b318c901a0f2dd1f6ce781d62474435ae627d22fbac9b21bbc39ffd804b6"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "8467c813d442837fcaeddbc42cf5c5359fab4933"
+        },
+        {
+          "alg": "MD5",
+          "content": "1c6032441aec11b523e1a7bfa96d60cf"
+        }
+      ]
+    },
+    {
+      "bom-ref": "commons-io:commons-io:2.11.0",
+      "type": "library",
+      "group": "commons-io",
+      "name": "commons-io",
+      "version": "2.11.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "961b2f6d87dbacc5d54abf45ab7a6e2495f89b75598962d8c723cea9bc210908"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "a2503f302b11ebde7ebc3df41daebe0e4eea3689"
+        },
+        {
+          "alg": "MD5",
+          "content": "3b4b7ccfaeceeac240b804839ee1a1ca"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.codehaus.woodstox:stax2-api:4.2.1",
+      "type": "library",
+      "group": "org.codehaus.woodstox",
+      "name": "stax2-api",
+      "version": "4.2.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "678567e48b51a42c65c699f266539ad3d676d4b1a5b0ad7d89ece8b9d5772579"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "a3f7325c52240418c2ba257b103c3c550e140c83"
+        },
+        {
+          "alg": "MD5",
+          "content": "af8377bc7882332e22456616a9f164f6"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.commons:commons-collections4:4.4",
+      "type": "library",
+      "group": "org.apache.commons",
+      "name": "commons-collections4",
+      "version": "4.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1df8b9430b5c8ed143d7815e403e33ef5371b2400aadbe9bda0883762e0846d1"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "62ebe7544cb7164d87e0637a2a6a2bdc981395e8"
+        },
+        {
+          "alg": "MD5",
+          "content": "4a37023740719b391f10030362c86be6"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.fasterxml.woodstox:woodstox-core:6.4.0",
+      "type": "library",
+      "group": "com.fasterxml.woodstox",
+      "name": "woodstox-core",
+      "version": "6.4.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d6eb9f2f40049a7a808baf11ffba0737648e62ff52fde9271d808e5d57a27279"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "c47579857bbf12c85499f431d4ecf27d77976b7c"
+        },
+        {
+          "alg": "MD5",
+          "content": "afcba1114fca8199ef26346dd6011e90"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.poi:poi:5.2.3",
+      "type": "library",
+      "group": "org.apache.poi",
+      "name": "poi",
+      "version": "5.2.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1d4c81a283e127693db89e85df45119d9d312d5686d2439b5be9445c2c649155"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "2fb22ae74ad5aea6af1a9c64b9542f2ccf348604"
+        },
+        {
+          "alg": "MD5",
+          "content": "d4b21c2109d83abb8e93ba4bcfbdeb3a"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:tools-plugin:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "tools-plugin",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:algorithms-plugin:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "algorithms-plugin",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:settings-upgrader:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "settings-upgrader",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:gephi-parent:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "gephi-parent",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:generator-plugin-ui:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "generator-plugin-ui",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:desktop-search:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "desktop-search",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:preview-plugin:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "preview-plugin",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:filters-plugin-ui:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "filters-plugin-ui",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:filters-plugin:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "filters-plugin",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:timeline-api:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "timeline-api",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:desktop-timeline:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "desktop-timeline",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:desktop-context:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "desktop-context",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:desktop-generate:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "desktop-generate",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:import-plugin-ui:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "import-plugin-ui",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:preview-export-ui:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "preview-export-ui",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.ow2.asm:asm-commons:9.3",
+      "type": "library",
+      "group": "org.ow2.asm",
+      "name": "asm-commons",
+      "version": "9.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a347c24732db2aead106b6e5996a015b06a3ef86e790a4f75b61761f0d2f7f39"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "1f2a432d1212f5c352ae607d7b61dcae20c20af5"
+        },
+        {
+          "alg": "MD5",
+          "content": "16e6ac17d33ad97baa415c42e9d93d38"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.modules:org-netbeans-bootstrap:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.modules",
+      "name": "org-netbeans-bootstrap",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ea9c629edd7e6ac2428323b32d5629b4a32b6aeea49b67766801962014cea05d"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "47093fc20fae0242e4e810eb6d2afc33c8dbe535"
+        },
+        {
+          "alg": "MD5",
+          "content": "e299eba32760bfce2888c093b6e4337d"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.ow2.asm:asm:9.3",
+      "type": "library",
+      "group": "org.ow2.asm",
+      "name": "asm",
+      "version": "9.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1263369b59e29c943918de11d6d6152e2ec6085ce63e5710516f8c67d368e4bc"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "8e6300ef51c1d801a7ed62d07cd221aca3a90640"
+        },
+        {
+          "alg": "MD5",
+          "content": "e1c3b96035117ab516ffe0de9bd696e0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.ow2.asm:asm-analysis:9.3",
+      "type": "library",
+      "group": "org.ow2.asm",
+      "name": "asm-analysis",
+      "version": "9.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "37fd5392bb2cf4c15f202ffefd46d0e92bb34ff848c549f30d426a60d6b29495"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "4b071f211b37c38e0e9f5998550197c8593f6ad8"
+        },
+        {
+          "alg": "MD5",
+          "content": "11e43c0220b3f6b4791b8abf7b4cc7ef"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.modules:org-netbeans-core-startup:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.modules",
+      "name": "org-netbeans-core-startup",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2e06b0c32d9de61e48bd94d2a7a1a7ea96e7a2718f19a111aa4c5d2cf4c93877"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "b7e2e959c6446a439445627e37d4e20c2d83ccd9"
+        },
+        {
+          "alg": "MD5",
+          "content": "573befc998bb8da969aa7ccb662666d5"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.modules:org-netbeans-core-startup-base:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.modules",
+      "name": "org-netbeans-core-startup-base",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "20fd4b2848f216d89854a800a7917ded1c3fc740751943889fe132eb86775fcf"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "efc4c2f624b221c5fd3b6dde02eef37df6a1e888"
+        },
+        {
+          "alg": "MD5",
+          "content": "a32362d16c91e6f2f3ad496aab369340"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.netbeans.api:org-netbeans-libs-asm:RELEASE160",
+      "type": "library",
+      "group": "org.netbeans.api",
+      "name": "org-netbeans-libs-asm",
+      "version": "RELEASE160",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1b575ef7019ec86d1446d6cb64fa76de177001270254d3f80996883ed0ceeeb8"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "942e535c54886095d89c0527045c648825637ea7"
+        },
+        {
+          "alg": "MD5",
+          "content": "b871123cedfd298e8a3ef911616a3194"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.ow2.asm:asm-tree:9.3",
+      "type": "library",
+      "group": "org.ow2.asm",
+      "name": "asm-tree",
+      "version": "9.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ae629c2609f39681ef8d140a42a23800464a94f2d23e36d8f25cd10d5e4caff4"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "78d2ecd61318b5a58cd04fb237636c0e86b77d97"
+        },
+        {
+          "alg": "MD5",
+          "content": "f087bfb911ff93957e44860de3e73c46"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.gephi:gephi:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "gephi",
+      "version": "0.10.1"
+    },
+    {
+      "bom-ref": "org.gephi:welcome-screen:0.10.1",
+      "type": "application",
+      "group": "org.gephi",
+      "name": "welcome-screen",
+      "version": "0.10.1"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "org.jfree:jfreechart:1.0.19",
+      "dependsOn": [
+        "org.jfree:jcommon:1.0.23"
+      ]
+    },
+    {
+      "ref": "org.gephi:project-api:0.10.1",
+      "dependsOn": [
+        "org.gephi:utils-longtask:0.10.1"
+      ]
+    },
+    {
+      "ref": "org.apache.xmlgraphics:batik-transcoder:1.16",
+      "dependsOn": [
+        "org.apache.xmlgraphics:batik-gvt:1.16",
+        "org.apache.xmlgraphics:batik-util:1.16",
+        "org.apache.xmlgraphics:batik-xml:1.16",
+        "org.apache.xmlgraphics:batik-svggen:1.16",
+        "xml-apis:xml-apis-ext:1.3.04",
+        "org.apache.xmlgraphics:batik-shared-resources:1.16",
+        "org.apache.xmlgraphics:batik-awt-util:1.16",
+        "org.apache.xmlgraphics:batik-bridge:1.16",
+        "org.apache.xmlgraphics:batik-anim:1.16",
+        "org.apache.xmlgraphics:batik-dom:1.16"
+      ]
+    },
+    {
+      "ref": "org.gephi:desktop-preview:0.10.1",
+      "dependsOn": [
+        "org.gephi:preview-api:0.10.1"
+      ]
+    },
+    {
+      "ref": "org.ow2.asm:asm-commons:9.3",
+      "dependsOn": [
+        "org.ow2.asm:asm-analysis:9.3"
+      ]
+    },
+    {
+      "ref": "org.gephi:core-library-wrapper:0.10.1",
+      "dependsOn": [
+        "org.apache.pdfbox:pdfbox:2.0.27",
+        "org.apache.commons:commons-math3:3.6.1",
+        "net.java.dev:stax-utils:snapshot-20100402",
+        "org.jfree:jfreechart:1.0.19",
+        "com.google.code.gson:gson:2.10",
+        "org.apache.commons:commons-csv:1.9.0",
+        "net.sf.trove4j:trove4j:3.0.3",
+        "org.apache.commons:commons-compress:1.22",
+        "commons-codec:commons-codec:1.15"
+      ]
+    },
+    {
+      "ref": "colt:colt:1.2.0",
+      "dependsOn": [
+        "concurrent:concurrent:1.3.4"
+      ]
+    },
+    {
+      "ref": "org.gephi:desktop-filters:0.10.1",
+      "dependsOn": [
+        "org.gephi:filters-api:0.10.1"
+      ]
+    },
+    {
+      "ref": "org.apache.xmlgraphics:batik-util:1.16",
+      "dependsOn": [
+        "org.apache.xmlgraphics:batik-constants:1.16",
+        "org.apache.xmlgraphics:batik-i18n:1.16"
+      ]
+    },
+    {
+      "ref": "com.mysql:mysql-connector-j:8.0.31",
+      "dependsOn": [
+        "com.google.protobuf:protobuf-java:3.19.4"
+      ]
+    },
+    {
+      "ref": "org.gephi:appearance-plugin-ui:0.10.1",
+      "dependsOn": [
+        "org.gephi:appearance-api:0.10.1",
+        "org.gephi:appearance-plugin:0.10.1"
+      ]
+    },
+    {
+      "ref": "org.netbeans.modules:org-netbeans-core-output2:RELEASE160",
+      "dependsOn": [
+        "org.netbeans.api:org-netbeans-swing-plaf:RELEASE160",
+        "org.netbeans.modules:org-netbeans-modules-options-keymap:RELEASE160"
+      ]
+    },
+    {
+      "ref": "org.gephi:ui-components:0.10.1",
+      "dependsOn": [
+        "org.netbeans.api:org-openide-windows:RELEASE160",
+        "org.netbeans.api:org-openide-util-ui:RELEASE160",
+        "org.gephi:ui-utils:0.10.1",
+        "org.gephi:desktop-icons:0.10.1",
+        "org.netbeans.api:org-openide-nodes:RELEASE160",
+        "org.netbeans.api:org-openide-util:RELEASE160",
+        "org.gephi:core-library-wrapper:0.10.1",
+        "org.gephi:utils:0.10.1",
+        "org.netbeans.api:org-openide-awt:RELEASE160",
+        "org.gephi:ui-library-wrapper:0.10.1"
+      ]
+    },
+    {
+      "ref": "org.gephi:io-importer-plugin:0.10.1",
+      "dependsOn": [
+        "org.apache.poi:poi-ooxml:5.2.3",
+        "com.fasterxml.woodstox:woodstox-core:6.4.0"
+      ]
+    },
+    {
+      "ref": "org.gephi:batik-wrapper:0.10.1",
+      "dependsOn": [
+        "org.apache.xmlgraphics:batik-transcoder:1.16"
+      ]
+    },
+    {
+      "ref": "org.apache.xmlgraphics:batik-awt-util:1.16",
+      "dependsOn": [
+        "org.apache.xmlgraphics:xmlgraphics-commons:2.7"
+      ]
+    },
+    {
+      "ref": "org.gephi:desktop-branding:0.10.1",
+      "dependsOn": [
+        "org.netbeans.api:org-openide-io:RELEASE160",
+        "org.netbeans.api:org-netbeans-modules-autoupdate-services:RELEASE160",
+        "org.gephi:desktop-window:0.10.1",
+        "org.gephi:visualization:0.10.1",
+        "io.sentry:sentry:5.7.3",
+        "org.netbeans.api:org-netbeans-modules-sendopts:RELEASE160",
+        "org.netbeans.modules:org-netbeans-core-output2:RELEASE160"
+      ]
+    },
+    {
+      "ref": "org.netbeans.modules:org-netbeans-core-startup:RELEASE160",
+      "dependsOn": [
+        "org.netbeans.modules:org-netbeans-bootstrap:RELEASE160",
+        "org.netbeans.modules:org-netbeans-core-startup-base:RELEASE160",
+        "org.netbeans.api:org-netbeans-libs-asm:RELEASE160"
+      ]
+    },
+    {
+      "ref": "org.gephi:desktop-window:0.10.1",
+      "dependsOn": [
+        "org.netbeans.api:org-netbeans-modules-options-api:RELEASE160",
+        "org.gephi:perspective-api:0.10.1"
+      ]
+    },
+    {
+      "ref": "org.gephi:visualization:0.10.1",
+      "dependsOn": [
+        "org.jogamp.jogl:jogl-all-natives-macosx-universal:v2.4.0-rc4",
+        "org.jogamp.jogl:jogl-all:2.4.0-rc-20221118",
+        "org.jogamp.gluegen:gluegen-rt-natives-linux-i586:v2.4.0-rc4",
+        "org.jogamp.gluegen:gluegen-rt:v2.4.0-rc4",
+        "org.jogamp.gluegen:gluegen-rt-natives-windows-amd64:v2.4.0-rc4",
+        "org.jogamp.gluegen:gluegen-rt-natives-macosx-universal:v2.4.0-rc4",
+        "org.jogamp.jogl:jogl-all-natives-windows-amd64:v2.4.0-rc4",
+        "org.jogamp.gluegen:gluegen-rt-natives-windows-i586:v2.4.0-rc4",
+        "org.jogamp.jogl:jogl-all-natives-linux-i586:v2.4.0-rc4",
+        "org.jogamp.jogl:jogl-all-natives-windows-i586:v2.4.0-rc4",
+        "org.gephi:visualization-api:0.10.1",
+        "org.jogamp.jogl:jogl-all-natives-linux-amd64:v2.4.0-rc4",
+        "org.jogamp.gluegen:gluegen-rt-natives-linux-amd64:v2.4.0-rc4"
+      ]
+    },
+    {
+      "ref": "org.gephi:preview-api:0.10.1",
+      "dependsOn": [
+        "org.gephi:batik-wrapper:0.10.1"
+      ]
+    },
+    {
+      "ref": "org.gephi:graphstore:0.6.14",
+      "dependsOn": [
+        "it.unimi.dsi:fastutil:8.5.11",
+        "joda-time:joda-time:2.12.2",
+        "colt:colt:1.2.0"
+      ]
+    },
+    {
+      "ref": "org.gephi:ui-utils:0.10.1",
+      "dependsOn": [
+        "org.netbeans.api:org-openide-dialogs:RELEASE160",
+        "org.gephi:graph-api:0.10.1"
+      ]
+    },
+    {
+      "ref": "org.netbeans.api:org-openide-explorer:RELEASE160",
+      "dependsOn": [
+        "org.netbeans.api:org-netbeans-swing-tabcontrol:RELEASE160"
+      ]
+    },
+    {
+      "ref": "com.mastfrog:simplevalidation-swing:1.14.1",
+      "dependsOn": [
+        "com.mastfrog:simplevalidation:1.14.1"
+      ]
+    },
+    {
+      "ref": "org.gephi:tools-plugin:0.10.1",
+      "dependsOn": [
+        "org.gephi:algorithms-plugin:0.10.1"
+      ]
+    },
+    {
+      "ref": "org.netbeans.api:org-netbeans-libs-asm:RELEASE160",
+      "dependsOn": [
+        "org.ow2.asm:asm:9.3",
+        "org.ow2.asm:asm-tree:9.3",
+        "org.ow2.asm:asm-commons:9.3"
+      ]
+    },
+    {
+      "ref": "org.gephi:statistics-plugin-ui:0.10.1",
+      "dependsOn": [
+        "org.gephi:statistics-plugin:0.10.1",
+        "org.gephi:statistics-api:0.10.1"
+      ]
+    },
+    {
+      "ref": "org.gephi:db-drivers:0.10.1",
+      "dependsOn": [
+        "org.postgresql:postgresql:42.4.3",
+        "com.mysql:mysql-connector-j:8.0.31",
+        "org.xerial:sqlite-jdbc:3.36.0.3",
+        "com.microsoft.sqlserver:mssql-jdbc:11.2.1.jre11"
+      ]
+    },
+    {
+      "ref": "org.netbeans.api:org-openide-actions:RELEASE160",
+      "dependsOn": [
+        "org.netbeans.api:org-openide-explorer:RELEASE160",
+        "org.netbeans.api:org-openide-text:RELEASE160"
+      ]
+    },
+    {
+      "ref": "org.netbeans.api:org-openide-dialogs:RELEASE160",
+      "dependsOn": [
+        "org.netbeans.api:org-netbeans-api-progress:RELEASE160",
+        "org.netbeans.api:org-netbeans-api-progress-nb:RELEASE160"
+      ]
+    },
+    {
+      "ref": "org.gephi:io-generator-plugin:0.10.1",
+      "dependsOn": [
+        "org.gephi:io-generator-api:0.10.1"
+      ]
+    },
+    {
+      "ref": "org.netbeans.api:org-netbeans-modules-options-api:RELEASE160",
+      "dependsOn": [
+        "org.netbeans.api:org-netbeans-spi-quicksearch:RELEASE160"
+      ]
+    },
+    {
+      "ref": "org.gephi:desktop-datalab:0.10.1",
+      "dependsOn": [
+        "org.gephi:desktop-io-export:0.10.1",
+        "org.gephi:desktop-project:0.10.1",
+        "org.netbeans.api:org-netbeans-swing-outline:RELEASE160",
+        "org.gephi:datalab-api:0.10.1",
+        "org.gephi:io-exporter-api:0.10.1",
+        "org.gephi:io-exporter-plugin:0.10.1",
+        "org.netbeans.api:org-netbeans-modules-settings:RELEASE160"
+      ]
+    },
+    {
+      "ref": "org.gephi:ui-library-wrapper:0.10.1",
+      "dependsOn": [
+        "org.swinglabs.swingx:swingx-all:1.6.5-1",
+        "com.formdev:flatlaf-swingx:2.6",
+        "org.netbeans.api:org-openide-util-lookup:RELEASE160",
+        "org.jdesktop:beansbinding:1.2.1",
+        "org.netbeans.api:org-netbeans-libs-flatlaf:RELEASE160",
+        "com.connectina.swing:fontchooser:1.0",
+        "com.github.insubstantial:flamingo:7.3",
+        "com.miglayout:miglayout:3.7.4",
+        "com.mastfrog:simplevalidation-swing:1.14.1",
+        "com.mastfrog:colorchooser:1.4",
+        "net.java.dev:timingframework:1.1"
+      ]
+    },
+    {
+      "ref": "org.gephi:io-importer-api:0.10.1",
+      "dependsOn": [
+        "org.gephi:db-drivers:0.10.1"
+      ]
+    },
+    {
+      "ref": "org.netbeans.api:org-netbeans-modules-settings:RELEASE160",
+      "dependsOn": [
+        "org.netbeans.api:org-openide-loaders:RELEASE160",
+        "org.netbeans.api:org-openide-actions:RELEASE160",
+        "org.netbeans.api:org-openide-filesystems-nb:RELEASE160"
+      ]
+    },
+    {
+      "ref": "org.apache.poi:poi:5.2.3",
+      "dependsOn": [
+        "com.zaxxer:SparseBitSet:1.2"
+      ]
+    },
+    {
+      "ref": "com.fasterxml.woodstox:woodstox-core:6.4.0",
+      "dependsOn": [
+        "org.codehaus.woodstox:stax2-api:4.2.1"
+      ]
+    },
+    {
+      "ref": "org.netbeans.api:org-openide-io:RELEASE160",
+      "dependsOn": [
+        "org.netbeans.api:org-netbeans-api-io:RELEASE160",
+        "org.netbeans.api:org-netbeans-api-intent:RELEASE160"
+      ]
+    },
+    {
+      "ref": "org.netbeans.api:org-openide-loaders:RELEASE160",
+      "dependsOn": [
+        "org.netbeans.api:org-netbeans-modules-editor-mimelookup:RELEASE160",
+        "org.netbeans.api:org-netbeans-api-scripting:RELEASE160",
+        "org.netbeans.api:org-netbeans-modules-queries:RELEASE160",
+        "org.netbeans.api:org-netbeans-api-templates:RELEASE160"
+      ]
+    },
+    {
+      "ref": "org.netbeans.api:org-netbeans-modules-autoupdate-services:RELEASE160",
+      "dependsOn": [
+        "org.netbeans.external:updater:RELEASE160"
+      ]
+    },
+    {
+      "ref": "org.apache.xmlgraphics:batik-anim:1.16",
+      "dependsOn": [
+        "org.apache.xmlgraphics:batik-css:1.16",
+        "org.apache.xmlgraphics:batik-svg-dom:1.16",
+        "org.apache.xmlgraphics:batik-ext:1.16",
+        "org.apache.xmlgraphics:batik-parser:1.16"
+      ]
+    },
+    {
+      "ref": "org.apache.poi:poi-ooxml:5.2.3",
+      "dependsOn": [
+        "com.github.virtuald:curvesapi:1.07",
+        "org.apache.logging.log4j:log4j-api:2.18.0",
+        "org.apache.xmlbeans:xmlbeans:5.1.1",
+        "org.apache.poi:poi-ooxml-lite:5.2.3",
+        "commons-io:commons-io:2.11.0",
+        "org.apache.commons:commons-collections4:4.4",
+        "org.apache.poi:poi:5.2.3"
+      ]
+    },
+    {
+      "ref": "org.gephi:filters-plugin-ui:0.10.1",
+      "dependsOn": [
+        "org.gephi:filters-plugin:0.10.1"
+      ]
+    },
+    {
+      "ref": "org.netbeans.api:org-openide-awt:RELEASE160",
+      "dependsOn": [
+        "org.netbeans.api:org-netbeans-api-annotations-common:RELEASE160",
+        "org.netbeans.api:org-openide-filesystems:RELEASE160"
+      ]
+    },
+    {
+      "ref": "org.apache.pdfbox:pdfbox:2.0.27",
+      "dependsOn": [
+        "commons-logging:commons-logging:1.2",
+        "org.apache.pdfbox:fontbox:2.0.27"
+      ]
+    },
+    {
+      "ref": "org.netbeans.api:org-netbeans-libs-flatlaf:RELEASE160",
+      "dependsOn": [
+        "com.formdev:flatlaf:2.6",
+        "org.netbeans.api:org-openide-modules:RELEASE160"
+      ]
+    },
+    {
+      "ref": "org.gephi:layout-plugin:0.10.1",
+      "dependsOn": [
+        "org.gephi:layout-api:0.10.1"
+      ]
+    },
+    {
+      "ref": "org.gephi:io-exporter-plugin:0.10.1",
+      "dependsOn": [
+        "org.netbeans.modules:org-netbeans-core-startup:RELEASE160"
+      ]
+    },
+    {
+      "ref": "org.gephi:graph-api:0.10.1",
+      "dependsOn": [
+        "org.gephi:graphstore:0.6.14",
+        "org.gephi:project-api:0.10.1"
+      ]
+    },
+    {
+      "ref": "com.github.insubstantial:flamingo:7.3",
+      "dependsOn": [
+        "com.github.insubstantial:trident:7.3"
+      ]
+    },
+    {
+      "ref": "org.apache.xmlgraphics:batik-bridge:1.16",
+      "dependsOn": [
+        "org.apache.xmlgraphics:batik-script:1.16"
+      ]
+    }
+  ]
+}
