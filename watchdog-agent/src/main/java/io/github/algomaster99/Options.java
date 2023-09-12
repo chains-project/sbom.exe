@@ -134,8 +134,8 @@ public class Options {
             LOGGER.warn("Root component is not present.");
             return;
         }
-        File jarFile = JarDownloader.getMavenJarFile(
-                rootComponent.getGroup(), rootComponent.getName(), rootComponent.getVersion());
+        File jarFile =
+                JarDownloader.getJarFile(rootComponent.getGroup(), rootComponent.getName(), rootComponent.getVersion());
         goInsideJarAndUpdateFingerprints(
                 jarFile,
                 fingerprints,
@@ -148,8 +148,8 @@ public class Options {
     private void processAllComponents(Bom14Schema sbom) {
         for (Component component : sbom.getComponents()) {
             try {
-                File jarFile = JarDownloader.getMavenJarFile(
-                        component.getGroup(), component.getName(), component.getVersion());
+                File jarFile =
+                        JarDownloader.getJarFile(component.getGroup(), component.getName(), component.getVersion());
                 if (jarFile == null) {
                     LOGGER.warn(
                             "Could not find jar for {}:{}:{}",
