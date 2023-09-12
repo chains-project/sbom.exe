@@ -12,6 +12,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.DefaultInvoker;
 import org.apache.maven.shared.invoker.InvocationRequest;
@@ -159,50 +160,70 @@ public class AgentTest {
 
     @Nested
     class Level2_CompositeJar {
-        private final Path project = Path.of("src/test/resources/pdfbox-3.0.0");
+        @Nested
+        class JGit {
+            private final Path project = Path.of("src/test/resources/jgit-6.7.0.202309050840-r");
 
-        @Test
-        void pdfbox_3_0_0_cyclonedx_2_7_4(@TempDir Path dir) throws IOException, InterruptedException {
-            // contract: pdfbox-tools 3.0.0 should not execute as the SBOM has no dependencies
-            Path output = dir.resolve("output.txt");
-            assertThat(runPDFBoxWithSbom(project.resolve("bom.json"), output)).isEqualTo(1);
-        }
+            @Test
+            void jgit_6_7_0_202309050840_r_buildInfoGo_1_9_9(@TempDir Path gitDir)
+                    throws IOException, InterruptedException {
+                // contract: jgit 6.7.0.202309050840-r should run all three git commands successfully.
 
-        @Test
-        void pdfbox_3_0_0_depscan_4_2_2(@TempDir Path dir) throws IOException, InterruptedException {
-            // contract: pdfbox-tools 3.0.0 should not execute as the SBOM has no root component
-            Path output = dir.resolve("output.txt");
-            assertThat(runPDFBoxWithSbom(project.resolve("sbom-universal.json"), output))
-                    .isEqualTo(1);
-        }
+                String agentArgs =
+                        "sbom=" + project.resolve("build-info-go.json").toAbsolutePath();
+                Path dependency = project.resolve("dependency");
+                List<Path> dependencyAsClasspath =
+                        Files.list(dependency).map(Path::toAbsolutePath).collect(Collectors.toList());
+                String classpath =
+                        dependencyAsClasspath.stream().map(Path::toString).collect(Collectors.joining(":"));
+                String mainClass = "org.eclipse.jgit.pgm.Main";
+                String[] init = {"java", "-javaagent:" + getAgentPath(agentArgs), "-cp", classpath, mainClass, "init"};
+                assertThat(runJGit(init, gitDir))
+                        .withFailMessage("Failed to init git repo")
+                        .isEqualTo(0);
 
-        private int runPDFBoxWithSbom(Path sbom, Path output) throws IOException, InterruptedException {
-            Path appWhichContainsExecutable = project.resolve("pdfbox-tools-3.0.0.jar");
-            String mainClass = "org.apache.pdfbox.tools.PDFBox";
-            Path workload = project.resolve("2303.11102.pdf").toAbsolutePath();
+                Path a = gitDir.resolve("a.txt");
+                Path b = gitDir.resolve("b.txt");
+                String[] add = {
+                    "java",
+                    "-javaagent:" + getAgentPath(agentArgs),
+                    "-cp",
+                    classpath,
+                    mainClass,
+                    "add",
+                    a.toString(),
+                    b.toString()
+                };
+                assertThat(runJGit(add, gitDir))
+                        .withFailMessage("Failed to add files to git repo")
+                        .isEqualTo(0);
 
-            Path dependency = project.resolve("dependency");
-            String agentArgs = "sbom=" + sbom;
-            String[] cmd = {
-                "java",
-                "-javaagent:" + getAgentPath(agentArgs),
-                "-cp",
-                appWhichContainsExecutable + ":" + dependency + "/*",
-                // convert PDFs to text file
-                mainClass,
-                "export:text",
-                "--input",
-                workload.toString(),
-                "--output",
-                output.toString()
-            };
-            ProcessBuilder pb = new ProcessBuilder(cmd);
-            pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
-            pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-            pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+                String[] commit = {
+                    "java",
+                    "-javaagent:" + getAgentPath(agentArgs),
+                    "-cp",
+                    classpath,
+                    mainClass,
+                    "commit",
+                    "-m",
+                    "test",
+                    "--no-gpg-sign"
+                };
+                assertThat(runJGit(commit, gitDir))
+                        .withFailMessage("Failed to commit files to git repo")
+                        .isEqualTo(0);
+            }
 
-            Process p = pb.start();
-            return p.waitFor();
+            private int runJGit(String[] command, Path gitDir) throws IOException, InterruptedException {
+                ProcessBuilder pb = new ProcessBuilder(command);
+                pb.directory(gitDir.toFile());
+                pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
+                pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+
+                Process p = pb.start();
+                return p.waitFor();
+            }
         }
     }
 
