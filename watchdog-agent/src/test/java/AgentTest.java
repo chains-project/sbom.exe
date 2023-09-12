@@ -170,7 +170,7 @@ public class AgentTest {
 
                 String agentArgs =
                         "sbom=" + project.resolve("build-info-go.json").toAbsolutePath();
-                Path dependency = project.resolve("dependency");
+                Path dependency = project.resolve("dependency").toAbsolutePath();
                 String mainClass = "org.eclipse.jgit.pgm.Main";
                 String[] init = {
                     "java", "-javaagent:" + getAgentPath(agentArgs), "-cp", dependency + "/*", mainClass, "init"
