@@ -21,6 +21,8 @@ import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 
 public class AgentTest {
@@ -117,6 +119,7 @@ public class AgentTest {
             }
         }
 
+        @DisabledOnOs(value = OS.WINDOWS, disabledReason = "It is extremely slow on Windows.")
         @Nested
         // We use TTorrent 2.0 based on release page however its actual version in POM is 1.2
         class TTorrent {
