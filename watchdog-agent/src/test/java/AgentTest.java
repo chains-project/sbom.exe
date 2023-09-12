@@ -12,7 +12,6 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.DefaultInvoker;
 import org.apache.maven.shared.invoker.InvocationRequest;
@@ -172,12 +171,10 @@ public class AgentTest {
                 String agentArgs =
                         "sbom=" + project.resolve("build-info-go.json").toAbsolutePath();
                 Path dependency = project.resolve("dependency");
-                List<Path> dependencyAsClasspath =
-                        Files.list(dependency).map(Path::toAbsolutePath).collect(Collectors.toList());
-                String classpath =
-                        dependencyAsClasspath.stream().map(Path::toString).collect(Collectors.joining(":"));
                 String mainClass = "org.eclipse.jgit.pgm.Main";
-                String[] init = {"java", "-javaagent:" + getAgentPath(agentArgs), "-cp", classpath, mainClass, "init"};
+                String[] init = {
+                    "java", "-javaagent:" + getAgentPath(agentArgs), "-cp", dependency + "/*", mainClass, "init"
+                };
                 assertThat(runJGit(init, gitDir))
                         .withFailMessage("Failed to init git repo")
                         .isEqualTo(0);
@@ -188,7 +185,7 @@ public class AgentTest {
                     "java",
                     "-javaagent:" + getAgentPath(agentArgs),
                     "-cp",
-                    classpath,
+                    dependency + "/*",
                     mainClass,
                     "add",
                     a.toString(),
@@ -202,7 +199,7 @@ public class AgentTest {
                     "java",
                     "-javaagent:" + getAgentPath(agentArgs),
                     "-cp",
-                    classpath,
+                    dependency + "/*",
                     mainClass,
                     "commit",
                     "-m",
