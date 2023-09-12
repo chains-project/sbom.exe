@@ -120,7 +120,7 @@ public class AgentTest {
         @Nested
         // We use TTorrent 2.0 based on release page however its actual version in POM is 1.2
         class TTorrent {
-            private final Path project = Paths.get("src/test/resources/pdfbox-2.0");
+            private final Path project = Paths.get("src/test/resources/ttorent-2.0");
 
             @Test
             void ttorrent_2_0_buildInfoGo_1_9_9(@TempDir Path tempDir) throws IOException, InterruptedException {
