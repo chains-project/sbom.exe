@@ -15,8 +15,8 @@ import org.jsoup.Jsoup;
 public class JarDownloader {
 
     private static final Map<String, String> repositoryUrls = Map.of(
-            "mavenCentral", "https://repo1.maven.org/maven2",
-            "jboss", "https://repository.jboss.org/nexus/content/repositories/thirdparty-releases");
+            "mavenCentral", "https://repo1.maven.org/maven2/",
+            "jboss", "https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/");
 
     private JarDownloader() {}
 
@@ -34,7 +34,7 @@ public class JarDownloader {
 
     private static String getArtifactUrl(String groupId, String artifactId, String version, String repositoryUrl) {
         groupId = groupId.replace('.', '/');
-        return repositoryUrl + "/" + groupId + "/" + artifactId + "/" + version + "/";
+        return repositoryUrl + groupId + "/" + artifactId + "/" + version + "/";
     }
 
     private static String getUrlOfRequestedJar(String indexPageContent, String indexPageUrl) {
@@ -42,14 +42,19 @@ public class JarDownloader {
                 .map(e -> e.attr("href"))
                 .toList();
 
-        Optional<String> artifactJarName = candidates.stream()
+        Optional<String> artifactJar = candidates.stream()
                 .filter(c -> c.endsWith(".jar"))
                 .filter(c -> !c.contains("sources"))
                 .filter(c -> !c.contains("javadoc"))
                 .findFirst();
 
-        if (artifactJarName.isPresent()) {
-            return indexPageUrl + artifactJarName.get();
+        if (artifactJar.isPresent()) {
+            String artifactJarName = artifactJar.get();
+            // java.net.URI has the worst APIs ever
+            if (artifactJarName.startsWith("https://") || artifactJarName.startsWith("http://")) {
+                return artifactJarName;
+            }
+            return indexPageUrl + artifactJarName;
         } else {
             System.err.println("Could not find jar for " + indexPageUrl);
             return null;
