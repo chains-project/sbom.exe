@@ -125,8 +125,7 @@ public class AgentTest {
             @Test
             void ttorrent_2_0_buildInfoGo_1_9_9(@TempDir Path tempDir) throws IOException, InterruptedException {
                 // contract: ttorrent 1.2 should execute.
-                Path output = tempDir.resolve("test_folder");
-                assertThat(runTTorrentWithSbom(project.resolve("build-info-go.json"), output))
+                assertThat(runTTorrentWithSbom(project.resolve("build-info-go.json"), tempDir))
                         .isEqualTo(0);
             }
 
