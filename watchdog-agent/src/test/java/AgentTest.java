@@ -73,6 +73,7 @@ public class AgentTest {
     @Nested
     class Level1_FatJar {
 
+        @DisabledOnOs(value = OS.WINDOWS, disabledReason = "It is extremely slow on Windows.")
         @Nested
         class PDFBox {
             private final Path project = Paths.get("src/test/resources/pdfbox-3.0.0");
@@ -119,7 +120,6 @@ public class AgentTest {
             }
         }
 
-        @DisabledOnOs(value = OS.WINDOWS, disabledReason = "It is extremely slow on Windows.")
         @Nested
         // We use TTorrent 2.0 based on release page however its actual version in POM is 1.2
         class TTorrent {
