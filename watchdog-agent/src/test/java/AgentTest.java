@@ -118,43 +118,30 @@ public class AgentTest {
         }
 
         @Nested
-        class Spoon {
-            private final Path project = Paths.get("src/test/resources/spoon-10.4.0");
+        // We use TTorrent 2.0 based on release page however its actual version in POM is 1.2
+        class TTorrent {
+            private final Path project = Paths.get("src/test/resources/pdfbox-2.0");
 
             @Test
-            void spoon_10_4_0_cyclonedx_2_7_4_correctSbom() throws IOException, InterruptedException {
-                // contract: spoon 10.4.0 CLI should be self-contained in a fat jar and its execution should not load
-                // any
-                // classes outside SBOM
-                assertThat(runSpoonWithSbom(project.resolve("bom.json"))).isEqualTo(0);
-            }
-
-            @Test
-            void spoon_10_4_0_cyclonedx_2_7_4_wrongSbom() throws IOException, InterruptedException {
-                // contract: spoon should not execute as the incorrect SBOM is passed (spoon-core is changed to 10.3.0)
-                assertThat(runSpoonWithSbom(project.resolve("wrong-bom.json"))).isEqualTo(1);
-            }
-
-            @Test
-            void spoon_10_4_0_depscan_4_2_2() throws IOException, InterruptedException {
-                // contract: spoon should execute as the root component is within component list
-                assertThat(runSpoonWithSbom(project.resolve("sbom-universal.json")))
+            void ttorrent_2_0_buildInfoGo_1_9_9(@TempDir Path tempDir) throws IOException, InterruptedException {
+                // contract: ttorrent 1.2 should execute.
+                Path output = tempDir.resolve("test_folder");
+                assertThat(runTTorrentWithSbom(project.resolve("build-info-go.json"), output))
                         .isEqualTo(0);
             }
 
-            private int runSpoonWithSbom(Path sbom) throws IOException, InterruptedException {
-                Path spoonExecutable = project.resolve("spoon-core-10.4.0-jar-with-dependencies.jar");
-                Path workload = project.resolve("Main.java").toAbsolutePath();
+            private int runTTorrentWithSbom(Path sbom, Path output) throws IOException, InterruptedException {
+                Path tTorrentExecutable = project.resolve("ttorrent-cli-1.2-shaded.jar");
+                Path torrent = project.resolve("test.torrent").toAbsolutePath();
                 String agentArgs = "sbom=" + sbom;
                 String[] cmd = {
                     "java",
                     "-javaagent:" + getAgentPath(agentArgs),
                     "-jar",
-                    spoonExecutable.toString(),
-                    "--input",
-                    workload.toString(),
-                    "--disable-comments", // remove comments and prints in spooned/Main.java
-                    "--compile" // prints bytecode in spooned-classes
+                    tTorrentExecutable.toString(),
+                    torrent.toString(),
+                    "--output",
+                    output.toAbsolutePath().toString(),
                 };
                 ProcessBuilder pb = new ProcessBuilder(cmd);
                 pb.redirectInput(ProcessBuilder.Redirect.INHERIT);

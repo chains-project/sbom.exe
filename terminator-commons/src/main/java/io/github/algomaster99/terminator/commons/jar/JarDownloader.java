@@ -8,26 +8,37 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.jsoup.Jsoup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JarDownloader {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JarDownloader.class);
-    private static final String MAVEN_CENTRAL_URL = "https://repo1.maven.org/maven2";
+    private static final Map<String, String> repositoryUrls = Map.of(
+            "mavenCentral", "https://repo1.maven.org/maven2",
+            "jboss", "https://repository.jboss.org/nexus/content/repositories/thirdparty-releases");
 
     private JarDownloader() {}
 
-    public static String getMavenJarUrl(String groupId, String artifactId, String version)
-            throws IOException, InterruptedException {
-        groupId = groupId.replace('.', '/');
-        String url = MAVEN_CENTRAL_URL + "/" + groupId + "/" + artifactId + "/" + version + "/";
+    private static String getIndexPageOfRepository(String artifactUrl) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
+        HttpRequest request =
+                HttpRequest.newBuilder().uri(URI.create(artifactUrl)).build();
         HttpResponse<String> result = client.send(request, HttpResponse.BodyHandlers.ofString());
-        List<String> candidates = Jsoup.parse(result.body()).select("a").stream()
+
+        if (result.statusCode() != 200) {
+            return null;
+        }
+        return result.body();
+    }
+
+    private static String getArtifactUrl(String groupId, String artifactId, String version, String repositoryUrl) {
+        groupId = groupId.replace('.', '/');
+        return repositoryUrl + "/" + groupId + "/" + artifactId + "/" + version + "/";
+    }
+
+    private static String getUrlOfRequestedJar(String indexPageContent, String indexPageUrl) {
+        List<String> candidates = Jsoup.parse(indexPageContent).select("a").stream()
                 .map(e -> e.attr("href"))
                 .toList();
 
@@ -38,26 +49,32 @@ public class JarDownloader {
                 .findFirst();
 
         if (artifactJarName.isPresent()) {
-            return url + artifactJarName.get();
+            return indexPageUrl + artifactJarName.get();
         } else {
-            System.err.println("Could not find jar for " + url);
-            LOGGER.warn("Could not find jar for {}:{}:{}", groupId, artifactId, version);
+            System.err.println("Could not find jar for " + indexPageUrl);
             return null;
         }
     }
 
-    public static File getMavenJarFile(String groupId, String artifactId, String version)
+    public static File getJarFile(String groupId, String artifactId, String version)
             throws IOException, InterruptedException {
-        String url = getMavenJarUrl(groupId, artifactId, version);
-        if (url == null) {
-            return null;
-        }
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
+        for (String repositoryUrl : repositoryUrls.values()) {
+            String url = getArtifactUrl(groupId, artifactId, version, repositoryUrl);
+            String indexPageContent = getIndexPageOfRepository(url);
+            if (indexPageContent != null) {
+                String jarUrl = getUrlOfRequestedJar(indexPageContent, url);
+                if (jarUrl != null) {
+                    HttpClient client = HttpClient.newHttpClient();
+                    HttpRequest request =
+                            HttpRequest.newBuilder().uri(URI.create(jarUrl)).build();
 
-        Path tempFile = File.createTempFile(String.format("%s-%s-%s", groupId, artifactId, version), ".jar")
-                .toPath();
-        HttpResponse<Path> result = client.send(request, HttpResponse.BodyHandlers.ofFile(tempFile));
-        return result.body().toFile();
+                    Path tempFile = File.createTempFile(String.format("%s-%s-%s", groupId, artifactId, version), ".jar")
+                            .toPath();
+                    HttpResponse<Path> result = client.send(request, HttpResponse.BodyHandlers.ofFile(tempFile));
+                    return result.body().toFile();
+                }
+            }
+        }
+        return null;
     }
 }
