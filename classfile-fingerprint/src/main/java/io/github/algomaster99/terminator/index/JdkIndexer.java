@@ -67,7 +67,7 @@ public class JdkIndexer implements Callable<Integer> {
         throw new IllegalArgumentException("Either --input or --output must be specified");
     }
 
-    public Map<String, List<Provenance>> createOrMergeProvenances(Map<String, List<Provenance>> referenceProvenance) {
+    private Map<String, List<Provenance>> createOrMergeProvenances(Map<String, List<Provenance>> referenceProvenance) {
         List<JdkClass> jdkClasses = io.github.algomaster99.terminator.commons.fingerprint.JdkIndexer.listJdkClasses();
         jdkClasses.forEach(resource -> {
             try {
