@@ -22,11 +22,10 @@ class ProvenanceDeserializer extends JsonDeserializer<Provenance> {
         Class<? extends Provenance> instanceClass = null;
         if (root.has("path")) {
             instanceClass = Jar.class;
-        } else {
+        } else if (root.has("groupId")) {
             instanceClass = Maven.class;
-        }
-        if (instanceClass == null) {
-            return null;
+        } else {
+            instanceClass = Jdk.class;
         }
         return mapper.convertValue(root, instanceClass);
     }
