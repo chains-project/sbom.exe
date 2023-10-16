@@ -10,7 +10,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 class JdkIndexerTest {
     @Test
-    void jdkIndexShouldBeDeterministic(@TempDir Path tempDir) throws IOException {
+    void jdkIndexShouldBeDeterministic_irrespectiveOfTheJDK(@TempDir Path tempDir) throws IOException {
         // arrange
         Path indexFile = tempDir.resolve("jdk.json");
 
