@@ -44,7 +44,8 @@ public class JdkIndexer implements Callable<Integer> {
 
     @CommandLine.Option(
             names = {"--algorithm"},
-            description = "The algorithm to use for computing the hash",
+            description =
+                    "The algorithm to use for computing the hash. See https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#messagedigest-algorithms.",
             defaultValue = "SHA-256",
             required = true)
     private String algorithm;
