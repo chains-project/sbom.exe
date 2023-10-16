@@ -1,0 +1,1344 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "version": 1,
+  "components": [
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.gpg.bc.test:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.gpg.bc.test",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "net.bytebuddy:byte-buddy-agent:1.14.6",
+      "type": "library",
+      "group": "net.bytebuddy",
+      "name": "byte-buddy-agent",
+      "version": "1.14.6",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "aed93d1b77c87494f03c7c420f6c9861560dfc55dc8ad914192fcc1c57307f0b"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "46e2545d7a97b6ccb195621650c5957279eb4812"
+        },
+        {
+          "alg": "MD5",
+          "content": "2ac378517ff3bbf575f06f9e5a2f197b"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.bouncycastle:bcprov-jdk18on:1.76",
+      "type": "library",
+      "group": "org.bouncycastle",
+      "name": "bcprov-jdk18on",
+      "version": "1.76",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "fda85d777aaae168015860b23a77cad9b8d3a1d5c904fda875313427bd560179"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "3a785d0b41806865ad7e311162bfa3fa60b3965b"
+        },
+        {
+          "alg": "MD5",
+          "content": "7020b9a9e1b951f5754a2168a26367f1"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.slf4j:slf4j-simple:1.7.36",
+      "type": "library",
+      "group": "org.slf4j",
+      "name": "slf4j-simple",
+      "version": "1.7.36",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2f39bed943d624dfa8f4102d0571283a10870b6aa36f197a8a506f147010c10f"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "a41f9cfe6faafb2eb83a1c7dd2d0dfd844e2a936"
+        },
+        {
+          "alg": "MD5",
+          "content": "fd4a5fa54910b5ee561f639c903cf34a"
+        }
+      ]
+    },
+    {
+      "bom-ref": "net.bytebuddy:byte-buddy:1.12.21",
+      "type": "library",
+      "group": "net.bytebuddy",
+      "name": "byte-buddy",
+      "version": "1.12.21",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f6f45c2237a7f132c16745ad2a52c4cdde58028b11ee80b09f0d422f4930d685"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "1a257bbdb9288f2558d3767cc2cc22b499d5091c"
+        },
+        {
+          "alg": "MD5",
+          "content": "50a7c31e5a3b01c15df6a5415e7b3cdb"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.bouncycastle:bcpkix-jdk18on:1.76",
+      "type": "library",
+      "group": "org.bouncycastle",
+      "name": "bcpkix-jdk18on",
+      "version": "1.76",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "935a388854c329f9a6f32708f30c90045d2f91294fa687281273145d4cf9834a"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "10c9cf5c1b4d64abeda28ee32fbade3b74373622"
+        },
+        {
+          "alg": "MD5",
+          "content": "661d57d384f768f2bf92c0392f88379e"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.objenesis:objenesis:3.3",
+      "type": "library",
+      "group": "org.objenesis",
+      "name": "objenesis",
+      "version": "3.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "02dfd0b0439a5591e35b708ed2f5474eb0948f53abf74637e959b8e4ef69bfeb"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "1049c09f1de4331e8193e579448d0916d75b7631"
+        },
+        {
+          "alg": "MD5",
+          "content": "ab0e0b2ab81affdd7f38bcc60fd85571"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.slf4j:slf4j-api:1.7.36",
+      "type": "library",
+      "group": "org.slf4j",
+      "name": "slf4j-api",
+      "version": "1.7.36",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d3ef575e3e4979678dc01bf1dcce51021493b4d11fb7f1be8ad982877c16a1c0"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "6c62681a2f655b49963a5983b8b0950a6120ae14"
+        },
+        {
+          "alg": "MD5",
+          "content": "872da51f5de7f3923da4de871d57fd85"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.lfs.server:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.lfs.server",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.slf4j:jcl-over-slf4j:1.7.32",
+      "type": "library",
+      "group": "org.slf4j",
+      "name": "jcl-over-slf4j",
+      "version": "1.7.32",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "60f3bda5922e3912889cca1311d1b227753610bf60cb4e5e914e8b2eaa0326b4"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "32c060250bcc5282cdbc1fd7008c12eb4ebad00e"
+        },
+        {
+          "alg": "MD5",
+          "content": "8788169f5d5be6550efc75d3bfffc82c"
+        }
+      ]
+    },
+    {
+      "bom-ref": "net.java.dev.jna:jna:5.13.0",
+      "type": "library",
+      "group": "net.java.dev.jna",
+      "name": "jna",
+      "version": "5.13.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "66d4f819a062a51a1d5627bffc23fac55d1677f0e0a1feba144aabdd670a64bb"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "1200e7ebeedbe0d10062093f32925a912020e747"
+        },
+        {
+          "alg": "MD5",
+          "content": "bd2e5bc6b4b020c2d9a6e17a8e9bcef1"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.bouncycastle:bcpg-jdk18on:1.76",
+      "type": "library",
+      "group": "org.bouncycastle",
+      "name": "bcpg-jdk18on",
+      "version": "1.76",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "5bc7c7ea6fc4d38cdfa0cf28142cc11944c6fa9abfa756ce8fb7a7e11d2fbf9e"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "d5c23d0470261254d0e84dde1d4237d228540298"
+        },
+        {
+          "alg": "MD5",
+          "content": "6d7037402e65947f42ab73a0fb0dc196"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.jcraft:jzlib:1.1.3",
+      "type": "library",
+      "group": "com.jcraft",
+      "name": "jzlib",
+      "version": "1.1.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "89b1360f407381bf61fde411019d8cbd009ebb10cff715f3669017a031027560"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "c01428efa717624f7aabf4df319939dda9646b2d"
+        },
+        {
+          "alg": "MD5",
+          "content": "386d3714fef534d21175d8885ae48bf7"
+        }
+      ]
+    },
+    {
+      "bom-ref": "junit:junit:4.13.2",
+      "type": "library",
+      "group": "junit",
+      "name": "junit",
+      "version": "4.13.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12"
+        },
+        {
+          "alg": "MD5",
+          "content": "d98a9a02a99a9acd22d7653cbcc1f31f"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.eclipse.jetty.toolchain:jetty-servlet-api:4.0.6",
+      "type": "library",
+      "group": "org.eclipse.jetty.toolchain",
+      "name": "jetty-servlet-api",
+      "version": "4.0.6",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d90bf1f8a9d2ba89f4510bb51e1516dcf94ef6dc034e00f233654abdd78f2210"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "959c5d83d08f5cddf56caff749e48b735193191b"
+        },
+        {
+          "alg": "MD5",
+          "content": "d63413e02885c25d0129e3d2936606f6"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.hamcrest:hamcrest-core:1.3",
+      "type": "library",
+      "group": "org.hamcrest",
+      "name": "hamcrest-core",
+      "version": "1.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "42a25dc3219429f0e5d060061f71acb49bf010a0"
+        },
+        {
+          "alg": "MD5",
+          "content": "6393363b47ddcbba82321110c3e07519"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.httpcomponents:httpcore:4.4.16",
+      "type": "library",
+      "group": "org.apache.httpcomponents",
+      "name": "httpcore",
+      "version": "4.4.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6c9b3dd142a09dc468e23ad39aad6f75a0f2b85125104469f026e52a474e464f"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "51cf043c87253c9f58b539c9f7e44c8894223850"
+        },
+        {
+          "alg": "MD5",
+          "content": "28d2cd9bf8789fd2ec774fb88436ebd1"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.eclipse.jetty:jetty-servlet:10.0.15",
+      "type": "library",
+      "group": "org.eclipse.jetty",
+      "name": "jetty-servlet",
+      "version": "10.0.15",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f8e4180f7d1018f608aee7d6df8742a61f04317a409e02c6873d16879d5b5ec5"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "17e21100d9eabae2c0f560ab2c1d5f0edfc4a57b"
+        },
+        {
+          "alg": "MD5",
+          "content": "794f44ce781f07dc8a553f0bcff960da"
+        }
+      ]
+    },
+    {
+      "bom-ref": "commons-logging:commons-logging:1.2",
+      "type": "library",
+      "group": "commons-logging",
+      "name": "commons-logging",
+      "version": "1.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "daddea1ea0be0f56978ab3006b8ac92834afeefbd9b7e4e6316fca57df0fa636"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "4bfc12adfe4842bf07b657f0369c4cb522955686"
+        },
+        {
+          "alg": "MD5",
+          "content": "040b4b4d8eac886f6b4a2a3bd2f31b00"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.test:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.test",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.ssh.apache.agent:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.ssh.apache.agent",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.eclipse.jetty:jetty-util:10.0.15",
+      "type": "library",
+      "group": "org.eclipse.jetty",
+      "name": "jetty-util",
+      "version": "10.0.15",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "aebe0b8369352f9870e0c593a1a82c60c48c77410df04a7bb6b383ba47430368"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "eb8901d419e83f2f06809e0cdceaf38b06426f01"
+        },
+        {
+          "alg": "MD5",
+          "content": "f54d39c0ba13513e589a68d77b586d19"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.pgm:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.pgm",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.apache.sshd:sshd-sftp:2.10.0",
+      "type": "library",
+      "group": "org.apache.sshd",
+      "name": "sshd-sftp",
+      "version": "2.10.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "af28d7d059eeeac3080a58d98bc75d23186cead52b9aa7c92763c2ee7b966a4c"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "88707339ac0693d48df0ec1bafb84c78d792ed08"
+        },
+        {
+          "alg": "MD5",
+          "content": "86b6dfc7e97eae2ad56e7e5e840521ce"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.jcraft:jsch:0.1.55",
+      "type": "library",
+      "group": "com.jcraft",
+      "name": "jsch",
+      "version": "0.1.55",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d492b15a6d2ea3f1cc39c422c953c40c12289073dbe8360d98c0f6f9ec74fc44"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "bbd40e5aa7aa3cfad5db34965456cee738a42a50"
+        },
+        {
+          "alg": "MD5",
+          "content": "c395ada0fc012d66f11bd30246f6c84d"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.ssh.jsch:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.ssh.jsch",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.http.apache:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.http.apache",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.eclipse.jetty:jetty-http:10.0.15",
+      "type": "library",
+      "group": "org.eclipse.jetty",
+      "name": "jetty-http",
+      "version": "10.0.15",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "e95a4f5c6a1fc291b233324a75af93c4e9bbd762cc714d05820f8cbca5e46cec"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "53c4702201c33501bc37a982e5325b5f11084a4e"
+        },
+        {
+          "alg": "MD5",
+          "content": "7a2c229ed73cf27d64cebc261db78137"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.bouncycastle:bcutil-jdk18on:1.76",
+      "type": "library",
+      "group": "org.bouncycastle",
+      "name": "bcutil-jdk18on",
+      "version": "1.76",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1a65ad02958223a3f31373bd72eea942cafd1b1877a3ed0b492c2487e77c3c27"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "8c7594e651a278bcde18e038d8ab55b1f97f4d31"
+        },
+        {
+          "alg": "MD5",
+          "content": "4df5b021c310b4c7c07d4490318d75cb"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.assertj:assertj-core:3.24.2",
+      "type": "library",
+      "group": "org.assertj",
+      "name": "assertj-core",
+      "version": "3.24.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "df3d0b348f1fe806bdddcb10fa4ae63c6679e9888d4bc7055f09848517976aa3"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "ebbf338e33f893139459ce5df023115971c2786f"
+        },
+        {
+          "alg": "MD5",
+          "content": "b596a91049e6ce526bc5595c1bebea2c"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.osgi:org.osgi.core:6.0.0",
+      "type": "library",
+      "group": "org.osgi",
+      "name": "org.osgi.core",
+      "version": "6.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1c1bb435eb34cbf1f743653da38f604d45d53fbc95979053768cd3fc293cb931"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "0c49acdc9ac62cf69ee49cb6f1905b4fdb79ea5c"
+        },
+        {
+          "alg": "MD5",
+          "content": "cae291c61fe8b7a4476d713550c7ff49"
+        }
+      ]
+    },
+    {
+      "bom-ref": "net.i2p.crypto:eddsa:0.3.0",
+      "type": "library",
+      "group": "net.i2p.crypto",
+      "name": "eddsa",
+      "version": "0.3.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "4dda1120db856640dbec04140ed23242215a075fe127bdefa0dcfa29fb31267d"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "1901c8d4d8bffb7d79027686cfb91e704217c3e1"
+        },
+        {
+          "alg": "MD5",
+          "content": "ee7de3b6f19de76a06e465efc978f669"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.eclipse.jetty:jetty-security:10.0.15",
+      "type": "library",
+      "group": "org.eclipse.jetty",
+      "name": "jetty-security",
+      "version": "10.0.15",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ea342bd355df7e5a7e508007ecde39bccb4ac1bf67ff92c58ffcc5cf2010544e"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "ae9c2fd327090fc749a6656109adf88f84f05854"
+        },
+        {
+          "alg": "MD5",
+          "content": "b551183270eb9bd46cf576143ecae9d2"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.eclipse.jetty:jetty-server:10.0.15",
+      "type": "library",
+      "group": "org.eclipse.jetty",
+      "name": "jetty-server",
+      "version": "10.0.15",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "49f5f4d482cd1d4683eb9a81f5bc3351ad78da5ba42e06221a04f4100e1ef4cd"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "d1e941f30300d64b122d5346f1599ecaa8e270ba"
+        },
+        {
+          "alg": "MD5",
+          "content": "360671d2e3fc8661a208eb60094b6bfb"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.google.code.gson:gson:2.10.1",
+      "type": "library",
+      "group": "com.google.code.gson",
+      "name": "gson",
+      "version": "2.10.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "4241c14a7727c34feea6507ec801318a3d4a90f070e4525681079fb94ee4c593"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "b3add478d4382b78ea20b1671390a858002feb6c"
+        },
+        {
+          "alg": "MD5",
+          "content": "df6097815738cb31fc56391553210843"
+        }
+      ]
+    },
+    {
+      "bom-ref": "args4j:args4j:2.33",
+      "type": "library",
+      "group": "args4j",
+      "name": "args4j",
+      "version": "2.33",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "91ddeaba0b24adce72291c618c00bbdce1c884755f6c4dba9c5c46e871c69ed6"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "bd87a75374a6d6523de82fef51fc3cfe9baf9fc9"
+        },
+        {
+          "alg": "MD5",
+          "content": "0a6d515f76b15d29e3cd529de9319739"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.archive:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.archive",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.junit.ssh:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.junit.ssh",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.ui:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.ui",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.lfs:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.lfs",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.apache.sshd:sshd-osgi:2.10.0",
+      "type": "library",
+      "group": "org.apache.sshd",
+      "name": "sshd-osgi",
+      "version": "2.10.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "90c50ae43863e577b5a908abee1ba02b1baa86305eeb602abbad821518cb1725"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "03677ac1da780b7bdb682da50b762d79ea0d940d"
+        },
+        {
+          "alg": "MD5",
+          "content": "d3ba3fa461e32dbd8d00993b570c90e5"
+        }
+      ]
+    },
+    {
+      "bom-ref": "com.googlecode.javaewah:JavaEWAH:1.2.3",
+      "type": "library",
+      "group": "com.googlecode.javaewah",
+      "name": "JavaEWAH",
+      "version": "1.2.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d65226949713c4c61a784f41c51167e7b0316f93764398ebba9e4336b3d954c2"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "13a27c856e0c8808cee9a64032c58eee11c3adc9"
+        },
+        {
+          "alg": "MD5",
+          "content": "8fdeda28c1fb10e67b3d79f86bef5e61"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.eclipse.jetty:jetty-io:10.0.15",
+      "type": "library",
+      "group": "org.eclipse.jetty",
+      "name": "jetty-io",
+      "version": "10.0.15",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c6c64774bd34857d38300ff6b700f7e3a0825b5ae79a80b5d7cae5489e4411e8"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "4481d9593bb89c4da016e49463b0d477faca06dc"
+        },
+        {
+          "alg": "MD5",
+          "content": "f2fce0b2e97365d6b9afe84ce871fc09"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.httpcomponents:httpclient:4.5.14",
+      "type": "library",
+      "group": "org.apache.httpcomponents",
+      "name": "httpclient",
+      "version": "4.5.14",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c8bc7e1c51a6d4ce72f40d2ebbabf1c4b68bfe76e732104b04381b493478e9d6"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "1194890e6f56ec29177673f2f12d0b8e627dec98"
+        },
+        {
+          "alg": "MD5",
+          "content": "2cb357c4b763f47e58af6cad47df6ba3"
+        }
+      ]
+    },
+    {
+      "bom-ref": "net.java.dev.jna:jna-platform:5.13.0",
+      "type": "library",
+      "group": "net.java.dev.jna",
+      "name": "jna-platform",
+      "version": "5.13.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "474d7b88f6e97009b6ec1d98c3024dd95c23187c65dabfbc35331bcac3d173dd"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "88e9a306715e9379f3122415ef4ae759a352640d"
+        },
+        {
+          "alg": "MD5",
+          "content": "7cc7af47ad1f151faa57ef0624b2f271"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.ssh.apache:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.ssh.apache",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.junit:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.junit",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.apache.commons:commons-compress:1.23.0",
+      "type": "library",
+      "group": "org.apache.commons",
+      "name": "commons-compress",
+      "version": "1.23.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c267f17160e9ef662b4d78b7f29dca7c82b15c5cff2cb6a9865ef4ab3dd5b787"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "4af2060ea9b0c8b74f1854c6cafe4d43cfc161fc"
+        },
+        {
+          "alg": "MD5",
+          "content": "96b88349958aeaa15cdf6e5e877bdced"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.mockito:mockito-core:5.5.0",
+      "type": "library",
+      "group": "org.mockito",
+      "name": "mockito-core",
+      "version": "5.5.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ebfa1aa7f5acd96f4fdf04576d56c1c9f5146574a2bb3dd1faccf74d72bc9230"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "1660ec3ce0af7f713af923817b225a37cc5cf965"
+        },
+        {
+          "alg": "MD5",
+          "content": "efec04c8101cdadc72d4f1afb57bf0e4"
+        }
+      ]
+    },
+    {
+      "bom-ref": "commons-codec:commons-codec:1.16.0",
+      "type": "library",
+      "group": "commons-codec",
+      "name": "commons-codec",
+      "version": "1.16.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "56595fb20b0b85bc91d0d503dad50bb7f1b9afc0eed5dffa6cbb25929000484d"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "4e3eb3d79888d76b54e28b350915b5dc3919c9de"
+        },
+        {
+          "alg": "MD5",
+          "content": "6e26920fa7228891980890cce06b718c"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.gpg.bc:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.gpg.bc",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.junit.http:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.junit.http",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.http.server:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.http.server",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.lfs.server.test:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.lfs.server.test",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.lfs.test:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.lfs.test",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.ant.test:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.ant.test",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.apache.ant:ant:1.10.12",
+      "type": "library",
+      "group": "org.apache.ant",
+      "name": "ant",
+      "version": "1.10.12",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "5c6a438c3ebe7a306eba452b09fa307b0e60314926177920bca896c4a504eaf6"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "be08c4f63e92e03bac761404cf77bc270928b6c5"
+        },
+        {
+          "alg": "MD5",
+          "content": "f5b97fb267862b35d1eb398defe1831a"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.ant:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.ant",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.apache.ant:ant-launcher:1.10.12",
+      "type": "library",
+      "group": "org.apache.ant",
+      "name": "ant-launcher",
+      "version": "1.10.12",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "42a7ca7e7bb777fe7ee75a5ed4cc529c766bc43486367fdaad0ab4a32ee9c249"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "e090b4f9d3ecf45491cc16e759f1e843a1a224c0"
+        },
+        {
+          "alg": "MD5",
+          "content": "709ed15ea16a95903e7b3e8be130fa1e"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.benchmarks:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.benchmarks",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.apache.commons:commons-math3:3.6.1",
+      "type": "library",
+      "group": "org.apache.commons",
+      "name": "commons-math3",
+      "version": "3.6.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1e56d7b058d28b65abd256b8458e3885b674c1d588fa43cd7d1cbb9c7ef2b308"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "e4ba98f1d4b3c80ec46392f25e094a6a2e58fcbf"
+        },
+        {
+          "alg": "MD5",
+          "content": "5b730d97e4e6368069de1983937c508e"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.openjdk.jmh:jmh-core:1.37",
+      "type": "library",
+      "group": "org.openjdk.jmh",
+      "name": "jmh-core",
+      "version": "1.37",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "dc0eaf2bbf0036a70b60798c785d6e03a9daf06b68b8edb0f1ba9eb3421baeb3"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "896f27e49105b35ea1964319c83d12082e7a79ef"
+        },
+        {
+          "alg": "MD5",
+          "content": "db951a09b14a411f1b642dc6ddc39125"
+        }
+      ]
+    },
+    {
+      "bom-ref": "net.sf.jopt-simple:jopt-simple:5.0.4",
+      "type": "library",
+      "group": "net.sf.jopt-simple",
+      "name": "jopt-simple",
+      "version": "5.0.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "df26cc58f235f477db07f753ba5a3ab243ebe5789d9f89ecf68dd62ea9a66c28"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "4fdac2fbe92dfad86aa6e9301736f6b4342a3f5c"
+        },
+        {
+          "alg": "MD5",
+          "content": "eb0d9dffe9b0eddead68fe678be76c49"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.openjdk.jmh:jmh-generator-annprocess:1.37",
+      "type": "library",
+      "group": "org.openjdk.jmh",
+      "name": "jmh-generator-annprocess",
+      "version": "1.37",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6a5604b5b804e0daca1145df1077609321687734a8b49387e49f10557c186c77"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "da93888682df163144edf9b13d2b78e54166063a"
+        },
+        {
+          "alg": "MD5",
+          "content": "68593f57af0d1bb87d857904e3cfc4f5"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.coverage:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.coverage",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.pgm.test:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.pgm.test",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.ssh.apache.test:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.ssh.apache.test",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.http.test:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.http.test",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "jakarta.servlet:jakarta.servlet-api:4.0.4",
+      "type": "library",
+      "group": "jakarta.servlet",
+      "name": "jakarta.servlet-api",
+      "version": "4.0.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "586e27706c21258f5882f43be06904f49b02db9ac54e345d393fe4a32494d127"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "b8a1142e04838fe54194049c6e7a18dae8f9b960"
+        },
+        {
+          "alg": "MD5",
+          "content": "f5d1d7a29978e4ae0be5a456ee1c65c3"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit.ssh.jsch.test:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit.ssh.jsch.test",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.eclipse.jgit:org.eclipse.jgit-parent:6.7.0.202309050840-r",
+      "type": "application",
+      "group": "org.eclipse.jgit",
+      "name": "org.eclipse.jgit-parent",
+      "version": "6.7.0.202309050840-r"
+    },
+    {
+      "bom-ref": "org.tukaani:xz:1.9",
+      "type": "library",
+      "group": "org.tukaani",
+      "name": "xz",
+      "version": "1.9",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "211b306cfc44f8f96df3a0a3ddaf75ba8c5289eed77d60d72f889bb855f535e5"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "1ea4bec1a921180164852c65006d928617bd2caf"
+        },
+        {
+          "alg": "MD5",
+          "content": "57c2fbfeb55e307ccae52e5322082e02"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.hamcrest:hamcrest:2.2",
+      "type": "library",
+      "group": "org.hamcrest",
+      "name": "hamcrest",
+      "version": "2.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "5e62846a89f05cd78cd9c1a553f340d002458380c320455dd1f8fc5497a8a1c1"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "1820c0968dba3a11a1b30669bb1f01978a91dedc"
+        },
+        {
+          "alg": "MD5",
+          "content": "10b47e837f271d0662f28780e60388e8"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "junit:junit:4.13.2",
+      "dependsOn": [
+        "org.hamcrest:hamcrest-core:1.3"
+      ]
+    },
+    {
+      "ref": "org.apache.httpcomponents:httpclient:4.5.14",
+      "dependsOn": [
+        "commons-logging:commons-logging:1.2"
+      ]
+    },
+    {
+      "ref": "org.eclipse.jgit:org.eclipse.jgit.junit.ssh:6.7.0.202309050840-r",
+      "dependsOn": [
+        "org.apache.sshd:sshd-sftp:2.10.0",
+        "org.apache.sshd:sshd-osgi:2.10.0"
+      ]
+    },
+    {
+      "ref": "org.eclipse.jgit:org.eclipse.jgit.archive:6.7.0.202309050840-r",
+      "dependsOn": [
+        "org.osgi:org.osgi.core:6.0.0"
+      ]
+    },
+    {
+      "ref": "org.eclipse.jgit:org.eclipse.jgit.lfs:6.7.0.202309050840-r",
+      "dependsOn": [
+        "com.google.code.gson:gson:2.10.1"
+      ]
+    },
+    {
+      "ref": "org.eclipse.jgit:org.eclipse.jgit.junit.http:6.7.0.202309050840-r",
+      "dependsOn": [
+        "org.eclipse.jgit:org.eclipse.jgit.http.server:6.7.0.202309050840-r"
+      ]
+    },
+    {
+      "ref": "org.mockito:mockito-core:5.5.0",
+      "dependsOn": [
+        "net.bytebuddy:byte-buddy-agent:1.14.6",
+        "org.objenesis:objenesis:3.3"
+      ]
+    },
+    {
+      "ref": "org.eclipse.jgit:org.eclipse.jgit:6.7.0.202309050840-r",
+      "dependsOn": [
+        "org.slf4j:slf4j-api:1.7.36",
+        "com.googlecode.javaewah:JavaEWAH:1.2.3",
+        "commons-codec:commons-codec:1.16.0"
+      ]
+    },
+    {
+      "ref": "org.eclipse.jgit:org.eclipse.jgit.ssh.apache.test:6.7.0.202309050840-r",
+      "dependsOn": [
+        "org.eclipse.jgit:org.eclipse.jgit.ssh.apache:6.7.0.202309050840-r",
+        "org.eclipse.jgit:org.eclipse.jgit.junit:6.7.0.202309050840-r",
+        "org.eclipse.jgit:org.eclipse.jgit:6.7.0.202309050840-r",
+        "junit:junit:4.13.2",
+        "org.eclipse.jgit:org.eclipse.jgit.test:6.7.0.202309050840-r",
+        "org.eclipse.jgit:org.eclipse.jgit.junit.ssh:6.7.0.202309050840-r"
+      ]
+    },
+    {
+      "ref": "org.apache.sshd:sshd-osgi:2.10.0",
+      "dependsOn": [
+        "org.slf4j:jcl-over-slf4j:1.7.32"
+      ]
+    },
+    {
+      "ref": "org.eclipse.jetty:jetty-server:10.0.15",
+      "dependsOn": [
+        "org.eclipse.jetty.toolchain:jetty-servlet-api:4.0.6",
+        "org.eclipse.jetty:jetty-http:10.0.15",
+        "org.eclipse.jetty:jetty-io:10.0.15"
+      ]
+    },
+    {
+      "ref": "org.eclipse.jgit:org.eclipse.jgit.ssh.apache:6.7.0.202309050840-r",
+      "dependsOn": [
+        "net.i2p.crypto:eddsa:0.3.0"
+      ]
+    },
+    {
+      "ref": "org.eclipse.jetty:jetty-servlet:10.0.15",
+      "dependsOn": [
+        "org.eclipse.jetty:jetty-security:10.0.15"
+      ]
+    },
+    {
+      "ref": "org.eclipse.jgit:org.eclipse.jgit.coverage:6.7.0.202309050840-r",
+      "dependsOn": [
+        "org.eclipse.jgit:org.eclipse.jgit.pgm.test:6.7.0.202309050840-r",
+        "org.eclipse.jgit:org.eclipse.jgit.ssh.apache.test:6.7.0.202309050840-r",
+        "org.eclipse.jgit:org.eclipse.jgit.http.test:6.7.0.202309050840-r"
+      ]
+    },
+    {
+      "ref": "org.eclipse.jgit:org.eclipse.jgit.gpg.bc:6.7.0.202309050840-r",
+      "dependsOn": [
+        "org.bouncycastle:bcutil-jdk18on:1.76",
+        "org.bouncycastle:bcprov-jdk18on:1.76",
+        "org.bouncycastle:bcpkix-jdk18on:1.76",
+        "org.bouncycastle:bcpg-jdk18on:1.76"
+      ]
+    },
+    {
+      "ref": "org.eclipse.jgit:org.eclipse.jgit.pgm:6.7.0.202309050840-r",
+      "dependsOn": [
+        "org.apache.commons:commons-compress:1.23.0",
+        "org.eclipse.jgit:org.eclipse.jgit.lfs.server:6.7.0.202309050840-r",
+        "org.eclipse.jgit:org.eclipse.jgit.ssh.apache.agent:6.7.0.202309050840-r",
+        "org.eclipse.jgit:org.eclipse.jgit.lfs:6.7.0.202309050840-r",
+        "org.apache.httpcomponents:httpclient:4.5.14",
+        "args4j:args4j:2.33",
+        "org.eclipse.jgit:org.eclipse.jgit.archive:6.7.0.202309050840-r",
+        "org.eclipse.jgit:org.eclipse.jgit.gpg.bc:6.7.0.202309050840-r",
+        "org.slf4j:slf4j-simple:1.7.36",
+        "org.eclipse.jetty:jetty-servlet:10.0.15",
+        "org.eclipse.jgit:org.eclipse.jgit.ssh.jsch:6.7.0.202309050840-r",
+        "org.eclipse.jgit:org.eclipse.jgit.http.apache:6.7.0.202309050840-r"
+      ]
+    },
+    {
+      "ref": "org.assertj:assertj-core:3.24.2",
+      "dependsOn": [
+        "net.bytebuddy:byte-buddy:1.12.21"
+      ]
+    },
+    {
+      "ref": "org.eclipse.jgit:org.eclipse.jgit.http.apache:6.7.0.202309050840-r",
+      "dependsOn": [
+        "org.apache.httpcomponents:httpcore:4.4.16"
+      ]
+    },
+    {
+      "ref": "org.eclipse.jgit:org.eclipse.jgit.test:6.7.0.202309050840-r",
+      "dependsOn": [
+        "org.assertj:assertj-core:3.24.2",
+        "org.eclipse.jgit:org.eclipse.jgit.ui:6.7.0.202309050840-r",
+        "org.mockito:mockito-core:5.5.0",
+        "org.tukaani:xz:1.9",
+        "org.hamcrest:hamcrest:2.2",
+        "org.eclipse.jgit:org.eclipse.jgit.pgm:6.7.0.202309050840-r"
+      ]
+    },
+    {
+      "ref": "org.eclipse.jgit:org.eclipse.jgit.ssh.apache.agent:6.7.0.202309050840-r",
+      "dependsOn": [
+        "net.java.dev.jna:jna:5.13.0",
+        "net.java.dev.jna:jna-platform:5.13.0"
+      ]
+    },
+    {
+      "ref": "org.eclipse.jgit:org.eclipse.jgit.ssh.jsch:6.7.0.202309050840-r",
+      "dependsOn": [
+        "com.jcraft:jsch:0.1.55",
+        "com.jcraft:jzlib:1.1.3"
+      ]
+    },
+    {
+      "ref": "org.eclipse.jetty:jetty-http:10.0.15",
+      "dependsOn": [
+        "org.eclipse.jetty:jetty-util:10.0.15"
+      ]
+    },
+    {
+      "ref": "org.eclipse.jetty:jetty-security:10.0.15",
+      "dependsOn": [
+        "org.eclipse.jetty:jetty-server:10.0.15"
+      ]
+    }
+  ]
+}
