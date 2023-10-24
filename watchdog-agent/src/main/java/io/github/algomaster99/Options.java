@@ -23,15 +23,17 @@ import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Options {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Options.class);
-    private Map<String, List<Provenance>> fingerprints = new HashMap<>();
+    private Map<String, Set<Provenance>> fingerprints = new HashMap<>();
     private Map<String, List<Provenance>> jdkFingerprints = new HashMap<>();
     private boolean skipShutdown = false;
 
@@ -103,7 +105,7 @@ public class Options {
         processJdk();
     }
 
-    public Map<String, List<Provenance>> getFingerprints() {
+    public Map<String, Set<Provenance>> getFingerprints() {
         return fingerprints;
     }
 
@@ -187,8 +189,8 @@ public class Options {
                 });
                 fingerprints.computeIfAbsent(
                         resource.name(),
-                        k -> new ArrayList<>(
-                                List.of((new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm))))));
+                        k -> new HashSet<>(
+                                Set.of((new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm))))));
                 fingerprints.computeIfPresent(resource.name(), (k, v) -> {
                     v.add(new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm)));
                     return v;

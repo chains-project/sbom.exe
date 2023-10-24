@@ -8,9 +8,10 @@ import io.github.algomaster99.terminator.commons.fingerprint.provenance.Jdk;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ public class JdkIndexer extends BaseIndexer implements Callable<Integer> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Jdk.class);
 
-    Map<String, List<Provenance>> createOrMergeProvenances(Map<String, List<Provenance>> referenceProvenance) {
+    Map<String, Set<Provenance>> createOrMergeProvenances(Map<String, Set<Provenance>> referenceProvenance) {
         List<JdkClass> jdkClasses = io.github.algomaster99.terminator.commons.fingerprint.JdkIndexer.listJdkClasses();
         jdkClasses.forEach(resource -> {
             try {
@@ -33,14 +34,9 @@ public class JdkIndexer extends BaseIndexer implements Callable<Integer> {
                 String hash = HashComputer.computeHash(classfileBytes, algorithm);
                 referenceProvenance.computeIfAbsent(
                         resource.name(),
-                        k -> new ArrayList<>(
-                                List.of((new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm))))));
+                        k -> new HashSet<>(
+                                Set.of((new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm))))));
                 referenceProvenance.computeIfPresent(resource.name(), (k, v) -> {
-                    // TODO: should be removed after https://github.com/ASSERT-KTH/sbom.exe/issues/96 is fixed
-                    if (v.stream()
-                            .anyMatch(jdk -> jdk.classFileAttributes().hash().equals(hash))) {
-                        return v;
-                    }
                     v.add(new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm)));
                     return v;
                 });

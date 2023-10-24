@@ -10,11 +10,12 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ParsingHelper {
     private ParsingHelper() {}
 
-    public static void serialiseFingerprints(Map<String, List<Provenance>> fingerprints, Path fingerprintFile) {
+    public static void serialiseFingerprints(Map<String, Set<Provenance>> fingerprints, Path fingerprintFile) {
         ObjectMapper mapper = new ObjectMapper();
         try (SequenceWriter seq =
                 mapper.writer().withRootValueSeparator(System.lineSeparator()).writeValues(fingerprintFile.toFile())) {
@@ -26,14 +27,14 @@ public class ParsingHelper {
         }
     }
 
-    public static Map<String, List<Provenance>> deserializeFingerprints(Path fingerprintFile) {
-        Map<String, List<Provenance>> result = new HashMap<>();
+    public static Map<String, Set<Provenance>> deserializeFingerprints(Path fingerprintFile) {
+        Map<String, Set<Provenance>> result = new HashMap<>();
         final ObjectMapper mapper = new ObjectMapper();
-        try (MappingIterator<Map<String, List<Provenance>>> it = mapper.readerFor(
+        try (MappingIterator<Map<String, Set<Provenance>>> it = mapper.readerFor(
                         new TypeReference<Map<String, List<Provenance>>>() {})
                 .readValues(fingerprintFile.toFile())) {
             while (it.hasNext()) {
-                Map<String, List<Provenance>> item = it.nextValue();
+                Map<String, Set<Provenance>> item = it.nextValue();
                 result.putAll(item);
             }
         } catch (IOException e) {

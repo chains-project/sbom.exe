@@ -4,8 +4,8 @@ import io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import picocli.CommandLine;
 
@@ -40,20 +40,20 @@ public abstract class BaseIndexer implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
         if (indexFile.input != null) {
-            Map<String, List<Provenance>> currentReferenceProvenance =
+            Map<String, Set<Provenance>> currentReferenceProvenance =
                     ParsingHelper.deserializeFingerprints(indexFile.input.toPath());
-            Map<String, List<Provenance>> updatedReferenceProvenance =
+            Map<String, Set<Provenance>> updatedReferenceProvenance =
                     createOrMergeProvenances(currentReferenceProvenance);
             ParsingHelper.serialiseFingerprints(updatedReferenceProvenance, indexFile.input.toPath());
             return 0;
         }
         if (indexFile.output != null) {
-            Map<String, List<Provenance>> updatedReferenceProvenance = createOrMergeProvenances(new HashMap<>());
+            Map<String, Set<Provenance>> updatedReferenceProvenance = createOrMergeProvenances(new HashMap<>());
             ParsingHelper.serialiseFingerprints(updatedReferenceProvenance, indexFile.output.toPath());
             return 0;
         }
         throw new IllegalArgumentException("Either --input or --output must be specified");
     }
 
-    abstract Map<String, List<Provenance>> createOrMergeProvenances(Map<String, List<Provenance>> referenceProvenance);
+    abstract Map<String, Set<Provenance>> createOrMergeProvenances(Map<String, Set<Provenance>> referenceProvenance);
 }

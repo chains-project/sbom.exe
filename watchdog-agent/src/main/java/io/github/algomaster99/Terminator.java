@@ -8,8 +8,8 @@ import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.security.NoSuchAlgorithmException;
 import java.security.ProtectionDomain;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Terminator {
     private static Options options;
@@ -31,7 +31,7 @@ public class Terminator {
     }
 
     private static byte[] isLoadedClassWhitelisted(String className, byte[] classfileBuffer) {
-        Map<String, List<Provenance>> fingerprints = options.getFingerprints();
+        Map<String, Set<Provenance>> fingerprints = options.getFingerprints();
         if (RuntimeClass.isProxyClass(classfileBuffer)
                 || RuntimeClass.isGeneratedClassExtendingMagicAccessor(classfileBuffer)
                 || RuntimeClass.isBoundMethodHandle(classfileBuffer)) {
@@ -39,7 +39,7 @@ public class Terminator {
         }
         for (String expectedClassName : fingerprints.keySet()) {
             if (expectedClassName.equals(className)) {
-                List<Provenance> candidates = fingerprints.get(expectedClassName);
+                Set<Provenance> candidates = fingerprints.get(expectedClassName);
                 for (Provenance candidate : candidates) {
                     String hash;
                     try {

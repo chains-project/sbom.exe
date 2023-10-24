@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 
@@ -186,7 +187,7 @@ class GenerateMojoIT {
 
         Path projectDirectory = result.getMavenProjectResult().getTargetProjectDirectory();
         Path fingerprint = getFingerprint(projectDirectory, "classfile.sha256.jsonl");
-        Map<String, List<Provenance>> fingerprints = ParsingHelper.deserializeFingerprints(fingerprint);
+        Map<String, Set<Provenance>> fingerprints = ParsingHelper.deserializeFingerprints(fingerprint);
 
         assertThat(fingerprints)
                 .hasSize(2)

@@ -14,10 +14,11 @@ import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenan
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ public class JarScanner {
 
     public static void goInsideJarAndUpdateFingerprints(
             File artifactFileOnSystem,
-            Map<String, List<Provenance>> fingerprints,
+            Map<String, Set<Provenance>> fingerprints,
             String algorithm,
             String... provenanceInformation) {
         try (JarFile jarFile = new JarFile(artifactFileOnSystem)) {
@@ -50,16 +51,10 @@ public class JarScanner {
                             new ClassFileAttributes(classfileVersion, hashOfClass, algorithm);
 
                     if (fingerprints.containsKey(jarEntryName)) {
-                        List<Provenance> alreadyExistingProvenance = fingerprints.get(jarEntryName);
-                        // TODO: should be removed after https://github.com/ASSERT-KTH/sbom.exe/issues/96 is fixed
-                        if (alreadyExistingProvenance.stream()
-                                .anyMatch(provenance ->
-                                        provenance.classFileAttributes().hash().equals(hashOfClass))) {
-                            continue;
-                        }
+                        Set<Provenance> alreadyExistingProvenance = fingerprints.get(jarEntryName);
                         updateProvenanceList(alreadyExistingProvenance, classFileAttributes, provenanceInformation);
                     } else {
-                        List<Provenance> newProvenance = new ArrayList<>();
+                        Set<Provenance> newProvenance = new HashSet<>();
                         updateProvenanceList(newProvenance, classFileAttributes, provenanceInformation);
                         fingerprints.put(jarEntryName, newProvenance);
                     }
@@ -74,7 +69,7 @@ public class JarScanner {
     }
 
     public static void processExternalJars(
-            File externalJars, Map<String, List<Provenance>> fingerprints, String algorithm) {
+            File externalJars, Map<String, Set<Provenance>> fingerprints, String algorithm) {
         if (externalJars == null) {
             LOGGER.info("No external jars are known.");
             return;
@@ -102,7 +97,7 @@ public class JarScanner {
     }
 
     private static void updateProvenanceList(
-            List<Provenance> provenances, ClassFileAttributes classFileAttributes, String... provenanceInformation) {
+            Set<Provenance> provenances, ClassFileAttributes classFileAttributes, String... provenanceInformation) {
         if (provenanceInformation.length == 3) {
             String groupId = provenanceInformation[0];
             String artifactId = provenanceInformation[1];

@@ -13,8 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
     private Path sbomPath;
 
     @Override
-    Map<String, List<Provenance>> createOrMergeProvenances(Map<String, List<Provenance>> referenceProvenance) {
+    Map<String, Set<Provenance>> createOrMergeProvenances(Map<String, Set<Provenance>> referenceProvenance) {
         Bom15Schema sbom = null;
         try {
             sbom = CycloneDX.getPojo_1_5(Files.readString(sbomPath));
@@ -51,7 +51,7 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
         return referenceProvenance;
     }
 
-    private void processRootComponent(Bom15Schema sbom, Map<String, List<Provenance>> referenceProvenance) {
+    private void processRootComponent(Bom15Schema sbom, Map<String, Set<Provenance>> referenceProvenance) {
         Metadata__1 metadata = sbom.getMetadata();
         if (metadata == null) {
             LOGGER.warn("Metadata is not present.");
@@ -78,7 +78,7 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
                 rootComponent.getVersion());
     }
 
-    private void processAllComponents(Bom15Schema sbom, Map<String, List<Provenance>> referenceProvenance) {
+    private void processAllComponents(Bom15Schema sbom, Map<String, Set<Provenance>> referenceProvenance) {
         for (Component__1 component : sbom.getComponents()) {
             try {
                 File jarFile =
