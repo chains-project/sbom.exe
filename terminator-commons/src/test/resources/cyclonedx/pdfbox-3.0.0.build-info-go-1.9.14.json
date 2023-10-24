@@ -1,0 +1,619 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "version": 1,
+  "components": [
+    {
+      "bom-ref": "org.apache.pdfbox:xmpbox:3.0.0",
+      "type": "application",
+      "group": "org.apache.pdfbox",
+      "name": "xmpbox",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "commons-logging:commons-logging:1.2",
+      "type": "library",
+      "group": "commons-logging",
+      "name": "commons-logging",
+      "version": "1.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "daddea1ea0be0f56978ab3006b8ac92834afeefbd9b7e4e6316fca57df0fa636"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "4bfc12adfe4842bf07b657f0369c4cb522955686"
+        },
+        {
+          "alg": "MD5",
+          "content": "040b4b4d8eac886f6b4a2a3bd2f31b00"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.opentest4j:opentest4j:1.3.0",
+      "type": "library",
+      "group": "org.opentest4j",
+      "name": "opentest4j",
+      "version": "1.3.0"
+    },
+    {
+      "bom-ref": "org.junit.jupiter:junit-jupiter-engine:5.10.0",
+      "type": "library",
+      "group": "org.junit.jupiter",
+      "name": "junit-jupiter-engine",
+      "version": "5.10.0"
+    },
+    {
+      "bom-ref": "org.junit.platform:junit-platform-engine:1.10.0",
+      "type": "library",
+      "group": "org.junit.platform",
+      "name": "junit-platform-engine",
+      "version": "1.10.0"
+    },
+    {
+      "bom-ref": "org.junit.jupiter:junit-jupiter:5.10.0",
+      "type": "library",
+      "group": "org.junit.jupiter",
+      "name": "junit-jupiter",
+      "version": "5.10.0"
+    },
+    {
+      "bom-ref": "org.junit.platform:junit-platform-commons:1.10.0",
+      "type": "library",
+      "group": "org.junit.platform",
+      "name": "junit-platform-commons",
+      "version": "1.10.0"
+    },
+    {
+      "bom-ref": "org.apiguardian:apiguardian-api:1.1.2",
+      "type": "library",
+      "group": "org.apiguardian",
+      "name": "apiguardian-api",
+      "version": "1.1.2"
+    },
+    {
+      "bom-ref": "org.junit.jupiter:junit-jupiter-api:5.10.0",
+      "type": "library",
+      "group": "org.junit.jupiter",
+      "name": "junit-jupiter-api",
+      "version": "5.10.0"
+    },
+    {
+      "bom-ref": "org.junit.jupiter:junit-jupiter-params:5.10.0",
+      "type": "library",
+      "group": "org.junit.jupiter",
+      "name": "junit-jupiter-params",
+      "version": "5.10.0"
+    },
+    {
+      "bom-ref": "org.apache.pdfbox:preflight:3.0.0",
+      "type": "application",
+      "group": "org.apache.pdfbox",
+      "name": "preflight",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "org.apache.pdfbox:jbig2-imageio:3.0.4",
+      "type": "library",
+      "group": "org.apache.pdfbox",
+      "name": "jbig2-imageio",
+      "version": "3.0.4"
+    },
+    {
+      "bom-ref": "org.bouncycastle:bcmail-jdk18on:1.76",
+      "type": "library",
+      "group": "org.bouncycastle",
+      "name": "bcmail-jdk18on",
+      "version": "1.76",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0a5a8e7de098c2b707cbe7dd00a9f9fc37dec1ef229ef6221d743002a86de095"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "33e17d91d00544c4d7e28826abf8ef38600f7d6b"
+        },
+        {
+          "alg": "MD5",
+          "content": "ec1136764ac619bcf6fc2c00a5b2dc9b"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.bouncycastle:bcprov-jdk18on:1.76",
+      "type": "library",
+      "group": "org.bouncycastle",
+      "name": "bcprov-jdk18on",
+      "version": "1.76",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "fda85d777aaae168015860b23a77cad9b8d3a1d5c904fda875313427bd560179"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "3a785d0b41806865ad7e311162bfa3fa60b3965b"
+        },
+        {
+          "alg": "MD5",
+          "content": "7020b9a9e1b951f5754a2168a26367f1"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.bouncycastle:bcpkix-jdk18on:1.76",
+      "type": "library",
+      "group": "org.bouncycastle",
+      "name": "bcpkix-jdk18on",
+      "version": "1.76",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "935a388854c329f9a6f32708f30c90045d2f91294fa687281273145d4cf9834a"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "10c9cf5c1b4d64abeda28ee32fbade3b74373622"
+        },
+        {
+          "alg": "MD5",
+          "content": "661d57d384f768f2bf92c0392f88379e"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.pdfbox:pdfbox:3.0.0",
+      "type": "application",
+      "group": "org.apache.pdfbox",
+      "name": "pdfbox",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "org.apache.pdfbox:pdfbox-io:3.0.0",
+      "type": "application",
+      "group": "org.apache.pdfbox",
+      "name": "pdfbox-io",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "commons-io:commons-io:2.13.0",
+      "type": "library",
+      "group": "commons-io",
+      "name": "commons-io",
+      "version": "2.13.0"
+    },
+    {
+      "bom-ref": "org.bouncycastle:bcutil-jdk18on:1.76",
+      "type": "library",
+      "group": "org.bouncycastle",
+      "name": "bcutil-jdk18on",
+      "version": "1.76",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1a65ad02958223a3f31373bd72eea942cafd1b1877a3ed0b492c2487e77c3c27"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "8c7594e651a278bcde18e038d8ab55b1f97f4d31"
+        },
+        {
+          "alg": "MD5",
+          "content": "4df5b021c310b4c7c07d4490318d75cb"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.pdfbox:fontbox:3.0.0",
+      "type": "application",
+      "group": "org.apache.pdfbox",
+      "name": "fontbox",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "org.objenesis:objenesis:3.3",
+      "type": "library",
+      "group": "org.objenesis",
+      "name": "objenesis",
+      "version": "3.3"
+    },
+    {
+      "bom-ref": "org.mockito:mockito-core:4.11.0",
+      "type": "library",
+      "group": "org.mockito",
+      "name": "mockito-core",
+      "version": "4.11.0"
+    },
+    {
+      "bom-ref": "net.bytebuddy:byte-buddy-agent:1.12.19",
+      "type": "library",
+      "group": "net.bytebuddy",
+      "name": "byte-buddy-agent",
+      "version": "1.12.19"
+    },
+    {
+      "bom-ref": "com.github.jai-imageio:jai-imageio-core:1.4.0",
+      "type": "library",
+      "group": "com.github.jai-imageio",
+      "name": "jai-imageio-core",
+      "version": "1.4.0"
+    },
+    {
+      "bom-ref": "com.github.jai-imageio:jai-imageio-jpeg2000:1.4.0",
+      "type": "library",
+      "group": "com.github.jai-imageio",
+      "name": "jai-imageio-jpeg2000",
+      "version": "1.4.0"
+    },
+    {
+      "bom-ref": "org.apache.logging.log4j:log4j-jcl:2.20.0",
+      "type": "library",
+      "group": "org.apache.logging.log4j",
+      "name": "log4j-jcl",
+      "version": "2.20.0"
+    },
+    {
+      "bom-ref": "com.googlecode.java-diff-utils:diffutils:1.3.0",
+      "type": "library",
+      "group": "com.googlecode.java-diff-utils",
+      "name": "diffutils",
+      "version": "1.3.0"
+    },
+    {
+      "bom-ref": "org.apache.logging.log4j:log4j-core:2.20.0",
+      "type": "library",
+      "group": "org.apache.logging.log4j",
+      "name": "log4j-core",
+      "version": "2.20.0"
+    },
+    {
+      "bom-ref": "org.apache.logging.log4j:log4j-api:2.20.0",
+      "type": "library",
+      "group": "org.apache.logging.log4j",
+      "name": "log4j-api",
+      "version": "2.20.0"
+    },
+    {
+      "bom-ref": "net.bytebuddy:byte-buddy:1.12.19",
+      "type": "library",
+      "group": "net.bytebuddy",
+      "name": "byte-buddy",
+      "version": "1.12.19"
+    },
+    {
+      "bom-ref": "org.apache.pdfbox:pdfbox-app:3.0.0",
+      "type": "application",
+      "group": "org.apache.pdfbox",
+      "name": "pdfbox-app",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "org.apache.pdfbox:pdfbox-debugger:3.0.0",
+      "type": "application",
+      "group": "org.apache.pdfbox",
+      "name": "pdfbox-debugger",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "org.apache.pdfbox:jbig2-imageio:3.0.4",
+      "type": "library",
+      "group": "org.apache.pdfbox",
+      "name": "jbig2-imageio",
+      "version": "3.0.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "29cb2951622f10acf61fd0656c4e6fa5562194a9095f7a1d26aa426e2f6b17eb"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "ad09a9bb94ea791ea81fb6c5bc2b13dd77872598"
+        },
+        {
+          "alg": "MD5",
+          "content": "c51f45dc3d29bbf716774f9ff9e95ad6"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.pdfbox:pdfbox-tools:3.0.0",
+      "type": "application",
+      "group": "org.apache.pdfbox",
+      "name": "pdfbox-tools",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "commons-io:commons-io:2.13.0",
+      "type": "library",
+      "group": "commons-io",
+      "name": "commons-io",
+      "version": "2.13.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "671eaa39688dac2ffaa4645b3c9980ae2d0ea2471e4ae6a5da199cd15ae23666"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "8bb2bc9b4df17e2411533a0708a69f983bf5e83b"
+        },
+        {
+          "alg": "MD5",
+          "content": "8d000fa8939b71b8894637f0ef6ea28c"
+        }
+      ]
+    },
+    {
+      "bom-ref": "info.picocli:picocli:4.7.4",
+      "type": "library",
+      "group": "info.picocli",
+      "name": "picocli",
+      "version": "4.7.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1964e89575b43aa177aa4e534946b25bde9f3a48a9675d61d9ef7c4ca83d94b4"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "6c036f65c4534c87c4b7f47ed659ee625bee79d4"
+        },
+        {
+          "alg": "MD5",
+          "content": "21e112a8e2e9422faf7e1dcbd659fd34"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.pdfbox:preflight-app:3.0.0",
+      "type": "application",
+      "group": "org.apache.pdfbox",
+      "name": "preflight-app",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "org.apache.pdfbox:pdfbox-parent:3.0.0",
+      "type": "application",
+      "group": "org.apache.pdfbox",
+      "name": "pdfbox-parent",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "org.apache.pdfbox:debugger-app:3.0.0",
+      "type": "application",
+      "group": "org.apache.pdfbox",
+      "name": "debugger-app",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "org.apache.pdfbox:pdfbox-reactor:3.0.0",
+      "type": "application",
+      "group": "org.apache.pdfbox",
+      "name": "pdfbox-reactor",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "org.apache.pdfbox:pdfbox-examples:3.0.0",
+      "type": "application",
+      "group": "org.apache.pdfbox",
+      "name": "pdfbox-examples",
+      "version": "3.0.0"
+    },
+    {
+      "bom-ref": "org.apache.ant:ant-launcher:1.10.13",
+      "type": "library",
+      "group": "org.apache.ant",
+      "name": "ant-launcher",
+      "version": "1.10.13",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "cd7695b3bfb6964ab71b6a0b31dad60005ae77fe502132364679aacf08f77970"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "331234763210702757a5780437844c6aef5d2bdf"
+        },
+        {
+          "alg": "MD5",
+          "content": "a52f8633aa56da6d33493def13829f3d"
+        }
+      ]
+    },
+    {
+      "bom-ref": "javax.servlet:javax.servlet-api:4.0.1",
+      "type": "library",
+      "group": "javax.servlet",
+      "name": "javax.servlet-api",
+      "version": "4.0.1"
+    },
+    {
+      "bom-ref": "org.apache.lucene:lucene-analyzers-common:7.7.2",
+      "type": "library",
+      "group": "org.apache.lucene",
+      "name": "lucene-analyzers-common",
+      "version": "7.7.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ca20cf4e3a8d3e3f6089c5c33e448d9f69363b26a69680540ff1903a229555d5"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "b350eef042d3950b3ca6b7532abb7a6606b1aa51"
+        },
+        {
+          "alg": "MD5",
+          "content": "2bfcfe046926c019ae172e3f275c43d5"
+        }
+      ]
+    },
+    {
+      "bom-ref": "commons-net:commons-net:3.9.0",
+      "type": "library",
+      "group": "commons-net",
+      "name": "commons-net",
+      "version": "3.9.0"
+    },
+    {
+      "bom-ref": "org.apache.lucene:lucene-core:7.7.2",
+      "type": "library",
+      "group": "org.apache.lucene",
+      "name": "lucene-core",
+      "version": "7.7.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "81438ac9d678050c546d2a8412cc7283a5d20fd85c3714218447c75816594f5d"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "1febe49946a08a42a1de72e9922346b885c9cdf6"
+        },
+        {
+          "alg": "MD5",
+          "content": "eff02f6cc8d8acf435cdd563138069db"
+        }
+      ]
+    },
+    {
+      "bom-ref": "org.apache.geronimo.specs:geronimo-jaxrs_1.1_spec:1.0",
+      "type": "library",
+      "group": "org.apache.geronimo.specs",
+      "name": "geronimo-jaxrs_1.1_spec",
+      "version": "1.0"
+    },
+    {
+      "bom-ref": "org.apache.ant:ant:1.10.13",
+      "type": "library",
+      "group": "org.apache.ant",
+      "name": "ant",
+      "version": "1.10.13",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "befbfc79e744e9892cfa7db96df3b6e82dc17d2571af42aa427976fc22299838"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "85fd5990a27ddafe8af3f7a6d7132d2c29a22a7c"
+        },
+        {
+          "alg": "MD5",
+          "content": "0781dacdb3a7af3a1c1f6d5187438da4"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "org.apache.pdfbox:pdfbox-tools:3.0.0",
+      "dependsOn": [
+        "org.apache.pdfbox:pdfbox-debugger:3.0.0",
+        "info.picocli:picocli:4.7.4"
+      ]
+    },
+    {
+      "ref": "org.apache.ant:ant:1.10.13",
+      "dependsOn": [
+        "org.apache.ant:ant-launcher:1.10.13"
+      ]
+    },
+    {
+      "ref": "org.apache.pdfbox:pdfbox-examples:3.0.0",
+      "dependsOn": [
+        "commons-net:commons-net:3.9.0",
+        "org.apache.lucene:lucene-core:7.7.2",
+        "org.apache.geronimo.specs:geronimo-jaxrs_1.1_spec:1.0",
+        "org.apache.ant:ant:1.10.13",
+        "javax.servlet:javax.servlet-api:4.0.1",
+        "org.apache.lucene:lucene-analyzers-common:7.7.2"
+      ]
+    },
+    {
+      "ref": "org.apache.pdfbox:xmpbox:3.0.0",
+      "dependsOn": [
+        "commons-logging:commons-logging:1.2",
+        "org.junit.jupiter:junit-jupiter:5.10.0"
+      ]
+    },
+    {
+      "ref": "org.junit.jupiter:junit-jupiter-api:5.10.0",
+      "dependsOn": [
+        "org.opentest4j:opentest4j:1.3.0",
+        "org.junit.platform:junit-platform-commons:1.10.0",
+        "org.apiguardian:apiguardian-api:1.1.2"
+      ]
+    },
+    {
+      "ref": "org.junit.jupiter:junit-jupiter-engine:5.10.0",
+      "dependsOn": [
+        "org.junit.platform:junit-platform-engine:1.10.0"
+      ]
+    },
+    {
+      "ref": "org.apache.pdfbox:pdfbox:3.0.0",
+      "dependsOn": [
+        "org.apache.pdfbox:fontbox:3.0.0",
+        "org.mockito:mockito-core:4.11.0",
+        "com.github.jai-imageio:jai-imageio-core:1.4.0",
+        "com.github.jai-imageio:jai-imageio-jpeg2000:1.4.0",
+        "org.apache.logging.log4j:log4j-jcl:2.20.0",
+        "com.googlecode.java-diff-utils:diffutils:1.3.0",
+        "org.apache.logging.log4j:log4j-core:2.20.0",
+        "org.apache.pdfbox:pdfbox-io:3.0.0"
+      ]
+    },
+    {
+      "ref": "org.apache.logging.log4j:log4j-core:2.20.0",
+      "dependsOn": [
+        "org.apache.logging.log4j:log4j-api:2.20.0"
+      ]
+    },
+    {
+      "ref": "org.junit.jupiter:junit-jupiter:5.10.0",
+      "dependsOn": [
+        "org.junit.jupiter:junit-jupiter-engine:5.10.0",
+        "org.junit.jupiter:junit-jupiter-api:5.10.0",
+        "org.junit.jupiter:junit-jupiter-params:5.10.0"
+      ]
+    },
+    {
+      "ref": "org.apache.pdfbox:preflight:3.0.0",
+      "dependsOn": [
+        "org.bouncycastle:bcmail-jdk18on:1.76",
+        "org.bouncycastle:bcprov-jdk18on:1.76",
+        "org.apache.pdfbox:pdfbox:3.0.0",
+        "commons-io:commons-io:2.13.0",
+        "org.apache.pdfbox:jbig2-imageio:3.0.4"
+      ]
+    },
+    {
+      "ref": "org.bouncycastle:bcmail-jdk18on:1.76",
+      "dependsOn": [
+        "org.bouncycastle:bcpkix-jdk18on:1.76",
+        "org.bouncycastle:bcutil-jdk18on:1.76"
+      ]
+    },
+    {
+      "ref": "org.mockito:mockito-core:4.11.0",
+      "dependsOn": [
+        "org.objenesis:objenesis:3.3",
+        "net.bytebuddy:byte-buddy-agent:1.12.19",
+        "net.bytebuddy:byte-buddy:1.12.19"
+      ]
+    },
+    {
+      "ref": "org.apache.pdfbox:pdfbox-app:3.0.0",
+      "dependsOn": [
+        "org.apache.pdfbox:jbig2-imageio:3.0.4",
+        "org.apache.pdfbox:pdfbox-tools:3.0.0",
+        "commons-io:commons-io:2.13.0"
+      ]
+    }
+  ]
+}
