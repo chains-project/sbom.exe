@@ -8,7 +8,6 @@ import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenan
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,7 +30,7 @@ public class ParsingHelper {
         Map<String, Set<Provenance>> result = new HashMap<>();
         final ObjectMapper mapper = new ObjectMapper();
         try (MappingIterator<Map<String, Set<Provenance>>> it = mapper.readerFor(
-                        new TypeReference<Map<String, List<Provenance>>>() {})
+                        new TypeReference<Map<String, Set<Provenance>>>() {})
                 .readValues(fingerprintFile.toFile())) {
             while (it.hasNext()) {
                 Map<String, Set<Provenance>> item = it.nextValue();
