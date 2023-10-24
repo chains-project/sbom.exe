@@ -51,7 +51,7 @@ public class GenerateMojo extends AbstractMojo {
     @Parameter(property = "externalJars")
     private File externalJars;
 
-    private final Map<String, List<Provenance>> fingerprints = new HashMap<>();
+    private final Map<String, Set<Provenance>> fingerprints = new HashMap<>();
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -140,10 +140,10 @@ public class GenerateMojo extends AbstractMojo {
                             Provenance provenance = new Maven(classFileAttributes, groupId, artifactId, version);
 
                             if (fingerprints.containsKey(className)) {
-                                List<Provenance> alreadyExistingProvenance = fingerprints.get(className);
+                                Set<Provenance> alreadyExistingProvenance = fingerprints.get(className);
                                 alreadyExistingProvenance.add(provenance);
                             } else {
-                                List<Provenance> newProvenance = new ArrayList<>();
+                                Set<Provenance> newProvenance = new HashSet<>();
                                 newProvenance.add(provenance);
                                 fingerprints.put(className, newProvenance);
                             }

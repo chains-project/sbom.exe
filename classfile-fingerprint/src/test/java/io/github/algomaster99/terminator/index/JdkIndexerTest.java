@@ -7,8 +7,8 @@ import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenan
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -41,8 +41,9 @@ class JdkIndexerTest {
         Index.main(args);
 
         // assert
-        Map<String, List<Provenance>> referenceProvenance = ParsingHelper.deserializeFingerprints(indexFile);
-        referenceProvenance.forEach((key, value) ->
-                assertThat(value.get(0).classFileAttributes().algorithm()).isEqualTo("MD5"));
+        Map<String, Set<Provenance>> referenceProvenance = ParsingHelper.deserializeFingerprints(indexFile);
+        referenceProvenance.forEach((key, value) -> assertThat(
+                        value.stream().findAny().get().classFileAttributes().algorithm())
+                .isEqualTo("MD5"));
     }
 }

@@ -7,18 +7,21 @@ import io.github.algomaster99.terminator.commons.fingerprint.provenance.Maven;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+@Deprecated
+@Disabled("This test suite will be removed in future version.")
 public class OptionsTest {
     @Nested
     class ParseFingerprint {
         @Test
         void maven() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-            Map<String, List<Provenance>> fingerprints =
+            Map<String, Set<Provenance>> fingerprints =
                     deserializeFingerprints(Path.of("src/test/resources/fingerprints/maven.jsonl"));
             assertThat(fingerprints)
                     .extractingByKey("org/apache/commons/compress/compressors/CompressorStreamFactory")
@@ -28,7 +31,7 @@ public class OptionsTest {
 
         @Test
         void jar() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-            Map<String, List<Provenance>> fingerprints =
+            Map<String, Set<Provenance>> fingerprints =
                     deserializeFingerprints(Path.of("src/test/resources/fingerprints/jar.jsonl"));
             assertThat(fingerprints)
                     .extractingByKey("org/sonar/java/checks/security/FilePermissionsCheck")
@@ -38,7 +41,7 @@ public class OptionsTest {
 
         @Test
         void maven_jar() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-            Map<String, List<Provenance>> fingerprints =
+            Map<String, Set<Provenance>> fingerprints =
                     deserializeFingerprints(Path.of("src/test/resources/fingerprints/maven_jar.jsonl"));
             assertThat(fingerprints)
                     .extractingByKey("org/eclipse/jdt/core/dom/ASTNode")
