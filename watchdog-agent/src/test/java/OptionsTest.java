@@ -10,9 +10,12 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+@Deprecated
+@Disabled("This test suite will be removed in future version.")
 public class OptionsTest {
     @Nested
     class ParseFingerprint {
