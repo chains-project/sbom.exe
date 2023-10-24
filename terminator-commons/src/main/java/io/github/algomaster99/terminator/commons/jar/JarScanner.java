@@ -51,6 +51,12 @@ public class JarScanner {
 
                     if (fingerprints.containsKey(jarEntryName)) {
                         List<Provenance> alreadyExistingProvenance = fingerprints.get(jarEntryName);
+                        // TODO: should be removed after https://github.com/ASSERT-KTH/sbom.exe/issues/96 is fixed
+                        if (alreadyExistingProvenance.stream()
+                                .anyMatch(provenance ->
+                                        provenance.classFileAttributes().hash().equals(hashOfClass))) {
+                            continue;
+                        }
                         updateProvenanceList(alreadyExistingProvenance, classFileAttributes, provenanceInformation);
                     } else {
                         List<Provenance> newProvenance = new ArrayList<>();
