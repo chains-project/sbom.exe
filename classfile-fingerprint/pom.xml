@@ -8,7 +8,6 @@
     <version>0.11.1-SNAPSHOT</version>
   </parent>
   <artifactId>classfile-fingerprint</artifactId>
-  <packaging>pom</packaging>
 
   <name>Classfile Fingerprint Generator</name>
   <description>Generates fingerprint of all classfiles in a JAR.</description>
