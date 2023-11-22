@@ -31,7 +31,7 @@ public class Terminator {
     }
 
     private static byte[] isLoadedClassWhitelisted(String className, byte[] classfileBuffer) {
-        Map<String, Set<Provenance>> fingerprints = options.getFingerprints();
+        Map<String, Set<Provenance>> fingerprints = options.getSbom();
         if (RuntimeClass.isProxyClass(classfileBuffer)
                 || RuntimeClass.isGeneratedClassExtendingMagicAccessor(classfileBuffer)
                 || RuntimeClass.isBoundMethodHandle(classfileBuffer)) {
