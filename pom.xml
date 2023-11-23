@@ -30,6 +30,7 @@
 
   <modules>
     <module>watchdog-agent</module>
+    <module>runtime-class-interceptor</module>
     <module>classfile-fingerprint</module>
     <module>terminator-commons</module>
   </modules>
@@ -107,6 +108,11 @@
   <build>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.6.1</version>
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>

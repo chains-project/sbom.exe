@@ -3,13 +3,21 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.github.algomaster99</groupId>
-    <artifactId>classfile-fingerprint</artifactId>
+    <artifactId>terminator</artifactId>
     <version>0.11.1-SNAPSHOT</version>
   </parent>
   <artifactId>runtime-class-interceptor</artifactId>
   <name>Runtime class interceptor</name>
   <description>Intercepts classes at runtime outputs a list of classfiles</description>
   <url>${project.parent.url}</url>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.github.algomaster99</groupId>
+      <artifactId>terminator-commons</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
@@ -33,6 +41,18 @@
               <goal>shade</goal>
             </goals>
             <phase>package</phase>
+          </execution>
+          <!--          needed so that we can use the agent jar in the test for indexes -->
+          <execution>
+            <id>shade-for-classfile-fingerprint</id>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <outputDirectory>${project.build.directory}/classes</outputDirectory>
+              <finalName>${project.artifactId}</finalName>
+            </configuration>
           </execution>
         </executions>
       </plugin>
