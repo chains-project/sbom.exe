@@ -1,4 +1,4 @@
-# Terminator
+# sbom.exe
 
 [![tests](https://github.com/ASSERT-KTH/terminator/actions/workflows/tests.yml/badge.svg)](https://github.com/ASSERT-KTH/terminator/actions/workflows/tests.yml)
 
