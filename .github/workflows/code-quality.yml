@@ -29,10 +29,10 @@ jobs:
           distribution: 'oracle'
           java-version: '17'
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: java
       - run: mvn clean install -DskipTests
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
