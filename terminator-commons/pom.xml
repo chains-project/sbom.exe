@@ -65,6 +65,13 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-javaagent:/home/aman/Desktop/chains/sbom.exe/runtime-class-interceptor/target/runtime-class-interceptor-0.11.1-SNAPSHOT.jar=output=a.jsonl</argLine>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
       </plugin>
