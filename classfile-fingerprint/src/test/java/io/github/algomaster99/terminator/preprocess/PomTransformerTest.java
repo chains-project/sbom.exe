@@ -33,7 +33,7 @@ public class PomTransformerTest {
         assertThat(surefireConfiguration.getChildCount()).isEqualTo(1);
 
         Xpp3Dom argLine = surefireConfiguration.getChild("argLine");
-        assertThat(argLine.getValue()).contains("javaagent");
+        assertThat(argLine.getValue()).isEqualTo("-javaagent:" + PomTransformer.AGENT_JAR);
     }
 
     @Test
@@ -64,7 +64,8 @@ public class PomTransformerTest {
         transformer.transform();
 
         // assert
-        assertThat(surefireConfiguration.getChild("argLine").getValue()).isEqualTo("-javaagent: " + originalArgLine);
+        assertThat(surefireConfiguration.getChild("argLine").getValue())
+                .isEqualTo("-javaagent:" + PomTransformer.AGENT_JAR + " " + originalArgLine);
     }
 
     @Test

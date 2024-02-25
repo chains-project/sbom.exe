@@ -1,5 +1,7 @@
 package io.github.algomaster99.terminator.preprocess;
 
+import static io.github.algomaster99.terminator.util.JavaAgentPath.getAgentPath;
+
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,6 +17,17 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 public class PomTransformer {
+    static String AGENT_JAR;
+
+    static {
+        try {
+            AGENT_JAR = getAgentPath();
+        } catch (IOException e) {
+            throw new RuntimeException(
+                    "Could not fetch trace-collector.jar. Please package `trace-collector` module again.");
+        }
+    }
+
     private final Path pom;
     private final Model model;
 
@@ -82,10 +95,10 @@ public class PomTransformer {
         Xpp3Dom argLine = surefireConfiguration.getChild("argLine");
         if (argLine == null) {
             argLine = new Xpp3Dom("argLine");
-            argLine.setValue("-javaagent:");
+            argLine.setValue("-javaagent:" + AGENT_JAR + ""); // TODO: add options
             surefireConfiguration.addChild(argLine);
         } else {
-            argLine.setValue("-javaagent:" + " " + argLine.getValue());
+            argLine.setValue("-javaagent:" + AGENT_JAR + " " + argLine.getValue());
         }
     }
 
