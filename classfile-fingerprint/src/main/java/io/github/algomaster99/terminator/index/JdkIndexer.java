@@ -23,7 +23,7 @@ import picocli.CommandLine;
         description = "Create an index of the classfiles in JDK")
 public class JdkIndexer extends BaseIndexer implements Callable<Integer> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Jdk.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JdkIndexer.class);
 
     Map<String, Set<Provenance>> createOrMergeProvenances(Map<String, Set<Provenance>> referenceProvenance) {
         List<JdkClass> jdkClasses = io.github.algomaster99.terminator.commons.fingerprint.JdkIndexer.listJdkClasses();
