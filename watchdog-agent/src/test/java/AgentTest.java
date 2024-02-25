@@ -12,6 +12,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
+import java.util.Objects;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.DefaultInvoker;
 import org.apache.maven.shared.invoker.InvocationRequest;
@@ -337,7 +338,8 @@ public class AgentTest {
         String tempDir = System.getProperty("java.io.tmpdir");
         Path traceCollector = Path.of(tempDir, "watchdog-agent.jar");
         try (InputStream traceCollectorStream = Terminator.class.getResourceAsStream("/watchdog-agent.jar")) {
-            Files.copy(traceCollectorStream, traceCollector, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(
+                    Objects.requireNonNull(traceCollectorStream), traceCollector, StandardCopyOption.REPLACE_EXISTING);
         }
         return traceCollector.toAbsolutePath() + "=" + agentArgs;
     }
