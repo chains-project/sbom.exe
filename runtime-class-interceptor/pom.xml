@@ -35,13 +35,6 @@
           </transformers>
         </configuration>
         <executions>
-          <execution>
-            <id>shade</id>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <phase>package</phase>
-          </execution>
           <!--          needed so that we can use the agent jar in the test for indexes -->
           <execution>
             <id>shade-for-classfile-fingerprint</id>
