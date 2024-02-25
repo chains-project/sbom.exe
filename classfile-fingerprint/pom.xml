@@ -46,6 +46,14 @@
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-model</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
     <!--    For MOJO test. See: https://khmarbaise.github.io/maven-it-extension/itf-documentation/usersguide/usersguide.html-->
     <dependency>
       <groupId>org.assertj</groupId>

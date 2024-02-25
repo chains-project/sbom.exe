@@ -107,6 +107,11 @@
         <artifactId>maven-model</artifactId>
         <version>3.9.6</version>
       </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.15.1</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
