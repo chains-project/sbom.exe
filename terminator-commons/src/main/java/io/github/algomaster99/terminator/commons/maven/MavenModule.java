@@ -6,9 +6,9 @@ import java.util.List;
 import org.apache.maven.model.Model;
 
 public class MavenModule {
-    private Model self;
+    private final Model self;
 
-    private Path fileSystemPath;
+    private final Path fileSystemPath;
 
     private final List<MavenModule> children = new ArrayList<>();
 
