@@ -46,9 +46,7 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
         if (indexFile.output != null) {
             options.setOutput(indexFile.output.toPath());
         }
-        if (indexFile.input != null) {
-            options.setInput(indexFile.input.toPath());
-        }
+        // TODO: add support for input
         Path pathToTempProject = createCopyOfProject(project);
         if (cleanup) {
             recursiveDeleteOnShutdownHook(pathToTempProject.getParent());
