@@ -2,9 +2,12 @@ package io.github.algomaster99.terminator.commons.options;
 
 import java.lang.reflect.Field;
 import java.nio.file.Path;
+import java.util.Arrays;
 
 public class RuntimeClassInterceptorOptions {
     private Path output;
+
+    private Path input;
 
     /**
      * Default constructor useful for using setters to set the values
@@ -28,6 +31,9 @@ public class RuntimeClassInterceptorOptions {
                 case "output":
                     output = Path.of(value).toAbsolutePath();
                     break;
+                case "input":
+                    input = Path.of(value).toAbsolutePath();
+                    break;
                 default:
                     throw new IllegalArgumentException("Unknown argument: " + key);
             }
@@ -38,15 +44,32 @@ public class RuntimeClassInterceptorOptions {
         return output;
     }
 
+    public Path getInput() {
+        return input;
+    }
+
     public RuntimeClassInterceptorOptions setOutput(Path output) {
         this.output = output.toAbsolutePath();
+        return this;
+    }
+
+    public RuntimeClassInterceptorOptions setInput(Path input) {
+        this.input = input.toAbsolutePath();
         return this;
     }
 
     @Override
     public String toString() {
         StringBuilder agentsArgsBuilder = new StringBuilder();
-        Field[] fields = this.getClass().getDeclaredFields();
+        Field[] fields = Arrays.stream(this.getClass().getDeclaredFields())
+                .filter(field -> {
+                    try {
+                        return field.get(this) != null;
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .toArray(Field[]::new);
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
             try {
