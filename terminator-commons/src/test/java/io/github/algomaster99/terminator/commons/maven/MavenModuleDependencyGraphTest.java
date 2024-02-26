@@ -109,6 +109,6 @@ public class MavenModuleDependencyGraphTest {
         MavenModule module1 = root.getSubmodules().get(0);
         MavenModule module2 = root.getSubmodules().get(1);
 
-        assertThat(module1.getSubmodulesThatAreDependencies()).isEqualTo(List.of(module2.getSelf()));
+        assertThat(module1.getSubmodulesThatAreDependencies()).isEqualTo(List.of(module2));
     }
 }

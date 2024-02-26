@@ -59,8 +59,8 @@ public class MavenModule {
         return parent.topLevelParent();
     }
 
-    public List<Model> getSubmodulesThatAreDependencies() {
-        List<Model> subModulesThatAreDependencies = new ArrayList<>();
+    public List<MavenModule> getSubmodulesThatAreDependencies() {
+        List<MavenModule> subModulesThatAreDependencies = new ArrayList<>();
         List<Dependency> dependencies = self.getDependencies();
         for (Dependency dependency : dependencies) {
             String artifactId = dependency.getArtifactId();
@@ -68,7 +68,7 @@ public class MavenModule {
             if (submodule == null) {
                 continue;
             }
-            subModulesThatAreDependencies.add(submodule.getSelf());
+            subModulesThatAreDependencies.add(submodule);
             submodule.getSubmodulesThatAreDependencies();
         }
         return subModulesThatAreDependencies;

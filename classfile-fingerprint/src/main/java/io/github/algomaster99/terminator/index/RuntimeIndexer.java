@@ -1,6 +1,8 @@
 package io.github.algomaster99.terminator.index;
 
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
+import io.github.algomaster99.terminator.commons.maven.MavenModule;
+import io.github.algomaster99.terminator.commons.maven.MavenModuleDependencyGraph;
 import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptorOptions;
 import io.github.algomaster99.terminator.preprocess.PomTransformer;
 import java.io.File;
@@ -10,11 +12,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import org.apache.commons.io.FileUtils;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -35,6 +37,12 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
             required = false)
     private boolean cleanup = false;
 
+    @CommandLine.Option(
+            names = {"-mj", "--executable-jar-module"},
+            description = "The module that generates the executable jar",
+            required = true)
+    private String executableJarModule;
+
     @Override
     Map<String, Set<Provenance>> createOrMergeProvenances(Map<String, Set<Provenance>> referenceProvenance) {
         return null;
@@ -42,16 +50,29 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        RuntimeClassInterceptorOptions options = new RuntimeClassInterceptorOptions();
-        if (indexFile.output != null) {
-            options.setOutput(indexFile.output.toPath());
-        }
-        // TODO: add support for input
         Path pathToTempProject = createCopyOfProject(project);
+        MavenModule rootProject = MavenModuleDependencyGraph.createMavenModuleGraph(pathToTempProject);
+        MavenModule executableJar = rootProject.findSubmodule(executableJarModule);
+        if (executableJar == null) {
+            throw new RuntimeException("The module " + executableJarModule + " is not found in the project");
+        }
+        List<MavenModule> requiredModules = executableJar.getSubmodulesThatAreDependencies();
+        // we want to instrument the executable jar module as well
+        requiredModules.add(executableJar);
         if (cleanup) {
             recursiveDeleteOnShutdownHook(pathToTempProject.getParent());
         }
-        transformPomsRecursively(pathToTempProject, options);
+        for (MavenModule module : requiredModules) {
+            RuntimeClassInterceptorOptions options = new RuntimeClassInterceptorOptions();
+            if (indexFile.output != null) {
+                String suffix = module.getSelf().getArtifactId();
+                options.setOutput(Path.of(indexFile.output.toString() + "_" + suffix + ".json"));
+            }
+            PomTransformer transformer =
+                    new PomTransformer(module.getFileSystemPath().resolve("pom.xml"), options);
+            transformer.transform();
+            transformer.writeTransformedPomInPlace();
+        }
         return 0;
     }
 
@@ -95,22 +116,5 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
                 throw new RuntimeException("Failed to delete " + path, e);
             }
         }));
-    }
-
-    private static void transformPomsRecursively(Path projectRoot, RuntimeClassInterceptorOptions options)
-            throws IOException {
-        Files.walk(projectRoot)
-                .filter(path -> path.getFileName().toString().equals("pom.xml")
-                        && !path.toString().contains("/resources/"))
-                .forEach(path -> {
-                    try {
-                        PomTransformer transformer = new PomTransformer(path, options);
-                        transformer.transform();
-                        transformer.writeTransformedPomInPlace();
-
-                    } catch (XmlPullParserException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
     }
 }
