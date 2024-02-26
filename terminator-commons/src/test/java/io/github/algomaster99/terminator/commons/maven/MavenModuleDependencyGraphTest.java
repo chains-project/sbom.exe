@@ -23,7 +23,7 @@ public class MavenModuleDependencyGraphTest {
 
         assertThat(root.getSelf().getArtifactId()).isEqualTo("single-module");
         assertThat(root.getFileSystemPath()).isEqualTo(projectRoot);
-        assertThat(root.getChildren()).hasSize(0);
+        assertThat(root.getSubmodules()).hasSize(0);
     }
 
     @Test
@@ -40,18 +40,18 @@ public class MavenModuleDependencyGraphTest {
 
         assertThat(root.getSelf().getArtifactId()).isEqualTo("multi-module-single-depth");
         assertThat(root.getFileSystemPath()).isEqualTo(projectRoot);
-        assertThat(root.getChildren()).hasSize(2);
+        assertThat(root.getSubmodules()).hasSize(2);
 
-        MavenModule module1 = root.getChildren().get(0);
-        MavenModule module2 = root.getChildren().get(1);
+        MavenModule module1 = root.getSubmodules().get(0);
+        MavenModule module2 = root.getSubmodules().get(1);
 
         assertThat(Set.of(module1.getSelf().getArtifactId(), module2.getSelf().getArtifactId()))
                 .contains("m1", "m2");
         assertThat(Set.of(module1.getFileSystemPath(), module2.getFileSystemPath()))
                 .contains(projectRoot.resolve("m1"), projectRoot.resolve("m2"));
 
-        assertThat(module1.getChildren()).hasSize(0);
-        assertThat(module2.getChildren()).hasSize(0);
+        assertThat(module1.getSubmodules()).hasSize(0);
+        assertThat(module2.getSubmodules()).hasSize(0);
     }
 
     @Test
@@ -68,24 +68,24 @@ public class MavenModuleDependencyGraphTest {
 
         assertThat(root.getSelf().getArtifactId()).isEqualTo("multi-module-multiple-depth");
         assertThat(root.getFileSystemPath()).isEqualTo(projectRoot);
-        assertThat(root.getChildren()).hasSize(2);
+        assertThat(root.getSubmodules()).hasSize(2);
 
-        MavenModule module1 = root.getChildren().get(0);
-        MavenModule module2 = root.getChildren().get(1);
+        MavenModule module1 = root.getSubmodules().get(0);
+        MavenModule module2 = root.getSubmodules().get(1);
 
         assertThat(Set.of(module1.getSelf().getArtifactId(), module2.getSelf().getArtifactId()))
                 .contains("m1", "m2");
         assertThat(Set.of(module1.getFileSystemPath(), module2.getFileSystemPath()))
                 .contains(projectRoot.resolve("m1"), projectRoot.resolve("m2"));
 
-        assertThat(module1.getChildren()).hasSize(0);
-        assertThat(module2.getChildren()).hasSize(1);
+        assertThat(module1.getSubmodules()).hasSize(0);
+        assertThat(module2.getSubmodules()).hasSize(1);
 
-        MavenModule module21 = module2.getChildren().get(0);
+        MavenModule module21 = module2.getSubmodules().get(0);
 
         assertThat(module21.getSelf().getArtifactId()).isEqualTo("m21");
         assertThat(module21.getFileSystemPath())
                 .isEqualTo(projectRoot.resolve("m2").resolve("m21"));
-        assertThat(module21.getChildren()).hasSize(0);
+        assertThat(module21.getSubmodules()).hasSize(0);
     }
 }

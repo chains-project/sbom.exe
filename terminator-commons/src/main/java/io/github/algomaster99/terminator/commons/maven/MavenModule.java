@@ -10,7 +10,7 @@ public class MavenModule {
 
     private final Path fileSystemPath;
 
-    private final List<MavenModule> children = new ArrayList<>();
+    private final List<MavenModule> submodules = new ArrayList<>();
 
     MavenModule(Model self, Path fileSystemPath) {
         this.self = self;
@@ -18,15 +18,15 @@ public class MavenModule {
     }
 
     public void addChild(MavenModule child) {
-        children.add(child);
+        submodules.add(child);
     }
 
     public Model getSelf() {
         return self;
     }
 
-    public List<MavenModule> getChildren() {
-        return children;
+    public List<MavenModule> getSubmodules() {
+        return submodules;
     }
 
     public Path getFileSystemPath() {
