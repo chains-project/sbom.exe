@@ -26,7 +26,7 @@ public class RuntimeClassInterceptorOptions {
 
             switch (key) {
                 case "output":
-                    output = Path.of(value);
+                    output = Path.of(value).toAbsolutePath();
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown argument: " + key);
@@ -39,7 +39,7 @@ public class RuntimeClassInterceptorOptions {
     }
 
     public RuntimeClassInterceptorOptions setOutput(Path output) {
-        this.output = output;
+        this.output = output.toAbsolutePath();
         return this;
     }
 
