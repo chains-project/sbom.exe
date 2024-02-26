@@ -35,17 +35,12 @@
           </transformers>
         </configuration>
         <executions>
-          <!--          needed so that we can use the agent jar in the test for indexes -->
           <execution>
-            <id>shade-for-classfile-fingerprint</id>
+            <id>shade</id>
             <goals>
               <goal>shade</goal>
             </goals>
             <phase>package</phase>
-            <configuration>
-              <outputDirectory>${project.build.directory}/classes</outputDirectory>
-              <finalName>${project.artifactId}</finalName>
-            </configuration>
           </execution>
         </executions>
       </plugin>
