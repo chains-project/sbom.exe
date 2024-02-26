@@ -35,7 +35,7 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
 
     @Override
     Map<String, Set<Provenance>> createOrMergeProvenances(Map<String, Set<Provenance>> referenceProvenance) {
-        Bom15Schema sbom = null;
+        Bom15Schema sbom;
         try {
             sbom = CycloneDX.getPojo_1_5(Files.readString(sbomPath));
         } catch (IOException e) {

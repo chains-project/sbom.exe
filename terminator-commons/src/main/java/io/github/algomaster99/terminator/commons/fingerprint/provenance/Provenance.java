@@ -19,7 +19,7 @@ class ProvenanceDeserializer extends JsonDeserializer<Provenance> {
     public Provenance deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         ObjectMapper mapper = (ObjectMapper) p.getCodec();
         ObjectNode root = mapper.readTree(p);
-        Class<? extends Provenance> instanceClass = null;
+        Class<? extends Provenance> instanceClass;
         if (root.has("path")) {
             instanceClass = Jar.class;
         } else if (root.has("groupId")) {
