@@ -10,7 +10,7 @@ import java.nio.file.StandardCopyOption;
 public class JavaAgentPath {
     public static String getAgentPath() throws IOException {
         String tempDir = System.getProperty("java.io.tmpdir");
-        Path runtimeClassInterceptorJar = Path.of(tempDir, "trace-collector.jar");
+        Path runtimeClassInterceptorJar = Path.of(tempDir, "runtime-class-interceptor.jar");
 
         try (InputStream runtimeClassInterceptorStream =
                 RuntimeClassInterceptor.class.getResourceAsStream("/runtime-class-interceptor.jar")) {
