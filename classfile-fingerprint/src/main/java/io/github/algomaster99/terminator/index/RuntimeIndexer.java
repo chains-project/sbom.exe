@@ -17,6 +17,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import org.apache.commons.io.FileUtils;
+import org.apache.maven.shared.invoker.DefaultInvocationRequest;
+import org.apache.maven.shared.invoker.DefaultInvoker;
+import org.apache.maven.shared.invoker.InvocationRequest;
+import org.apache.maven.shared.invoker.Invoker;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -66,13 +70,19 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
             RuntimeClassInterceptorOptions options = new RuntimeClassInterceptorOptions();
             if (indexFile.output != null) {
                 String suffix = module.getSelf().getArtifactId();
-                options.setOutput(Path.of(indexFile.output.toString() + "_" + suffix + ".json"));
+                options.setOutput(Path.of(indexFile.output.toString() + "_" + suffix + ".jsonl"));
             }
             PomTransformer transformer =
                     new PomTransformer(module.getFileSystemPath().resolve("pom.xml"), options);
             transformer.transform();
             transformer.writeTransformedPomInPlace();
         }
+        InvocationRequest request = new DefaultInvocationRequest();
+        File pomFile = pathToTempProject.resolve("pom.xml").toFile();
+        request.setPomFile(pomFile);
+        request.setGoals(List.of("clean", "package"));
+        Invoker invoker = new DefaultInvoker();
+        invoker.execute(request);
         return 0;
     }
 
