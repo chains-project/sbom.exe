@@ -16,7 +16,7 @@ public class MavenModuleDependencyGraph {
         MavenXpp3Reader reader = new MavenXpp3Reader();
         Model rootModel = reader.read(new FileReader(rootPom.toFile()));
 
-        MavenModule root = new MavenModule(rootModel, projectRoot.toAbsolutePath());
+        MavenModule root = new MavenModule(rootModel, projectRoot.toAbsolutePath(), null);
 
         List<String> submodules = rootModel.getModules();
 
@@ -25,7 +25,7 @@ public class MavenModuleDependencyGraph {
             MavenXpp3Reader moduleReader = new MavenXpp3Reader();
             Model moduleModel = moduleReader.read(
                     new FileReader(modulePath.resolve("pom.xml").toFile()));
-            MavenModule mavenModule = new MavenModule(moduleModel, modulePath);
+            MavenModule mavenModule = new MavenModule(moduleModel, modulePath, root);
             if (moduleModel.getModules() != null) {
                 List<String> childModules = moduleModel.getModules();
                 List<MavenModule> children = childModules.stream()
@@ -37,9 +37,9 @@ public class MavenModuleDependencyGraph {
                             }
                         })
                         .toList();
-                children.forEach(mavenModule::addChild);
+                children.forEach(mavenModule::addSubmodule);
             }
-            root.addChild(mavenModule);
+            root.addSubmodule(mavenModule);
         }
         return root;
     }

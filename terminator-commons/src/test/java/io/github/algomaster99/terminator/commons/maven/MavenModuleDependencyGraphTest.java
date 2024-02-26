@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Set;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.jupiter.api.Test;
@@ -87,5 +88,27 @@ public class MavenModuleDependencyGraphTest {
         assertThat(module21.getFileSystemPath())
                 .isEqualTo(projectRoot.resolve("m2").resolve("m21"));
         assertThat(module21.getSubmodules()).hasSize(0);
+    }
+
+    @Test
+    void createMavenModuleGraph_submoduleAsDependency() throws XmlPullParserException, IOException {
+        // arrange
+        Path projectRoot = Path.of("src/test/resources/maven-modules/submodule-as-dependency")
+                .toAbsolutePath();
+
+        // act
+        MavenModule root = MavenModuleDependencyGraph.createMavenModuleGraph(projectRoot);
+
+        // assert
+        assertThat(root).isNotNull();
+
+        assertThat(root.getSelf().getArtifactId()).isEqualTo("submodule-as-dependency");
+        assertThat(root.getFileSystemPath()).isEqualTo(projectRoot);
+        assertThat(root.getSubmodules()).hasSize(2);
+
+        MavenModule module1 = root.getSubmodules().get(0);
+        MavenModule module2 = root.getSubmodules().get(1);
+
+        assertThat(module1.getSubmodulesThatAreDependencies()).isEqualTo(List.of(module2.getSelf()));
     }
 }
