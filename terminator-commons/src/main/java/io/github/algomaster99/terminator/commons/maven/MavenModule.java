@@ -5,7 +5,6 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
-
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 
@@ -18,7 +17,6 @@ public class MavenModule {
 
     private final List<MavenModule> submodules = new ArrayList<>();
 
-
     MavenModule(Model self, Path fileSystemPath, MavenModule parent) {
         this.self = self;
         this.fileSystemPath = fileSystemPath;
@@ -28,7 +26,6 @@ public class MavenModule {
     public void addSubmodule(MavenModule child) {
         submodules.add(child);
     }
-
 
     public Model getSelf() {
         return self;
