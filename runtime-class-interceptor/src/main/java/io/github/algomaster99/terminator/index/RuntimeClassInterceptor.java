@@ -6,10 +6,10 @@ import io.github.algomaster99.terminator.commons.fingerprint.classfile.Classfile
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.RuntimeClass;
+import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptorOptions;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
-import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.security.ProtectionDomain;
 import java.util.Map;
@@ -23,7 +23,7 @@ public class RuntimeClassInterceptor {
     private static final Map<String, Set<Provenance>> exhaustiveListOfClasses = new ConcurrentHashMap<>();
 
     public static void premain(String agentArgs, Instrumentation inst) {
-        Options options = new Options(agentArgs);
+        RuntimeClassInterceptorOptions options = new RuntimeClassInterceptorOptions(agentArgs);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             ParsingHelper.serialiseFingerprints(exhaustiveListOfClasses, options.getOutput());
         }));
@@ -60,33 +60,5 @@ public class RuntimeClassInterceptor {
             System.exit(1);
         }
         return classfileBuffer;
-    }
-
-    private static class Options {
-        private Path output;
-
-        public Options(String agentArgs) {
-            String[] args = agentArgs.split(",");
-            for (String arg : args) {
-                String[] split = arg.split("=");
-                if (split.length != 2) {
-                    throw new IllegalArgumentException("Invalid argument: " + arg);
-                }
-                String key = split[0];
-                String value = split[1];
-
-                switch (key) {
-                    case "output":
-                        output = Path.of(value);
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Unknown argument: " + key);
-                }
-            }
-        }
-
-        public Path getOutput() {
-            return output;
-        }
     }
 }

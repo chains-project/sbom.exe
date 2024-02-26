@@ -1,6 +1,7 @@
 package io.github.algomaster99.terminator.index;
 
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
+import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptorOptions;
 import io.github.algomaster99.terminator.preprocess.PomTransformer;
 import java.io.File;
 import java.io.IOException;
@@ -41,11 +42,16 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
+        RuntimeClassInterceptorOptions options = new RuntimeClassInterceptorOptions();
+        if (indexFile.output != null) {
+            options.setOutput(indexFile.output.toPath());
+        }
+        // TODO: add support for input
         Path pathToTempProject = createCopyOfProject(project);
         if (cleanup) {
             recursiveDeleteOnShutdownHook(pathToTempProject.getParent());
         }
-        transformPomsRecursively(pathToTempProject);
+        transformPomsRecursively(pathToTempProject, options);
         return 0;
     }
 
@@ -91,13 +97,14 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
         }));
     }
 
-    private static void transformPomsRecursively(Path projectRoot) throws IOException {
+    private static void transformPomsRecursively(Path projectRoot, RuntimeClassInterceptorOptions options)
+            throws IOException {
         Files.walk(projectRoot)
                 .filter(path -> path.getFileName().toString().equals("pom.xml")
                         && !path.toString().contains("/resources/"))
                 .forEach(path -> {
                     try {
-                        PomTransformer transformer = new PomTransformer(path);
+                        PomTransformer transformer = new PomTransformer(path, options);
                         transformer.transform();
                         transformer.writeTransformedPomInPlace();
 

@@ -2,6 +2,7 @@ package io.github.algomaster99.terminator.preprocess;
 
 import static io.github.algomaster99.terminator.util.JavaAgentPath.getAgentPath;
 
+import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptorOptions;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -31,21 +32,33 @@ public class PomTransformer {
     private final Path pom;
     private final Model model;
 
+    private final RuntimeClassInterceptorOptions options;
+
+    /**
+     * Used for getting the transformed model.
+     */
     public Model getModel() {
         return model;
     }
 
+    /**
+     * Writes the transformed model to the pom file.
+     */
     public void writeTransformedPomInPlace() throws IOException {
         MavenXpp3Writer writer = new MavenXpp3Writer();
         writer.write(new FileWriter(pom.toFile(), StandardCharsets.UTF_8), model);
     }
 
-    public PomTransformer(Path pom) throws IOException, XmlPullParserException {
+    public PomTransformer(Path pom, RuntimeClassInterceptorOptions options) throws IOException, XmlPullParserException {
         this.pom = pom;
+        this.options = options;
         MavenXpp3Reader reader = new MavenXpp3Reader();
         this.model = reader.read(new FileReader(pom.toFile(), StandardCharsets.UTF_8));
     }
 
+    /**
+     * Transforms the model to add the Java agent to the surefire plugin.
+     */
     public void transform() throws XmlPullParserException, IOException {
         modifySurefirePlugin();
     }
@@ -74,7 +87,7 @@ public class PomTransformer {
 
         Xpp3Dom surefireConfiguration = getOrCreateConfiguration(surefirePlugin);
 
-        getOrCreateArgLine(surefireConfiguration);
+        modifyOrCreateArgLine(surefireConfiguration, options);
 
         // Some modules may not have any tests, so we prevent its build from failing.
         modifyOrCreate("failIfNoTests", "false", surefireConfiguration);
@@ -91,14 +104,14 @@ public class PomTransformer {
         return configuration;
     }
 
-    private static void getOrCreateArgLine(Xpp3Dom surefireConfiguration) {
+    private static void modifyOrCreateArgLine(Xpp3Dom surefireConfiguration, RuntimeClassInterceptorOptions options) {
         Xpp3Dom argLine = surefireConfiguration.getChild("argLine");
         if (argLine == null) {
             argLine = new Xpp3Dom("argLine");
-            argLine.setValue("-javaagent:" + AGENT_JAR + ""); // TODO: add options
+            argLine.setValue("-javaagent:" + AGENT_JAR + "=" + options.toString());
             surefireConfiguration.addChild(argLine);
         } else {
-            argLine.setValue("-javaagent:" + AGENT_JAR + " " + argLine.getValue());
+            argLine.setValue("-javaagent:" + AGENT_JAR + "=" + options.toString() + " " + argLine.getValue());
         }
     }
 

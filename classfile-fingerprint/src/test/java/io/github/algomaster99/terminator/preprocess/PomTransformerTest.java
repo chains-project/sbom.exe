@@ -2,6 +2,7 @@ package io.github.algomaster99.terminator.preprocess;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptorOptions;
 import java.io.IOException;
 import java.nio.file.Path;
 import org.apache.maven.model.Model;
@@ -11,11 +12,14 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.jupiter.api.Test;
 
 public class PomTransformerTest {
+    private static final RuntimeClassInterceptorOptions MOCK_OPTIONS =
+            new RuntimeClassInterceptorOptions().setOutput(Path.of("mock-path"));
+
     @Test
     void modifySurefirePlugin_shouldAddArgLine() throws IOException, XmlPullParserException {
         // arrange
         Path testPom = Path.of("src/test/resources/surefire/add-argline.xml");
-        PomTransformer transformer = new PomTransformer(testPom);
+        PomTransformer transformer = new PomTransformer(testPom, MOCK_OPTIONS);
 
         // act
         transformer.transform();
@@ -33,14 +37,15 @@ public class PomTransformerTest {
         assertThat(surefireConfiguration.getChildCount()).isEqualTo(1);
 
         Xpp3Dom argLine = surefireConfiguration.getChild("argLine");
-        assertThat(argLine.getValue()).isEqualTo("-javaagent:" + PomTransformer.AGENT_JAR);
+        assertThat(argLine.getValue())
+                .isEqualTo("-javaagent:" + PomTransformer.AGENT_JAR + "=output=" + MOCK_OPTIONS.getOutput());
     }
 
     @Test
     void modifySurefirePlugin_shouldAddSurefirePlugin() throws IOException, XmlPullParserException {
         // arrange
         Path testPom = Path.of("src/test/resources/surefire/add-surefire-plugin.xml");
-        PomTransformer transformer = new PomTransformer(testPom);
+        PomTransformer transformer = new PomTransformer(testPom, MOCK_OPTIONS);
         assertThat(transformer.getModel().getBuild().getPlugins()).hasSize(0);
 
         // act
@@ -55,7 +60,7 @@ public class PomTransformerTest {
     void modifySurefirePlugin_shouldModifyArgLine() throws XmlPullParserException, IOException {
         // arrange
         Path testPom = Path.of("src/test/resources/surefire/modify-argline.xml");
-        PomTransformer transformer = new PomTransformer(testPom);
+        PomTransformer transformer = new PomTransformer(testPom, MOCK_OPTIONS);
         Xpp3Dom surefireConfiguration =
                 (Xpp3Dom) transformer.getModel().getBuild().getPlugins().get(0).getConfiguration();
         String originalArgLine = surefireConfiguration.getChild("argLine").getValue();
@@ -65,7 +70,8 @@ public class PomTransformerTest {
 
         // assert
         assertThat(surefireConfiguration.getChild("argLine").getValue())
-                .isEqualTo("-javaagent:" + PomTransformer.AGENT_JAR + " " + originalArgLine);
+                .isEqualTo("-javaagent:" + PomTransformer.AGENT_JAR + "=output=" + MOCK_OPTIONS.getOutput() + " "
+                        + originalArgLine);
     }
 
     @Test
@@ -73,7 +79,7 @@ public class PomTransformerTest {
             throws XmlPullParserException, IOException {
         // arrange
         Path testPom = Path.of("src/test/resources/surefire/add-failIfNoTests_testFailureIgnore.xml");
-        PomTransformer transformer = new PomTransformer(testPom);
+        PomTransformer transformer = new PomTransformer(testPom, MOCK_OPTIONS);
         Xpp3Dom originalSurefireConfiguration =
                 (Xpp3Dom) transformer.getModel().getBuild().getPlugins().get(0).getConfiguration();
         assertThat(originalSurefireConfiguration).isNull();
@@ -100,7 +106,7 @@ public class PomTransformerTest {
             throws XmlPullParserException, IOException {
         // arrange
         Path testPom = Path.of("src/test/resources/surefire/modify-failIfNoTests_testFailureIgnore.xml");
-        PomTransformer transformer = new PomTransformer(testPom);
+        PomTransformer transformer = new PomTransformer(testPom, MOCK_OPTIONS);
         Xpp3Dom surefireConfiguration =
                 (Xpp3Dom) transformer.getModel().getBuild().getPlugins().get(0).getConfiguration();
         String originalFailIfNoTests =
