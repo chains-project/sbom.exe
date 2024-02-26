@@ -60,6 +60,10 @@
       <artifactId>classgraph</artifactId>
       <version>4.8.165</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-model</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
