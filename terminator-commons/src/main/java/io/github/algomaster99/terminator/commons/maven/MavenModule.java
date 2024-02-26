@@ -1,10 +1,9 @@
 package io.github.algomaster99.terminator.commons.maven;
 
-import org.apache.maven.model.Model;
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.maven.model.Model;
 
 public class MavenModule {
     private Model self;
