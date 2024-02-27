@@ -1,5 +1,6 @@
 package io.github.algomaster99.terminator.index;
 
+import io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import io.github.algomaster99.terminator.commons.maven.MavenModule;
 import io.github.algomaster99.terminator.commons.maven.MavenModuleDependencyGraph;
@@ -12,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -66,11 +68,21 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
         if (cleanup) {
             recursiveDeleteOnShutdownHook(pathToTempProject.getParent());
         }
+        List<Path> candidateIndexForMerge = new ArrayList<>();
         for (MavenModule module : requiredModules) {
             RuntimeClassInterceptorOptions options = new RuntimeClassInterceptorOptions();
+
             if (indexFile.output != null) {
                 String suffix = module.getSelf().getArtifactId();
-                options.setOutput(Path.of(indexFile.output.toString() + "_" + suffix + ".jsonl"));
+                Path output = Path.of(indexFile.output.toString() + "_" + suffix + ".jsonl");
+                options.setOutput(output);
+                candidateIndexForMerge.add(output);
+            }
+            if (indexFile.input != null) {
+                String prefix = module.getSelf().getArtifactId();
+                Path temporaryFile = Files.createTempFile(prefix, ".jsonl");
+                options.setOutput(temporaryFile);
+                candidateIndexForMerge.add(temporaryFile);
             }
             PomTransformer transformer =
                     new PomTransformer(module.getFileSystemPath().resolve("pom.xml"), options);
@@ -83,6 +95,16 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
         request.setGoals(List.of("clean", "package"));
         Invoker invoker = new DefaultInvoker();
         invoker.execute(request);
+
+        for (Path index : candidateIndexForMerge) {
+            if (indexFile.input != null) {
+                Map<String, Set<Provenance>> currentReferenceProvenance =
+                        ParsingHelper.deserializeFingerprints(indexFile.input.toPath());
+                Map<String, Set<Provenance>> updatedReferenceProvenance = ParsingHelper.deserializeFingerprints(index);
+                updatedReferenceProvenance.putAll(currentReferenceProvenance);
+                ParsingHelper.serialiseFingerprints(updatedReferenceProvenance, indexFile.input.toPath());
+            }
+        }
         return 0;
     }
 
