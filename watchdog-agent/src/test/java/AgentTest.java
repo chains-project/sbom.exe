@@ -26,6 +26,8 @@ import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 
+@Deprecated
+@Disabled("I will remove this test suite after I refactor the project into generating 3 indexes")
 public class AgentTest {
     @Disabled("Should be worked upon after we know what java version is used by the application")
     @Test

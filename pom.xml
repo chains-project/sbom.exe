@@ -30,6 +30,7 @@
 
   <modules>
     <module>watchdog-agent</module>
+    <module>runtime-class-interceptor</module>
     <module>classfile-fingerprint</module>
     <module>terminator-commons</module>
   </modules>
@@ -106,12 +107,22 @@
         <artifactId>maven-model</artifactId>
         <version>3.9.6</version>
       </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.15.1</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
   <build>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.6.1</version>
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>

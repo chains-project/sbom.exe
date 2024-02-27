@@ -6,7 +6,7 @@ import picocli.CommandLine;
 @CommandLine.Command(
         name = "index",
         mixinStandardHelpOptions = true,
-        subcommands = {JdkIndexer.class, SupplyChainIndexer.class},
+        subcommands = {JdkIndexer.class, SupplyChainIndexer.class, RuntimeIndexer.class},
         description = "Create an index of the classfiles")
 public class Index implements Callable<Integer> {
     @Override

@@ -24,6 +24,8 @@ class ProvenanceDeserializer extends JsonDeserializer<Provenance> {
             instanceClass = Jar.class;
         } else if (root.has("groupId")) {
             instanceClass = Maven.class;
+        } else if (root.has("runtime")) {
+            instanceClass = RuntimeClass.class;
         } else {
             instanceClass = Jdk.class;
         }
