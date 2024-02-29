@@ -2,10 +2,6 @@ package io.github.algomaster99.terminator.commons.jar;
 
 import static io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer.computeHash;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.InjectableValues;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.algomaster99.terminator.commons.data.ExternalJar;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassfileVersion;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Jar;
@@ -16,7 +12,6 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
@@ -65,34 +60,6 @@ public class JarScanner {
             throw new RuntimeException(e);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    public static void processExternalJars(
-            File externalJars, Map<String, Set<Provenance>> fingerprints, String algorithm) {
-        if (externalJars == null) {
-            LOGGER.info("No external jars are known.");
-            return;
-        }
-
-        ObjectMapper mapper = new ObjectMapper();
-        List<ExternalJar> externalJarList;
-        try {
-            InjectableValues inject = new InjectableValues.Std().addValue("configFile", externalJars.getAbsolutePath());
-            externalJarList = mapper.setInjectableValues(inject)
-                    .readerFor(new TypeReference<List<ExternalJar>>() {})
-                    .readValue(externalJars);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not open external jar file: " + e);
-        }
-
-        for (ExternalJar jar : externalJarList) {
-            LOGGER.info("Processing external jar" + jar.path().getAbsolutePath());
-            goInsideJarAndUpdateFingerprints(
-                    jar.path().getAbsoluteFile(),
-                    fingerprints,
-                    algorithm,
-                    jar.path().getAbsolutePath());
         }
     }
 
