@@ -3,7 +3,6 @@ package io.github.algomaster99.terminator.index;
 import io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper;
 import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import io.github.algomaster99.terminator.commons.maven.MavenModule;
-import io.github.algomaster99.terminator.commons.maven.MavenModuleDependencyGraph;
 import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptorOptions;
 import io.github.algomaster99.terminator.preprocess.PomTransformer;
 import java.io.File;
@@ -57,7 +56,7 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
         Path pathToTempProject = createCopyOfProject(project);
-        MavenModule rootProject = MavenModuleDependencyGraph.createMavenModuleGraph(pathToTempProject);
+        MavenModule rootProject = MavenModule.createMavenModuleGraph(pathToTempProject);
         MavenModule executableJar = rootProject.findSubmodule(executableJarModule);
         if (executableJar == null) {
             throw new RuntimeException("The module " + executableJarModule + " is not found in the project");
