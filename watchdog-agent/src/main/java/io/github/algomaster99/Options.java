@@ -14,7 +14,6 @@ public class Options {
     private static final Logger LOGGER = LoggerFactory.getLogger(Options.class);
     private Map<String, Set<Provenance>> sbom;
     private boolean skipShutdown = false;
-    private String algorithm = "SHA-256";
 
     public Options(String agentArgs) {
         String[] args = agentArgs.split(",");
@@ -33,9 +32,6 @@ public class Options {
                 case "skipShutdown":
                     skipShutdown = Boolean.parseBoolean(value);
                     break;
-                case "algorithm":
-                    algorithm = value;
-                    break;
                 default:
                     throw new IllegalArgumentException("Unknown argument: " + key);
             }
@@ -44,10 +40,6 @@ public class Options {
 
     public Map<String, Set<Provenance>> getSbom() {
         return sbom;
-    }
-
-    public void setSbomb(Map<String, Set<Provenance>> sbom) {
-        this.sbom = sbom;
     }
 
     public boolean shouldSkipShutdown() {
