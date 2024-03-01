@@ -6,8 +6,7 @@ import io.github.algomaster99.terminator.commons.cyclonedx.Bom15Schema;
 import io.github.algomaster99.terminator.commons.cyclonedx.Component__1;
 import io.github.algomaster99.terminator.commons.cyclonedx.CycloneDX;
 import io.github.algomaster99.terminator.commons.cyclonedx.Metadata__1;
-import io.github.algomaster99.terminator.commons.fingerprint.provenance.Jdk;
-import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.jar.JarDownloader;
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +24,7 @@ import picocli.CommandLine;
         mixinStandardHelpOptions = true,
         description = "Create an index of the classfiles from SBOM")
 public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Jdk.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SupplyChainIndexer.class);
 
     @CommandLine.Option(
             names = {"-s", "--sbom"},
@@ -34,7 +33,8 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
     private Path sbomPath;
 
     @Override
-    Map<String, Set<Provenance>> createOrMergeProvenances(Map<String, Set<Provenance>> referenceProvenance) {
+    Map<String, Set<ClassFileAttributes>> createOrMergeProvenances(
+            Map<String, Set<ClassFileAttributes>> referenceProvenance) {
         Bom15Schema sbom;
         try {
             sbom = CycloneDX.getPojo_1_5(Files.readString(sbomPath));
@@ -51,7 +51,7 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
         return referenceProvenance;
     }
 
-    private void processRootComponent(Bom15Schema sbom, Map<String, Set<Provenance>> referenceProvenance) {
+    private void processRootComponent(Bom15Schema sbom, Map<String, Set<ClassFileAttributes>> referenceProvenance) {
         Metadata__1 metadata = sbom.getMetadata();
         if (metadata == null) {
             LOGGER.warn("Metadata is not present.");
@@ -78,7 +78,7 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
                 rootComponent.getVersion());
     }
 
-    private void processAllComponents(Bom15Schema sbom, Map<String, Set<Provenance>> referenceProvenance) {
+    private void processAllComponents(Bom15Schema sbom, Map<String, Set<ClassFileAttributes>> referenceProvenance) {
         for (Component__1 component : sbom.getComponents()) {
             try {
                 File jarFile =
