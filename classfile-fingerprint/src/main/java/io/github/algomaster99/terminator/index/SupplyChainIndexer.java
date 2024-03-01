@@ -2,10 +2,10 @@ package io.github.algomaster99.terminator.index;
 
 import static io.github.algomaster99.terminator.commons.jar.JarScanner.goInsideJarAndUpdateFingerprints;
 
-import io.github.algomaster99.terminator.commons.cyclonedx.Bom15Schema;
-import io.github.algomaster99.terminator.commons.cyclonedx.Component__1;
+import io.github.algomaster99.terminator.commons.cyclonedx.Component;
 import io.github.algomaster99.terminator.commons.cyclonedx.CycloneDX;
-import io.github.algomaster99.terminator.commons.cyclonedx.Metadata__1;
+import io.github.algomaster99.terminator.commons.cyclonedx.CycloneDXWrapper;
+import io.github.algomaster99.terminator.commons.cyclonedx.Metadata;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.jar.JarDownloader;
 import java.io.File;
@@ -35,9 +35,9 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
     @Override
     Map<String, Set<ClassFileAttributes>> createOrMergeProvenances(
             Map<String, Set<ClassFileAttributes>> referenceProvenance) {
-        Bom15Schema sbom;
+        CycloneDXWrapper sbom;
         try {
-            sbom = CycloneDX.getPojo_1_5(Files.readString(sbomPath));
+            sbom = CycloneDX.getPojo(Files.readString(sbomPath));
         } catch (IOException e) {
             LOGGER.error("SBOM could not be parsed.");
             throw new RuntimeException(e);
@@ -51,13 +51,14 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
         return referenceProvenance;
     }
 
-    private void processRootComponent(Bom15Schema sbom, Map<String, Set<ClassFileAttributes>> referenceProvenance) {
-        Metadata__1 metadata = sbom.getMetadata();
+    private void processRootComponent(
+            CycloneDXWrapper sbom, Map<String, Set<ClassFileAttributes>> referenceProvenance) {
+        Metadata metadata = sbom.getMetadata();
         if (metadata == null) {
             LOGGER.warn("Metadata is not present.");
             return;
         }
-        Component__1 rootComponent = metadata.getComponent();
+        Component rootComponent = metadata.getComponent();
         if (rootComponent == null) {
             LOGGER.warn("Root component is not present.");
             return;
@@ -78,8 +79,9 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
                 rootComponent.getVersion());
     }
 
-    private void processAllComponents(Bom15Schema sbom, Map<String, Set<ClassFileAttributes>> referenceProvenance) {
-        for (Component__1 component : sbom.getComponents()) {
+    private void processAllComponents(
+            CycloneDXWrapper sbom, Map<String, Set<ClassFileAttributes>> referenceProvenance) {
+        for (Component component : sbom.getComponents()) {
             try {
                 File jarFile =
                         JarDownloader.getJarFile(component.getGroup(), component.getName(), component.getVersion());

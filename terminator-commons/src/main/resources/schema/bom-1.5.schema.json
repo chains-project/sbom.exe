@@ -1,4 +1,5 @@
 {
+  "javaInterfaces" : ["io.github.algomaster99.terminator.commons.cyclonedx.CycloneDXWrapper"],
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "http://cyclonedx.org/schema/bom-1.5.schema.json",
   "type": "object",
@@ -160,6 +161,7 @@
       ]
     },
     "metadata": {
+      "javaType": "io.github.algomaster99.terminator.commons.cyclonedx.Metadata",
       "type": "object",
       "title": "BOM Metadata Object",
       "additionalProperties": false,
@@ -388,6 +390,7 @@
       }
     },
     "component": {
+      "javaType": "io.github.algomaster99.terminator.commons.cyclonedx.Component",
       "type": "object",
       "title": "Component Object",
       "required": [
@@ -687,6 +690,7 @@
       }
     },
     "hash": {
+      "javaType": "io.github.algomaster99.terminator.commons.cyclonedx.Hash",
       "type": "object",
       "title": "Hash Objects",
       "required": [
@@ -1139,6 +1143,7 @@
       }
     },
     "externalReference": {
+      "javaType": "io.github.algomaster99.terminator.commons.cyclonedx.ExternalReference",
       "type": "object",
       "title": "External Reference",
       "description": "External references provide a way to document systems, sites, and information that may be relevant, but are not included with the BOM. They may also establish specific relationships within or external to the BOM.",
@@ -1223,6 +1228,7 @@
       }
     },
     "dependency": {
+      "javaType": "io.github.algomaster99.terminator.commons.cyclonedx.Dependency",
       "type": "object",
       "title": "Dependency",
       "description": "Defines the direct dependencies of a component or service. Components or services that do not have their own dependencies MUST be declared as empty elements within the graph. Components or services that are not represented in the dependency graph MAY have unknown dependencies. It is RECOMMENDED that implementations assume this to be opaque and not an indicator of a object being dependency-free. It is RECOMMENDED to leverage compositions to indicate unknown dependency graphs.",

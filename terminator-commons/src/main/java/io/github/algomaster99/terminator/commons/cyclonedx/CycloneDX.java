@@ -10,14 +10,9 @@ public class CycloneDX {
 
     private CycloneDX() {}
 
-    // TODO: Inherit both versions from a common schema
-    public static Bom14Schema getPojo_1_4(String bom) throws JsonProcessingException {
+    public static CycloneDXWrapper getPojo(String bom) throws JsonProcessingException {
         final ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(bom, Bom14Schema.class);
-    }
-
-    public static Bom15Schema getPojo_1_5(String bom) throws JsonProcessingException {
-        final ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(bom, Bom15Schema.class);
+        CycloneDXWrapper wrapper = mapper.readValue(bom, CycloneDXWrapper.class);
+        return wrapper;
     }
 }
