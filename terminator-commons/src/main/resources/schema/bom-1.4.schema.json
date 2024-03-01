@@ -1,4 +1,5 @@
 {
+  "javaInterfaces" : ["io.github.algomaster99.terminator.commons.cyclonedx.CycloneDXWrapper"],
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "http://cyclonedx.org/schema/bom-1.4.schema.json",
   "type": "object",
@@ -109,6 +110,7 @@
       "type": "string"
     },
     "metadata": {
+      "javaType": "io.github.algomaster99.terminator.commons.cyclonedx.Metadata",
       "type": "object",
       "title": "BOM Metadata Object",
       "additionalProperties": false,
@@ -261,6 +263,7 @@
       }
     },
     "component": {
+      "javaType": "io.github.algomaster99.terminator.commons.cyclonedx.Component",
       "type": "object",
       "title": "Component Object",
       "required": [
@@ -557,6 +560,7 @@
       }
     },
     "hash": {
+      "javaType": "io.github.algomaster99.terminator.commons.cyclonedx.Hash",
       "type": "object",
       "title": "Hash Objects",
       "required": [
@@ -893,6 +897,7 @@
       }
     },
     "dependency": {
+      "javaType": "io.github.algomaster99.terminator.commons.cyclonedx.Dependency",
       "type": "object",
       "title": "Dependency",
       "description": "Defines the direct dependencies of a component. Components that do not have their own dependencies MUST be declared as empty elements within the graph. Components that are not represented in the dependency graph MAY have unknown dependencies. It is RECOMMENDED that implementations assume this to be opaque and not an indicator of a component being dependency-free.",
@@ -993,6 +998,7 @@
           "title": "Component License(s)"
         },
         "externalReferences": {
+          "javaType": "io.github.algomaster99.terminator.commons.cyclonedx.ExternalReference",
           "type": "array",
           "additionalItems": false,
           "items": {"$ref": "#/definitions/externalReference"},

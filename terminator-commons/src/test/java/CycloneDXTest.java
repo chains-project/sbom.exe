@@ -1,8 +1,7 @@
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.github.algomaster99.terminator.commons.cyclonedx.Bom14Schema;
-import io.github.algomaster99.terminator.commons.cyclonedx.Bom15Schema;
 import io.github.algomaster99.terminator.commons.cyclonedx.CycloneDX;
+import io.github.algomaster99.terminator.commons.cyclonedx.CycloneDXWrapper;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,7 +14,7 @@ public class CycloneDXTest {
         Path bom = Paths.get("src/test/resources/cyclonedx/terminator-0.8.1-SNAPSHOT.bom.json");
         String bomString = Files.readString(bom);
 
-        Bom14Schema bom14Schema = CycloneDX.getPojo_1_4(bomString);
+        CycloneDXWrapper bom14Schema = CycloneDX.getPojo(bomString);
 
         String groupId = bom14Schema.getMetadata().getComponent().getGroup();
         assertThat(groupId).isEqualTo("io.github.algomaster99");
@@ -29,8 +28,8 @@ public class CycloneDXTest {
         Path bom = Paths.get("src/test/resources/cyclonedx/pdfbox-3.0.0.build-info-go-1.9.14.json");
         String bomString = Files.readString(bom);
 
-        Bom15Schema bom15Schema = CycloneDX.getPojo_1_5(bomString);
+        CycloneDXWrapper cycloneDXBom = CycloneDX.getPojo(bomString);
 
-        assertThat(bom15Schema.getComponents().size()).isEqualTo(48);
+        assertThat(cycloneDXBom.getComponents().size()).isEqualTo(48);
     }
 }
