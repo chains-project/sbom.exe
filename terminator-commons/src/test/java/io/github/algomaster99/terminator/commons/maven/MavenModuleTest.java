@@ -9,7 +9,7 @@ import java.util.Set;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.jupiter.api.Test;
 
-public class MavenModuleDependencyGraphTest {
+public class MavenModuleTest {
     @Test
     void createMavenModuleGraph_singleModule() throws XmlPullParserException, IOException {
         // arrange
@@ -17,7 +17,7 @@ public class MavenModuleDependencyGraphTest {
                 Path.of("src/test/resources/maven-modules/single-module").toAbsolutePath();
 
         // act
-        MavenModule root = MavenModuleDependencyGraph.createMavenModuleGraph(projectRoot);
+        MavenModule root = MavenModule.createMavenModuleGraph(projectRoot);
 
         // assert
         assertThat(root).isNotNull();
@@ -34,7 +34,7 @@ public class MavenModuleDependencyGraphTest {
                 .toAbsolutePath();
 
         // act
-        MavenModule root = MavenModuleDependencyGraph.createMavenModuleGraph(projectRoot);
+        MavenModule root = MavenModule.createMavenModuleGraph(projectRoot);
 
         // assert
         assertThat(root).isNotNull();
@@ -62,7 +62,7 @@ public class MavenModuleDependencyGraphTest {
                 .toAbsolutePath();
 
         // act
-        MavenModule root = MavenModuleDependencyGraph.createMavenModuleGraph(projectRoot);
+        MavenModule root = MavenModule.createMavenModuleGraph(projectRoot);
 
         // assert
         assertThat(root).isNotNull();
@@ -97,7 +97,7 @@ public class MavenModuleDependencyGraphTest {
                 .toAbsolutePath();
 
         // act
-        MavenModule root = MavenModuleDependencyGraph.createMavenModuleGraph(projectRoot);
+        MavenModule root = MavenModule.createMavenModuleGraph(projectRoot);
 
         // assert
         assertThat(root).isNotNull();
