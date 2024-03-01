@@ -1,7 +1,7 @@
 package io.github.algomaster99.terminator.index;
 
 import io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper;
-import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.maven.MavenModule;
 import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptorOptions;
 import io.github.algomaster99.terminator.preprocess.PomTransformer;
@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,11 +48,6 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
             description = "The module that generates the executable jar",
             required = true)
     private String executableJarModule;
-
-    @Override
-    Map<String, Set<Provenance>> createOrMergeProvenances(Map<String, Set<Provenance>> referenceProvenance) {
-        return null;
-    }
 
     @Override
     public Integer call() throws Exception {
@@ -95,16 +91,58 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
         Invoker invoker = new DefaultInvoker();
         invoker.execute(request);
 
+        final Map<String, Set<ClassFileAttributes>> referenceProvenance = new HashMap<>();
+
         for (Path index : candidateIndexForMerge) {
-            if (indexFile.input != null) {
-                Map<String, Set<Provenance>> currentReferenceProvenance =
-                        ParsingHelper.deserializeFingerprints(indexFile.input.toPath());
-                Map<String, Set<Provenance>> updatedReferenceProvenance = ParsingHelper.deserializeFingerprints(index);
-                updatedReferenceProvenance.putAll(currentReferenceProvenance);
-                ParsingHelper.serialiseFingerprints(updatedReferenceProvenance, indexFile.input.toPath());
-            }
+            Map<String, Set<ClassFileAttributes>> generatedReferenceProvenance =
+                    ParsingHelper.deserializeFingerprints(index);
+            Map<String, Set<ClassFileAttributes>> updatedReferenceProvenance =
+                    createOrMergeProvenances(generatedReferenceProvenance);
+            referenceProvenance.putAll(updatedReferenceProvenance);
         }
+
+        if (indexFile.input != null) {
+            ParsingHelper.serialiseFingerprints(referenceProvenance, indexFile.input.toPath());
+        } else if (indexFile.output != null) {
+            ParsingHelper.serialiseFingerprints(referenceProvenance, indexFile.output.toPath());
+        }
+
         return 0;
+    }
+
+    @Override
+    Map<String, Set<ClassFileAttributes>> createOrMergeProvenances(
+            Map<String, Set<ClassFileAttributes>> referenceProvenance) {
+        if (indexFile.input != null) {
+            Map<String, Set<ClassFileAttributes>> currentReferenceProvenance =
+                    ParsingHelper.deserializeFingerprints(indexFile.input.toPath());
+
+            referenceProvenance.forEach((k, v) -> {
+                if (currentReferenceProvenance.containsKey(k)) {
+                    currentReferenceProvenance.get(k).addAll(v);
+                } else {
+                    currentReferenceProvenance.put(k, v);
+                }
+            });
+            return currentReferenceProvenance;
+        }
+        if (indexFile.output != null) {
+            Map<String, Set<ClassFileAttributes>> currentReferenceProvenance;
+            if (indexFile.output.toPath().toFile().exists()) {
+                currentReferenceProvenance = ParsingHelper.deserializeFingerprints(indexFile.output.toPath());
+            } else {
+                currentReferenceProvenance = new HashMap<>();
+            }
+            referenceProvenance.forEach((k, v) -> {
+                if (currentReferenceProvenance.containsKey(k)) {
+                    currentReferenceProvenance.get(k).addAll(v);
+                } else {
+                    currentReferenceProvenance.put(k, v);
+                }
+            });
+            return currentReferenceProvenance;
+        }
+        throw new IllegalArgumentException("Either --input or --output must be specified");
     }
 
     private static Path createCopyOfProject(Path project) {

@@ -2,8 +2,8 @@ package io.github.algomaster99;
 
 import static io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer.computeHash;
 
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.RuntimeClass;
-import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.security.NoSuchAlgorithmException;
@@ -31,7 +31,7 @@ public class Terminator {
     }
 
     private static byte[] isLoadedClassWhitelisted(String className, byte[] classfileBuffer) {
-        Map<String, Set<Provenance>> fingerprints = options.getSbom();
+        Map<String, Set<ClassFileAttributes>> fingerprints = options.getSbom();
         if (RuntimeClass.isProxyClass(classfileBuffer)
                 || RuntimeClass.isGeneratedClassExtendingMagicAccessor(classfileBuffer)
                 || RuntimeClass.isBoundMethodHandle(classfileBuffer)) {
@@ -39,18 +39,17 @@ public class Terminator {
         }
         for (String expectedClassName : fingerprints.keySet()) {
             if (expectedClassName.equals(className)) {
-                Set<Provenance> candidates = fingerprints.get(expectedClassName);
-                for (Provenance candidate : candidates) {
+                Set<ClassFileAttributes> candidates = fingerprints.get(expectedClassName);
+                for (ClassFileAttributes candidate : candidates) {
                     String hash;
                     try {
-                        hash = computeHash(
-                                classfileBuffer, candidate.classFileAttributes().algorithm());
+                        hash = computeHash(classfileBuffer, candidate.algorithm());
                     } catch (NoSuchAlgorithmException e) {
                         System.err.println("No such algorithm: " + e.getMessage());
                         System.exit(1);
                         return null;
                     }
-                    if (hash.equals(candidate.classFileAttributes().hash())) {
+                    if (hash.equals(candidate.hash())) {
                         return classfileBuffer;
                     }
                 }

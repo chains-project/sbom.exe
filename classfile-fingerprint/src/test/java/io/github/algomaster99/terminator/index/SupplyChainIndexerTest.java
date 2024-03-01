@@ -3,7 +3,7 @@ package io.github.algomaster99.terminator.index;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper;
-import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -43,10 +43,9 @@ class SupplyChainIndexerTest {
         Index.main(args);
 
         // assert
-        Map<String, Set<Provenance>> referenceProvenance = ParsingHelper.deserializeFingerprints(indexFile);
+        Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(indexFile);
         assertThat(referenceProvenance.keySet().size()).isEqualTo(20826);
-        referenceProvenance.forEach((key, value) -> assertThat(
-                        value.stream().findAny().get().classFileAttributes().algorithm())
-                .isEqualTo("MD5"));
+        referenceProvenance.forEach((key, value) ->
+                assertThat(value.stream().findAny().get().algorithm()).isEqualTo("MD5"));
     }
 }

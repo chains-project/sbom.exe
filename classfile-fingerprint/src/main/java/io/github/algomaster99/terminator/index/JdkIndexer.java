@@ -4,8 +4,6 @@ import io.github.algomaster99.terminator.commons.fingerprint.JdkClass;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassfileVersion;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
-import io.github.algomaster99.terminator.commons.fingerprint.provenance.Jdk;
-import io.github.algomaster99.terminator.commons.fingerprint.provenance.Provenance;
 import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
@@ -25,7 +23,8 @@ public class JdkIndexer extends BaseIndexer implements Callable<Integer> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JdkIndexer.class);
 
-    Map<String, Set<Provenance>> createOrMergeProvenances(Map<String, Set<Provenance>> referenceProvenance) {
+    Map<String, Set<ClassFileAttributes>> createOrMergeProvenances(
+            Map<String, Set<ClassFileAttributes>> referenceProvenance) {
         List<JdkClass> jdkClasses = io.github.algomaster99.terminator.commons.fingerprint.JdkIndexer.listJdkClasses();
         jdkClasses.forEach(resource -> {
             try {
@@ -34,10 +33,9 @@ public class JdkIndexer extends BaseIndexer implements Callable<Integer> {
                 String hash = HashComputer.computeHash(classfileBytes, algorithm);
                 referenceProvenance.computeIfAbsent(
                         resource.name(),
-                        k -> new HashSet<>(
-                                Set.of((new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm))))));
+                        k -> new HashSet<>(Set.of(new ClassFileAttributes(classfileVersion, hash, algorithm))));
                 referenceProvenance.computeIfPresent(resource.name(), (k, v) -> {
-                    v.add(new Jdk(new ClassFileAttributes(classfileVersion, hash, algorithm)));
+                    v.add(new ClassFileAttributes(classfileVersion, hash, algorithm));
                     return v;
                 });
             } catch (NoSuchAlgorithmException e) {
