@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 public class CycloneDXTest {
     @Test
-    void getPojo_1_4_CycloneDX_1_4_shouldGenerateJavaAPIsToParseSBOM() throws IOException {
+    void getPojo__CycloneDX_1_4__shouldGenerateJavaAPIsToParseSBOM() throws IOException {
         Path bom = Paths.get("src/test/resources/cyclonedx/terminator-0.8.1-SNAPSHOT.bom.json");
         String bomString = Files.readString(bom);
 
@@ -24,7 +24,7 @@ public class CycloneDXTest {
     }
 
     @Test
-    void getPojo_1_5_CycloneDX_1_5_shouldGenerateJavaAPIsToParseSBOM() throws IOException {
+    void getPojo__CycloneDX_1_5__shouldGenerateJavaAPIsToParseSBOM() throws IOException {
         Path bom = Paths.get("src/test/resources/cyclonedx/pdfbox-3.0.0.build-info-go-1.9.14.json");
         String bomString = Files.readString(bom);
 
