@@ -32,6 +32,22 @@ class JdkIndexerTest {
     }
 
     @Test
+    void jdkIndexShouldHave__jdk_internal_foreign_MemorySessionImpl__and__java_lang_foreign_MemorySegment$Scope(
+            @TempDir Path tempDir) {
+        // arrange
+        Path indexFile = tempDir.resolve("jdk.json");
+
+        // act
+        String[] args = {"jdk", "-o", indexFile.toString()};
+        Index.main(args);
+
+        // assert
+        Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(indexFile);
+        assertThat(referenceProvenance)
+                .containsKeys("jdk.internal.foreign.MemorySessionImpl", "java.lang.foreign.MemorySegment$Scope");
+    }
+
+    @Test
     void useMD5asAlgorithm(@TempDir Path tempDir) {
         // arrange
         Path indexFile = tempDir.resolve("jdk.json");
