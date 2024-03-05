@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
 import org.junit.jupiter.api.io.TempDir;
 
 class JdkIndexerTest {
@@ -29,6 +31,23 @@ class JdkIndexerTest {
 
         // assert
         assertThat(contentFirst).isEqualTo(contentSecond);
+    }
+
+    @EnabledOnJre(JRE.JAVA_21)
+    @Test
+    void jdkIndexShouldHave__jdk_internal_foreign_MemorySessionImpl__and__java_lang_foreign_MemorySegment$Scope(
+            @TempDir Path tempDir) {
+        // arrange
+        Path indexFile = tempDir.resolve("jdk.json");
+
+        // act
+        String[] args = {"jdk", "-o", indexFile.toString()};
+        Index.main(args);
+
+        // assert
+        Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(indexFile);
+        assertThat(referenceProvenance)
+                .containsKeys("jdk/internal/foreign/MemorySessionImpl", "java/lang/foreign/MemorySegment$Scope");
     }
 
     @Test
