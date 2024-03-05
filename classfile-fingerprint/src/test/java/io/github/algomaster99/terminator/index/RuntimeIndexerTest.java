@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -23,7 +24,7 @@ public class RuntimeIndexerTest {
             "runtime", "-p", project.toString(), "-i", indexFile.toString(), "-mj", "basic-math", "--cleanup"
         };
         Index.main(runtime_argsFirst);
-        String contentFirst = Files.readString(indexFile);
+        List<String> contentFirst = Files.readAllLines(indexFile);
 
         String[] jdk_argsSecond = {"jdk", "-o", indexFile.toString()};
         Index.main(jdk_argsSecond);
@@ -31,9 +32,10 @@ public class RuntimeIndexerTest {
             "runtime", "-p", project.toString(), "-i", indexFile.toString(), "-mj", "basic-math", "--cleanup"
         };
         Index.main(runtime_argsSecond);
-        String contentSecond = Files.readString(indexFile);
+        List<String> contentSecond = Files.readAllLines(indexFile);
 
         // assert
+        assertThat(contentFirst).size().isEqualTo(26269);
         assertThat(contentFirst).isEqualTo(contentSecond);
     }
 }
