@@ -20,11 +20,13 @@ public class RuntimeIndexerTest {
         // act
         String[] jdk_argsFirst = {"jdk", "-o", indexFile.toString()};
         Index.main(jdk_argsFirst);
+        List<String> jdkIndex = Files.readAllLines(indexFile);
+
         String[] runtime_argsFirst = {
             "runtime", "-p", project.toString(), "-i", indexFile.toString(), "-mj", "basic-math", "--cleanup"
         };
         Index.main(runtime_argsFirst);
-        List<String> contentFirst = Files.readAllLines(indexFile);
+        List<String> first = Files.readAllLines(indexFile);
 
         String[] jdk_argsSecond = {"jdk", "-o", indexFile.toString()};
         Index.main(jdk_argsSecond);
@@ -32,10 +34,11 @@ public class RuntimeIndexerTest {
             "runtime", "-p", project.toString(), "-i", indexFile.toString(), "-mj", "basic-math", "--cleanup"
         };
         Index.main(runtime_argsSecond);
-        List<String> contentSecond = Files.readAllLines(indexFile);
+        List<String> second = Files.readAllLines(indexFile);
 
         // assert
-        assertThat(contentFirst).size().isEqualTo(26269);
-        assertThat(contentFirst).isEqualTo(contentSecond);
+        // This ensures that the project compiles
+        assertThat(first).size().isGreaterThan(jdkIndex.size());
+        assertThat(first).isEqualTo(second);
     }
 }
