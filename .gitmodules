@@ -1,3 +1,0 @@
-[submodule "classfile-fingerprint/src/test/resources/pdfbox"]
-	path = classfile-fingerprint/src/test/resources/pdfbox
-	url = git@github.com:apache/pdfbox.git
