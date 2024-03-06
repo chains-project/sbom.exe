@@ -153,13 +153,15 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
                     tempDirectory.resolve(project.toFile().getName()).toFile();
             File dotGit = destinationDirectory.toPath().resolve(".git").toFile();
             FileUtils.copyDirectory(sourceDirectory, destinationDirectory);
-            if (dotGit.isDirectory()) {
-                FileUtils.deleteDirectory(
-                        destinationDirectory.toPath().resolve(".git").toFile());
-            }
-            // in case of submodules
-            else {
-                FileUtils.delete(destinationDirectory.toPath().resolve(".git").toFile());
+            // Git directory is not present in test resources
+            if (dotGit.exists()) {
+                if (dotGit.isDirectory()) {
+                    FileUtils.deleteDirectory(dotGit);
+                }
+                // in case of submodules
+                else {
+                    FileUtils.delete(dotGit);
+                }
             }
             return destinationDirectory.toPath();
         } catch (IOException e) {
