@@ -19,6 +19,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import org.apache.commons.io.FileUtils;
+import org.apache.maven.shared.invoker.DefaultInvocationRequest;
+import org.apache.maven.shared.invoker.DefaultInvoker;
+import org.apache.maven.shared.invoker.InvocationRequest;
+import org.apache.maven.shared.invoker.Invoker;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -80,17 +84,12 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
             transformer.transform();
             transformer.writeTransformedPomInPlace();
         }
-
-        String[] mavenArgs = {"mvn", "clean", "package"};
-        ProcessBuilder processBuilder = new ProcessBuilder(mavenArgs);
-        processBuilder.directory(pathToTempProject.toFile());
-        Map<String, String> env = processBuilder.environment();
-        for (String key : env.keySet())
-            System.out.println(key + ": " + env.get(key));
-        processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-        processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
-        Process process = processBuilder.start();
-        process.waitFor();
+        InvocationRequest request = new DefaultInvocationRequest();
+        File pomFile = pathToTempProject.resolve("pom.xml").toFile();
+        request.setPomFile(pomFile);
+        request.setGoals(List.of("clean", "package"));
+        Invoker invoker = new DefaultInvoker();
+        invoker.execute(request);
 
         final Map<String, Set<ClassFileAttributes>> referenceProvenance = new HashMap<>();
 
