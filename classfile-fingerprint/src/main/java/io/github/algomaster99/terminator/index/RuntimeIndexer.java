@@ -151,8 +151,16 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
             File sourceDirectory = project.toFile();
             File destinationDirectory =
                     tempDirectory.resolve(project.toFile().getName()).toFile();
+            File dotGit = destinationDirectory.toPath().resolve(".git").toFile();
             FileUtils.copyDirectory(sourceDirectory, destinationDirectory);
-            FileUtils.delete(destinationDirectory.toPath().resolve(".git").toFile());
+            if (dotGit.isDirectory()) {
+                FileUtils.deleteDirectory(
+                        destinationDirectory.toPath().resolve(".git").toFile());
+            }
+            // in case of submodules
+            else {
+                FileUtils.delete(destinationDirectory.toPath().resolve(".git").toFile());
+            }
             return destinationDirectory.toPath();
         } catch (IOException e) {
             throw new RuntimeException("Copy of the project could not be created: " + e);
