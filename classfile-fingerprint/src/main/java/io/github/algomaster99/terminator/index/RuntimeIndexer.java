@@ -84,6 +84,9 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
         String[] mavenArgs = {"mvn", "clean", "package"};
         ProcessBuilder processBuilder = new ProcessBuilder(mavenArgs);
         processBuilder.directory(pathToTempProject.toFile());
+        Map<String, String> env = processBuilder.environment();
+        for (String key : env.keySet())
+            System.out.println(key + ": " + env.get(key));
         processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
         processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
         Process process = processBuilder.start();
