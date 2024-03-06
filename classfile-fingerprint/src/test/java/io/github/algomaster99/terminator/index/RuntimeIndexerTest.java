@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -19,11 +20,13 @@ public class RuntimeIndexerTest {
         // act
         String[] jdk_argsFirst = {"jdk", "-o", indexFile.toString()};
         Index.main(jdk_argsFirst);
+        List<String> jdkIndex = Files.readAllLines(indexFile);
+
         String[] runtime_argsFirst = {
             "runtime", "-p", project.toString(), "-i", indexFile.toString(), "-mj", "basic-math", "--cleanup"
         };
         Index.main(runtime_argsFirst);
-        String contentFirst = Files.readString(indexFile);
+        List<String> first = Files.readAllLines(indexFile);
 
         String[] jdk_argsSecond = {"jdk", "-o", indexFile.toString()};
         Index.main(jdk_argsSecond);
@@ -31,9 +34,11 @@ public class RuntimeIndexerTest {
             "runtime", "-p", project.toString(), "-i", indexFile.toString(), "-mj", "basic-math", "--cleanup"
         };
         Index.main(runtime_argsSecond);
-        String contentSecond = Files.readString(indexFile);
+        List<String> second = Files.readAllLines(indexFile);
 
         // assert
-        assertThat(contentFirst).isEqualTo(contentSecond);
+        // This ensures that the project compiles
+        assertThat(first).size().isGreaterThan(jdkIndex.size());
+        assertThat(first).isEqualTo(second);
     }
 }
