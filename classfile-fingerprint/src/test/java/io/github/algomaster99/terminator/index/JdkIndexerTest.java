@@ -36,10 +36,27 @@ class JdkIndexerTest {
 
     @EnabledOnJre(JRE.JAVA_21)
     @Test
-    void jdk21Index_shouldBeReproducibleAcrossMultiple_implementations(@TempDir Path tempDir) throws IOException {
+    void jdk21_0_2_indexShouldBeReproducible_temurin(@TempDir Path tempDir) throws IOException {
         // arrange
         Path actualIndex = tempDir.resolve("jdk.jsonl");
         Path expectedIndex = Path.of("src", "test", "resources", "jdk-index", "21.0.2-tem.jsonl");
+
+        // act
+        String[] args = {"jdk", "-o", actualIndex.toString()};
+        Index.main(args);
+
+        // assert
+        List<String> actual = Files.readAllLines(actualIndex);
+        List<String> expected = Files.readAllLines(expectedIndex);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @EnabledOnJre(JRE.JAVA_17)
+    @Test
+    void jdk17_0_10_indexShouldBeReproducibleAcrossMultiple_implementations(@TempDir Path tempDir) throws IOException {
+        // arrange
+        Path actualIndex = tempDir.resolve("jdk.jsonl");
+        Path expectedIndex = Path.of("src", "test", "resources", "jdk-index", "17.0.10-tem.jsonl");
 
         // act
         String[] args = {"jdk", "-o", actualIndex.toString()};
