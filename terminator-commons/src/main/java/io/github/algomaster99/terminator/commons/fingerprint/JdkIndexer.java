@@ -8,10 +8,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import nonapi.io.github.classgraph.classpath.SystemJarFinder;
 
 /**
  * The JdkIndexer class provides a utility to list all JDK classes by scanning the JDK used for the execution of the application.
@@ -47,25 +45,6 @@ public class JdkIndexer {
                     }
                 }
             });
-        }
-        jdkClasses.addAll(indexJrt());
-        return jdkClasses;
-    }
-
-    /**
-     * Creates an index of the external Jrt jar. This jar provides an API for older jvms to access the modules in the JDK.
-     * The jvm itself does not need this jar.
-     * @return  the list of external jrt jdk classes
-     */
-    private static List<JdkClass> indexJrt() {
-        List<JdkClass> jdkClasses = new ArrayList<>();
-        Set<String> jreLibOrExtJars = SystemJarFinder.getJreLibOrExtJars();
-        for (String path : jreLibOrExtJars) {
-            try {
-                jdkClasses.addAll(readJarFile(path));
-            } catch (Exception e) {
-                System.err.println("Error reading jar file " + path + ": " + e);
-            }
         }
         return jdkClasses;
     }
