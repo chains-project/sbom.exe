@@ -48,27 +48,9 @@ public class JdkIndexer {
                 }
             });
         }
-        jdkClasses.addAll(indexJrt());
         return jdkClasses;
     }
 
-    /**
-     * Creates an index of the external Jrt jar. This jar provides an API for older jvms to access the modules in the JDK.
-     * The jvm itself does not need this jar.
-     * @return  the list of external jrt jdk classes
-     */
-    private static List<JdkClass> indexJrt() {
-        List<JdkClass> jdkClasses = new ArrayList<>();
-        Set<String> jreLibOrExtJars = SystemJarFinder.getJreLibOrExtJars();
-        for (String path : jreLibOrExtJars) {
-            try {
-                jdkClasses.addAll(readJarFile(path));
-            } catch (Exception e) {
-                System.err.println("Error reading jar file " + path + ": " + e);
-            }
-        }
-        return jdkClasses;
-    }
 
     private static List<JdkClass> readJarFile(String jarFilePath) throws IOException {
         List<JdkClass> jdkClasses = new ArrayList<>();

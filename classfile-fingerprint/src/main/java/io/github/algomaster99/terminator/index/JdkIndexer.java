@@ -34,10 +34,6 @@ public class JdkIndexer extends BaseIndexer implements Callable<Integer> {
                 referenceProvenance.computeIfAbsent(
                         resource.name(),
                         k -> new HashSet<>(Set.of(new ClassFileAttributes(classfileVersion, hash, algorithm))));
-                referenceProvenance.computeIfPresent(resource.name(), (k, v) -> {
-                    v.add(new ClassFileAttributes(classfileVersion, hash, algorithm));
-                    return v;
-                });
             } catch (NoSuchAlgorithmException e) {
                 LOGGER.error("Failed to compute hash with algorithm: " + algorithm, e);
                 throw new RuntimeException(e);
