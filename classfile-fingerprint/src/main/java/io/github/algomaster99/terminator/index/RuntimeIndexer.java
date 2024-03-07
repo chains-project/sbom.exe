@@ -118,9 +118,7 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
                     ParsingHelper.deserializeFingerprints(indexFile.input.toPath());
 
             referenceProvenance.forEach((k, v) -> {
-                if (currentReferenceProvenance.containsKey(k)) {
-                    currentReferenceProvenance.get(k).addAll(v);
-                } else {
+                if (!currentReferenceProvenance.containsKey(k)) {
                     currentReferenceProvenance.put(k, v);
                 }
             });
