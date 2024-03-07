@@ -49,6 +49,10 @@ class JdkIndexerTest {
         List<String> actual = Files.readAllLines(actualIndex);
         List<String> expected = Files.readAllLines(expectedIndex);
         assertThat(actual).isEqualTo(expected);
+
+        Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(actualIndex);
+        referenceProvenance.values().forEach(classFileAttributes -> assertThat(classFileAttributes.size())
+                .isEqualTo(1));
     }
 
     @EnabledOnJre(JRE.JAVA_17)
@@ -66,6 +70,10 @@ class JdkIndexerTest {
         List<String> actual = Files.readAllLines(actualIndex);
         List<String> expected = Files.readAllLines(expectedIndex);
         assertThat(actual).isEqualTo(expected);
+
+        Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(actualIndex);
+        referenceProvenance.values().forEach(classFileAttributes -> assertThat(classFileAttributes.size())
+                .isEqualTo(1));
     }
 
     @Test

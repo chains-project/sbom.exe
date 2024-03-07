@@ -8,10 +8,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import nonapi.io.github.classgraph.classpath.SystemJarFinder;
 
 /**
  * The JdkIndexer class provides a utility to list all JDK classes by scanning the JDK used for the execution of the application.
@@ -50,7 +48,6 @@ public class JdkIndexer {
         }
         return jdkClasses;
     }
-
 
     private static List<JdkClass> readJarFile(String jarFilePath) throws IOException {
         List<JdkClass> jdkClasses = new ArrayList<>();
