@@ -7,6 +7,7 @@ import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFile
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -35,19 +36,44 @@ class JdkIndexerTest {
 
     @EnabledOnJre(JRE.JAVA_21)
     @Test
-    void jdkIndexShouldHave__jdk_internal_foreign_MemorySessionImpl__and__java_lang_foreign_MemorySegment$Scope(
-            @TempDir Path tempDir) {
+    void jdk21_0_2_indexShouldBeReproducible_temurin(@TempDir Path tempDir) throws IOException {
         // arrange
-        Path indexFile = tempDir.resolve("jdk.json");
+        Path actualIndex = tempDir.resolve("jdk.jsonl");
+        Path expectedIndex = Path.of("src", "test", "resources", "jdk-index", "21.0.2-tem.jsonl");
 
         // act
-        String[] args = {"jdk", "-o", indexFile.toString()};
+        String[] args = {"jdk", "-o", actualIndex.toString()};
         Index.main(args);
 
         // assert
-        Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(indexFile);
-        assertThat(referenceProvenance)
-                .containsKeys("jdk/internal/foreign/MemorySessionImpl", "java/lang/foreign/MemorySegment$Scope");
+        List<String> actual = Files.readAllLines(actualIndex);
+        List<String> expected = Files.readAllLines(expectedIndex);
+        assertThat(actual).isEqualTo(expected);
+
+        Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(actualIndex);
+        referenceProvenance.values().forEach(classFileAttributes -> assertThat(classFileAttributes.size())
+                .isEqualTo(1));
+    }
+
+    @EnabledOnJre(JRE.JAVA_17)
+    @Test
+    void jdk17_0_10_indexShouldBeReproducibleAcrossMultiple_implementations(@TempDir Path tempDir) throws IOException {
+        // arrange
+        Path actualIndex = tempDir.resolve("jdk.jsonl");
+        Path expectedIndex = Path.of("src", "test", "resources", "jdk-index", "17.0.10-tem.jsonl");
+
+        // act
+        String[] args = {"jdk", "-o", actualIndex.toString()};
+        Index.main(args);
+
+        // assert
+        List<String> actual = Files.readAllLines(actualIndex);
+        List<String> expected = Files.readAllLines(expectedIndex);
+        assertThat(actual).isEqualTo(expected);
+
+        Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(actualIndex);
+        referenceProvenance.values().forEach(classFileAttributes -> assertThat(classFileAttributes.size())
+                .isEqualTo(1));
     }
 
     @Test
