@@ -17,9 +17,10 @@ public class ClassfileTest {
 
     private static final Path TEST_RESOURCES = Path.of("src/test/resources");
 
+    private static final Path CLASSFILE = TEST_RESOURCES.resolve("classfile");
+
     @Nested
     class IsRuntimeGeneratedClass {
-        private static final Path CLASSFILE = TEST_RESOURCES.resolve("classfile");
 
         @Test
         void isAProxyClass_true() throws IOException {
@@ -60,7 +61,7 @@ public class ClassfileTest {
                     .isTrue();
         }
 
-        private static byte[] makeClassfileSynthetic(byte[] classfileBytes) {
+        private byte[] makeClassfileSynthetic(byte[] classfileBytes) {
             ClassNode classNode = new ClassNode();
             ClassReader classReader = new ClassReader(classfileBytes);
             classReader.accept(classNode, 0);
