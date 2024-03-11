@@ -1,5 +1,8 @@
 package io.github.algomaster99.terminator.commons.fingerprint.classfile;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 public final class ClassFileAttributes {
@@ -7,20 +10,27 @@ public final class ClassFileAttributes {
     private final String hash;
     private final String algorithm;
 
-    public ClassFileAttributes(String classfileVersion, String hash, String algorithm) {
+    @JsonCreator
+    public ClassFileAttributes(
+            @JsonProperty("classfileVersion") String classfileVersion,
+            @JsonProperty("hash") String hash,
+            @JsonProperty("algorithm") String algorithm) {
         this.classfileVersion = classfileVersion;
         this.hash = hash;
         this.algorithm = algorithm;
     }
 
+    @JsonGetter("classfileVersion")
     public String classfileVersion() {
         return classfileVersion;
     }
 
+    @JsonGetter("hash")
     public String hash() {
         return hash;
     }
 
+    @JsonGetter("algorithm")
     public String algorithm() {
         return algorithm;
     }
