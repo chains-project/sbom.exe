@@ -31,6 +31,8 @@ class JdkIndexerTest {
 
         // assert
         assertThat(contentFirst).isEqualTo(contentSecond);
+
+        System.out.println(System.getProperty("java.vendor.version"));
     }
 
     @EnabledIfSystemProperty(named = "java.vendor.version", matches = "Temurin-21.0.2+13")
