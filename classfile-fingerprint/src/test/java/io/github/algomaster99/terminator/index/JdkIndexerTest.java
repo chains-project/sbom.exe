@@ -35,7 +35,7 @@ class JdkIndexerTest {
         System.out.println(System.getProperty("java.vendor.version"));
     }
 
-    @EnabledIfSystemProperty(named = "java.vendor.version", matches = "Temurin-21.0.2+13")
+    @EnabledIfSystemProperty(named = "java.vendor.version", matches = "Temurin-21\\.0\\.2\\+13")
     @Test
     void jdk21_0_2_indexShouldBeReproducible_temurin(@TempDir Path tempDir) throws IOException {
         // arrange
@@ -56,7 +56,7 @@ class JdkIndexerTest {
                 .isEqualTo(1));
     }
 
-    @EnabledIfSystemProperty(named = "java.vendor.version", matches = "Temurin-17.0.10+7")
+    @EnabledIfSystemProperty(named = "java.vendor.version", matches = "Temurin-17\\.0\\.10\\+7")
     @Test
     void jdk17_0_10_indexShouldBeReproducibleAcrossMultiple_implementations(@TempDir Path tempDir) throws IOException {
         // arrange
