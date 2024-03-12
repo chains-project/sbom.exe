@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnJre;
-import org.junit.jupiter.api.condition.JRE;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.api.io.TempDir;
 
 class JdkIndexerTest {
@@ -34,7 +33,7 @@ class JdkIndexerTest {
         assertThat(contentFirst).isEqualTo(contentSecond);
     }
 
-    @EnabledOnJre(JRE.JAVA_21)
+    @EnabledIfSystemProperty(named = "java.vendor.version", matches = "Temurin-21.0.2+13")
     @Test
     void jdk21_0_2_indexShouldBeReproducible_temurin(@TempDir Path tempDir) throws IOException {
         // arrange
@@ -55,7 +54,7 @@ class JdkIndexerTest {
                 .isEqualTo(1));
     }
 
-    @EnabledOnJre(JRE.JAVA_17)
+    @EnabledIfSystemProperty(named = "java.vendor.version", matches = "Temurin-17.0.10+7")
     @Test
     void jdk17_0_10_indexShouldBeReproducibleAcrossMultiple_implementations(@TempDir Path tempDir) throws IOException {
         // arrange
