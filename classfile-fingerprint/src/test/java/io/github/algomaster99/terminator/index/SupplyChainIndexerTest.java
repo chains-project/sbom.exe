@@ -44,8 +44,23 @@ class SupplyChainIndexerTest {
 
         // assert
         Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(indexFile);
-        assertThat(referenceProvenance.keySet().size()).isEqualTo(20826);
+        assertThat(referenceProvenance.keySet().size()).isEqualTo(18929);
         referenceProvenance.forEach((key, value) ->
                 assertThat(value.stream().findAny().get().algorithm()).isEqualTo("MD5"));
+    }
+
+    @Test
+    void getAllClassesIn_log4jCore_log4jApi(@TempDir Path tempDir) {
+        // arrange
+        Path indexFile = tempDir.resolve("sc.json");
+        Path sbom = Path.of("src", "test", "resources", "supply-chain-index", "log4j-core.bom.json");
+
+        // act
+        String[] args = {"supply-chain", "-s", sbom.toString(), "-o", indexFile.toString()};
+        Index.main(args);
+
+        // assert
+        Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(indexFile);
+        assertThat(referenceProvenance.keySet().size()).isEqualTo(1273);
     }
 }
