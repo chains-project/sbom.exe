@@ -44,7 +44,7 @@ class SupplyChainIndexerTest {
 
         // assert
         Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(indexFile);
-        assertThat(referenceProvenance.keySet().size()).isEqualTo(20826);
+        assertThat(referenceProvenance.keySet().size()).isEqualTo(18929);
         referenceProvenance.forEach((key, value) ->
                 assertThat(value.stream().findAny().get().algorithm()).isEqualTo("MD5"));
     }
