@@ -10,7 +10,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.jsoup.Jsoup;
 
 public class JarDownloader {
@@ -41,7 +40,7 @@ public class JarDownloader {
     private static String getUrlOfRequestedJar(String indexPageContent, String indexPageUrl) {
         List<String> candidates = Jsoup.parse(indexPageContent).select("a").stream()
                 .map(e -> e.attr("href"))
-                .collect(Collectors.toList());
+                .toList();
 
         Optional<String> artifactJar = candidates.stream()
                 .filter(c -> c.endsWith(".jar"))

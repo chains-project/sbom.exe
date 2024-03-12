@@ -14,7 +14,7 @@
   <url>${project.parent.url}</url>
 
   <properties>
-    <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.release>11</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -110,7 +110,7 @@
             <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
               <manifestEntries>
                 <Main-Class>io.github.algomaster99.terminator.index.Index</Main-Class>
-                <Multi-Release>false</Multi-Release>
+                <Multi-Release>true</Multi-Release>
               </manifestEntries>
             </transformer>
           </transformers>
