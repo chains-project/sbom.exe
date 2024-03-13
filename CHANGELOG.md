@@ -1,3 +1,251 @@
+# 0.12.0
+## Changelog
+
+## 🚀 Features
+- af85b34 feat: add subcommand for generating runtime-index (#118)
+- e917911 feat: add feature to get maven module dependency graph (#151)
+- ee2618d feat: add support for CycloneDX 1.5 (#104)
+- 158f999 feat: add ability to download jar from JBoss repository (#84)
+- a0fb3f0 feat: handle `java.lang.invoke.BoundMethodHandle` correctly (#78)
+- 19191f4 feat: add fingerprints for JDK classes (#63)
+- a74461d feat: add feature to detect runtime generated classes (#64)
+
+## 🐛 Fixes
+- 60df7d5 fix: narrow down list of classes in log4j (#182)
+- aea493f fix: include the missing classes in JDK index (#161)
+- ce7092e fix: check for metadata before accessing
+- 01d4bcc fix: prevent accessing metadata before ensuring
+
+## 🔄️ Changes
+- 0b13ef3 refactor: remove classes from jrt-fs jar (#171)
+- 5e68035 refactor: prevent appending provenances to already existing JDK index (#170)
+- 4dadd49 refactor: combine SBOM schema by making a super interface (#157)
+- 30753ca refactor: remove notion of provenance (#155)
+- adcd16d refactor: move creation of maven module graph to MavenModule (#154)
+- fbfb3b5 style: cleanup classfile-fingerprint (#107)
+- 6bd4923 perf: use set instead of list (#106)
+- 36e36ba refactor: add supply-chain indexing as a subcommand to indexer (#105)
+- 8c95aa4 refactor: add jdk indexing as a subcommand to indexer (#97)
+- 37ae48a refactor: put sorald under level 3 (#77)
+- 7359207 style: add blue screen of death (#73)
+- 4a0a0dc refactor: remove condition to detect synthetic classes in future (#65)
+
+## 🧪 Tests
+- 2e4571e test: rename tests for clarity
+
+## 🧰 Tasks
+- b1f1ac5 chore: releasing version 0.12.0
+- 1bd758b chore: releasing version 0.12.0
+- 5d053ca chore: update release configuration
+- 057ac71 chore: run CI on 11 without skipJava17 (#185)
+- 04d3a91 chore(deps): update dependency com.fasterxml.jackson.core:jackson-databind to v2.17.0
+- c030ed0 chore: run CI on 11 (#183)
+- d035a83 chore: make SBOM.exe multi-release (#177)
+- 511f113 chore(deps): update dependency org.apache.logging.log4j:log4j-core to v2.23.1
+- c3a7b87 chore(deps): update dependency com.fasterxml.jackson.core:jackson-databind to v2.16.2
+- 16079e0 chore(deps): update dependency io.github.classgraph:classgraph to v4.8.168
+- 61a8650 chore: add index for JDK 21 and 17 temurin (#168)
+- 695e987 chore: run tests on multiple java versions (#164)
+- 97c04ff chore(deps): update dependency io.github.classgraph:classgraph to v4.8.167
+- ca6a8d7 chore(deps): update dependency io.github.classgraph:classgraph to v4.8.166
+- db37324 chore: move dependency to parent-pom
+- 26e891e chore: debloat watchdog-agent in terms of parameters and tests (#153)
+- f315e2f chore(deps): update actions/upload-artifact action to v4 (#148)
+- 99ba121 chore: remove unnecessary files
+- 1aa517d chore: please qodana (#150)
+- 45d0cc9 chore(deps): update dependency org.apache.logging.log4j:log4j-core to v2.23.0
+- 495adc0 chore(deps): update dependency org.apache.maven.plugins:maven-shade-plugin to v3.5.2
+- 1d99226 chore(deps): update actions/setup-java action to v4 (#121)
+- ef40880 chore(deps): update github/codeql-action action to v3 (#125)
+- f12d44d chore: use `-release` for managing module versions (#145)
+- fb8db08 chore(deps): update dependency org.slf4j:log4j-over-slf4j to v2.0.12
+- e4b70a3 chore(deps): update dependency org.assertj:assertj-core to v3.25.3
+- 752c521 chore(deps): update junit5 monorepo to v5.10.2
+- f35c40e chore(deps): update dependency org.assertj:assertj-core to v3.25.2
+- be3454f chore(deps): update dependency com.diffplug.spotless:spotless-maven-plugin to v2.43.0
+- beb0f25 chore(deps): update dependency com.diffplug.spotless:spotless-maven-plugin to v2.42.0
+- 8287fef chore(deps): update dependency org.apache.maven.plugins:maven-plugin-plugin to v3.11.0
+- 62b468f chore(deps): update dependency org.apache.maven.plugins:maven-surefire-plugin to v3.2.5
+- 2b89006 chore(deps): update dependency org.slf4j:log4j-over-slf4j to v2.0.11
+- edbb829 chore(deps): update dependency org.assertj:assertj-core to v3.25.1
+- 645aa4f chore(deps): update dependency org.assertj:assertj-core to v3.25.0
+- 6e1e827 chore(deps): update dependency org.jsoup:jsoup to v1.17.2
+- f942afd chore(deps): update dependency org.slf4j:log4j-over-slf4j to v2.0.10
+- 4050e18 chore(deps): update dependency org.apache.logging.log4j:log4j-core to v2.22.1
+- ece11d4 chore(deps): update dependency org.apache.maven.plugins:maven-compiler-plugin to v3.12.1
+- cf9f120 chore(deps): update dependency com.fasterxml.jackson.core:jackson-databind to v2.16.1
+- 33b0a44 chore(deps): update dependency org.apache.maven.plugins:maven-compiler-plugin to v3.12.0
+- 1877473 chore(deps): update dependency org.apache.maven.plugins:maven-surefire-plugin to v3.2.3
+- 006dea4 chore(deps): update dependency com.diffplug.spotless:spotless-maven-plugin to v2.41.1
+- 082e352 chore(deps): update dependency org.apache.maven.plugins:maven-javadoc-plugin to v3.6.3
+- edd7be7 chore(deps): update dependency com.diffplug.spotless:spotless-maven-plugin to v2.41.0
+- 844122c chore(deps): update dependency org.jsoup:jsoup to v1.17.1
+- 090d713 chore(deps): update actions/checkout action to v4 (#75)
+- 5af0ca8 chore(deps): update dependency org.apache.logging.log4j:log4j-core to v2.22.0
+- 2d75cd8 chore(deps): update dependency io.github.classgraph:classgraph to v4.8.165
+- 2a3ca15 chore(deps): update dependency com.fasterxml.jackson.core:jackson-databind to v2.16.0
+- 14b62b5 chore(deps): update dependency org.apache.maven.plugins:maven-surefire-plugin to v3.2.2
+- dba6023 chore(deps): update dependency org.apache.maven.plugins:maven-plugin-plugin to v3.10.2
+- b9916cd chore(deps): update dependency org.apache.maven.plugins:maven-javadoc-plugin to v3.6.2
+- be5a7cf chore(deps): update junit5 monorepo to v5.10.1
+- 3b922fb chore(deps): update dependency io.github.classgraph:classgraph to v4.8.164
+- e374a73 chore(deps): update dependency org.apache.logging.log4j:log4j-core to v2.21.1
+- 6362f19 chore(deps): update dependency org.apache.maven.plugins:maven-surefire-plugin to v3.2.1
+- f718359 chore(deps): update dependency org.apache.maven.plugins:maven-plugin-plugin to v3.10.1
+- 8bf2d0c chore(deps): update dependency org.apache.maven.plugin-tools:maven-plugin-annotations to v3.10.1
+- 701de9b chore(deps): update dependency org.jsoup:jsoup to v1.16.2
+- e94b9c1 chore(deps): update dependency org.apache.logging.log4j:log4j-core to v2.21.0
+- 028713f chore(deps): update dependency io.github.classgraph:classgraph to v4.8.163
+- 3725c5f chore(deps): update dependency com.fasterxml.jackson.core:jackson-databind to v2.15.3
+- 694b8a1 chore(deps): update dependency org.apache.maven:maven-plugin-api to v3.9.5
+- f8709c9 chore(deps): update dependency org.apache.maven:maven-core to v3.9.5
+- 0e48263 chore(deps): update dependency org.ow2.asm:asm-util to v9.6
+- 029da0a chore(deps): update dependency org.ow2.asm:asm-tree to v9.6
+- 42ec754 chore(deps): update dependency org.ow2.asm:asm to v9.6
+- 88c1f89 chore(deps): update dependency com.diffplug.spotless:spotless-maven-plugin to v2.40.0
+- 3b4d9b9 chore(deps): update dependency org.apache.maven.plugins:maven-shade-plugin to v3.5.1
+- 2e972d6 chore(deps): update dependency org.apache.maven.plugins:maven-javadoc-plugin to v3.6.0
+- 762c8fb chore(deps): update dependency org.slf4j:log4j-over-slf4j to v2.0.9
+- 136e217 chore(deps): update dependency com.diffplug.spotless:spotless-maven-plugin to v2.39.0
+- 502f7ea chore(deps): update dependency info.picocli:picocli to v4.7.5
+- 219cdb2 chore: setting SNAPSHOT version 0.11.1-SNAPSHOT
+
+## 🛠  Build
+- 15dbae5 ci: remove files generated in CI
+
+## 📝 Documentation
+- 99fb5e5 docs: update diagram
+- 2d58672 docs: update diagram
+- b07955c docs: hardcode Java classes in references
+- 115123a docs: update diagram
+- b67f95e docs: update diagram
+- adda6b1 docs: update README
+- 5fb50de docs: update diagram
+- 8ae61b6 docs: update diagram
+- 4af4ace docs: update diagram
+- e791d6f docs: update diagram
+- a9c164d docs: update diagram
+- ee96950 docs: update diagram
+- 65209f5 docs: update diagram
+- 9351459 docs: update diagram
+- 8c5bd51 docs: update diagram
+- 0e13b8c docs: update diagram
+- 5db584f docs: update diagram
+- 5df83f5 docs: update diagram
+- d7beeb1 docs: update diagram
+- 79c2bcd docs: update diagram
+- 2905df9 docs: update diagram
+- cf08003 docs: update diagram
+- 9eece8c docs: update diagram
+- de4f5eb docs: update diagram
+- 7c427fe docs: update diagram
+- 69b3abe docs: update diagram
+- 2c826f3 docs: update diagram
+- e107a98 docs: update diagram
+- 337f21e docs: update diagram
+- 3cc4bc4 docs: update diagram
+- 412e8db docs: update diagram
+- 2294f99 docs: update diagram
+- ea72c48 docs: update diagram
+- 5d90c92 docs: update diagram
+- 71f236c docs: update diagram
+- f0420bf docs: update diagram
+- dfe88f2 docs: update diagram
+- 7215786 docs: update diagram
+- 6082888 docs: update diagram
+- 3b09f06 docs: update diagram
+- a488822 docs: change tool name in README
+- 50f1701 docs: update diagram
+- 1abe270 docs: update diagram
+- 197bbb5 docs: update diagram
+- c63e1f5 docs: update diagram
+- 3cf2bba docs: update diagram
+- 6821597 docs: update diagram
+- 4af49a6 docs: update diagram
+- f40698d docs: update diagram
+- ec81df8 docs: update diagram
+- 7654ff1 docs: update diagram
+- b6b1c87 docs: update diagram
+- 5bdffa8 docs: update diagram
+- aaf21fc docs: update diagram
+- a90e92e docs: update diagram
+- 6344d36 docs: update diagram
+- b7c37d0 docs: update diagram
+- 1809d22 docs: update diagram
+- 2f5be5c docs: update diagram
+- a602fc8 docs: update diagram
+- 704ffa1 docs: update diagram
+- 512e504 docs: update diagram
+- 434c755 docs: update diagram
+- b590142 docs: update diagram
+- cffc23d docs: update diagram
+- a9e28b7 docs: update diagram
+- da56842 docs: update diagram
+- 1a8719d docs: update diagram
+- 981e9cd docs: update diagram
+- e28b26a docs: update diagram
+- c4a7454 docs: update diagram
+- 4015765 docs: update diagram
+- ddaff79 docs: update diagram
+- a31b01c docs: update diagram
+- 4a882af docs: update diagram
+- aed4a16 docs: update diagram
+- c9556c8 docs: update diagram
+- e5a9bd6 docs: update diagram
+- d018e31 docs: update diagram
+- f47a0ab docs: update diagram
+- c07fbcc docs: update diagram
+- acb290f docs: update diagram
+- 6f371a6 docs: update diagram
+- 6d3995d docs: update diagram
+- e6d5e95 docs: update diagram
+- 4cfeb6f docs: update diagram
+- 0a839a0 docs: update diagram
+- 839b145 docs: update diagram
+- d7fc48b docs: update diagram
+- 5a94aa3 docs: update diagram
+- 775e59c docs: update diagram
+- 70f75b3 docs: update diagram
+- 8ec80e1 docs: update diagram
+- 6def62a docs: update diagram
+- 90ffaaf docs: update diagram
+- 1563d87 docs: update diagram
+- b43f326 docs: update diagram
+- b53dcbb docs: update diagram
+- 85fd790 docs: update diagram
+- 9d673a2 docs: update diagram
+- fa6db90 docs: update diagram
+- ff1c0be docs: update diagram
+- 81568d1 docs: update diagram
+- 30752da docs: update diagram
+- d6c8db9 docs: update diagram
+- c084bbf docs: update diagram
+- 13f7f45 docs: update diagram
+- 9bea51b docs: update diagram
+- 3111f3c docs: update diagram
+- a224770 docs: update diagram
+- 19b7597 docs: update diagram
+
+---
+- 5903477 Revert "chore: releasing version 0.12.0"
+- 22a91a7 tests: annotate precise version of JDK (#180)
+- 92174b9 tests: add test to check determinism of runtime-index (#160)
+- 0e496ef tests: add test for level 2 projects (#85)
+- 43c1ad8 tests: add pdfbox test for level 1 (#80)
+- fae647b tests: run spoon with depscan (#70)
+- a4f7116 tests: emulate execution of pdfbox-tools with cyclonedx-maven-plugin and depscan (#69)
+- c1d90cc tests: add test for spoon-core with incorrect SBOM (#68)
+- d2dd51a tests: add spoon `10.4.0` as test resource (#66)
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- GitHub ()
+- Martin Wittlinger ([@MartinWitt](https://github.com/MartinWitt))
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+- renovate[bot] ()
+- repo-visualizer ()
 
 # 0.11.0
 ## Changelog
