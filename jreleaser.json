@@ -9,11 +9,11 @@
     ],
     "license": "MIT",
     "links": {
-      "homepage": "https://github.com/ASSERT-KTH/terminator"
+      "homepage": "https://github.com/chains-project/sbom.exe"
     },
     "java": {
       "groupId": "io.github.algomaster99",
-      "version": "17"
+      "version": "11"
     },
     "inceptionYear": "2023"
   },
@@ -35,6 +35,15 @@
   },
 
   "distributions": {
+    "classfile-fingerprint": {
+      "type": "SINGLE_JAR",
+      "stereotype": "CLI",
+      "artifacts": [
+        {
+          "path": "classfile-fingerprint/target/{{distributionName}}-{{projectVersion}}.jar"
+        }
+      ]
+    },
     "watchdog-agent": {
       "type": "SINGLE_JAR",
       "stereotype": "CLI",

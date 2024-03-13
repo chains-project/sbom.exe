@@ -39,7 +39,7 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
 
     @CommandLine.Option(
             names = {"--cleanup"},
-            description = "The selected methods",
+            description = "Delete the temporary project after the process",
             required = false)
     private boolean cleanup = false;
 
