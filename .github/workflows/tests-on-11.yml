@@ -10,17 +10,22 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        java-version: [ 11 ]
         os: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v4
-      - name: Setup JDK${{ matrix.java-version }}
+      - name: Setup JDK21 for building project
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: ${{ matrix.java-version }}
+          java-version: 21
       - name: Build project
         # We need to build the agent first, because the tests depend on it
-        run: mvn clean package -DskipTests -DskipJava17
+        run: mvn clean install -DskipTests
+
+      - name: Setup JDK11 for running tests
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 11
       - name: Run tests
-        run: mvn test -DskipJava17
+        run: mvn surefire:test

@@ -16,7 +16,6 @@
   <properties>
     <maven.compiler.release>11</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <skipJava17>false</skipJava17>
   </properties>
 
   <dependencies>
@@ -88,7 +87,6 @@
             </goals>
             <phase>compile</phase>
             <configuration>
-              <skipMain>${skipJava17}</skipMain>
               <release>17</release>
               <compileSourceRoots>
                 <compileSourceRoot>${project.basedir}/src/main/java17</compileSourceRoot>
