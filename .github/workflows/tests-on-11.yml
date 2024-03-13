@@ -28,6 +28,6 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: 11
+          java-version: ${{ matrix.java-version }}
       - name: Run tests
         run: mvn surefire:test
