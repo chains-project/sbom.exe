@@ -22,7 +22,7 @@ public class RuntimeClass {
     }
 
     /**
-     * Skip classes inherited from {@link jdk.internal.reflect.MagicAccessorImpl} because they are generated at runtime using ASM.
+     * Skip classes inherited from `jdk.internal.reflect.MagicAccessorImpl` because they are generated at runtime using ASM.
      */
     public static boolean isGeneratedClassExtendingMagicAccessor(byte[] classfileBytes) {
         ClassReader reader = new ClassReader(classfileBytes);
@@ -39,8 +39,8 @@ public class RuntimeClass {
     }
 
     /**
-     * During the runtime the jvm binds methodhandles to the class {@link java.lang.invoke.BoundMethodHandle}.
-     * These classes are generated at runtime and should be ignored. We can identify them by checking if the super class is {@link java.lang.invoke.BoundMethodHandle}.
+     * During the runtime the jvm binds methodhandles to the class `java.lang.invoke.BoundMethodHandle`.
+     * These classes are generated at runtime and should be ignored. We can identify them by checking if the super class is `java.lang.invoke.BoundMethodHandle`.
      * @param classfileBytes  the class file bytes
      * @return  true if the class is a bound method handle, false otherwise.
      */
