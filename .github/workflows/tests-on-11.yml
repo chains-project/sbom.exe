@@ -10,6 +10,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        # We only need to test on JDK 11
+        java-version: [ 11 ]
         os: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v4
@@ -22,7 +24,7 @@ jobs:
         # We need to build the agent first, because the tests depend on it
         run: mvn clean install -DskipTests
 
-      - name: Setup JDK11 for running tests
+      - name: Setup JDK${{ matrix.java-version }} for running tests
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
