@@ -29,7 +29,7 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
     @CommandLine.Option(
             names = {"-s", "--sbom"},
             required = true,
-            description = "A valid CyclondeDX 1.4 SBOM")
+            description = "A valid CyclondeDX 1.4 or 1.5 SBOM")
     private Path sbomPath;
 
     @Override

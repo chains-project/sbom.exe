@@ -2,9 +2,9 @@
 
 [![tests](https://github.com/ASSERT-KTH/terminator/actions/workflows/tests.yml/badge.svg)](https://github.com/ASSERT-KTH/terminator/actions/workflows/tests.yml)
 
-A proof-of-concept to illustrate termination of Java virtual machine if a
-prohibited method in invoked. The proof-of-concept is located in
-[poc branch](https://github.com/ASSERT-KTH/terminator/tree/poc). Checkout the README on that branch for instructions. 
+A tool to illustrate termination of Java virtual machine if a
+prohibited method is invoked.
+Checkout the README on that branch for instructions.
 
 ## [Visualization by GitHub Next](https://githubnext.com/projects/repo-visualization/)
 
@@ -12,112 +12,62 @@ prohibited method in invoked. The proof-of-concept is located in
 
 ## Project structure
 
-The project is structured as follows:
+The project has two concepts - generating fingerprints and watching for
+prohibited classes.
 
-1. `classfile-fingerprint` - CLI to generate fingerprints of class files of a
-   Java project using maven project or SBOM.
-2. `watchdog-agent` - Java agent that is attached to the JVM and verifies the
-   fingerprints of loaded classes.
+## Generation of fingerprints
 
-## `classfile-fingerprint`
+The fingerprints are generated using the `classfile-fingerprint` CLI.
 
-### Maven plugin - DEPRECATED
-
-#### Pom Configuration
-
-```xml
-<plugin>
-    <groupId>io.github.algomaster99</groupId>
-    <artifactId>classfile-fingerprint</artifactId>
-    <version>latest version here</version> <!-- use latest version here -->
-    <configuration>
-        <algorithm>SHA256</algorithm> <!-- optional -->
-        <externalJars>path to jar</externalJars> <!-- optional -->
-    </configuration>
-    <executions>
-        <execution>
-            <goals>
-                <goal>generate</goal>
-            </goals>
-        </execution>
-    </executions>
-</plugin>
-
-```
-
-Run: `mvn compile`.
-
-It attaches to `compile` phase by default. We recommend to not change the
-phase preceding `compile` phase as it may not fingerprint the source files
-themselves.
-
-#### Via command line
-
-```bash
-mvn compile io.github.algomaster99:classfile-fingerprint:generate
-```
-
-**Optional parameters**
-
-|   Parameter    |   Type   | Description                                                                                                                                                                                                  |
-|:--------------:|:--------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|  `algorithm`   | `String` | Algorithm used to generate the hash sum. Default: `SHA256`.<br/> All options are [written here](https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#messagedigest-algorithms). |
-| `externalJars` |  `File`  | Configuration file to specify external jars. Default: `null`.                                                                                                                                                |
-
-> `externalJars` is a JSON file with the following structure:
-> ```json
-> [
->  {
->   "path": "path/to/jar"
->  }
-> ]
-> ```
-> 1. Path to `externalJars` **must** be absolute if the maven project is multimodular.
-> 2. The `path` inside the file is relativized to the path of the `externalJars` file itself.
->     However, if the path is absolute, it is not relativized.
-
-Both methods will output a file `classfile.sha256.jsonl` in the `target` directory.
-
-## `watchdog-agent`
-
-Run it as follows:
-
-```bash
-java -javaagent:<path/to/agent>=fingerprints=<path/to/fingerprints> -jar <path/to/your/executable/jar>
-```
-
-Works in two ways:
-
-### Generating fingerprint on the fly from SBOM
+It has three subcommands.
+All the commands take in the following parameters:
 
 **Required Parameters**
 
-| Parameter |  Type  | Description            |
-|:---------:|:------:|------------------------|
-|  `sbom`   | `File` | Path to the sbom file. |
+|      Parameter      |  Type  | Description                                                                               |
+|:-------------------:|:------:|-------------------------------------------------------------------------------------------|
+| `output` or `input` | `File` | Path to index file. `output` will create a <br/>new file. `input` will merge the indices. |
 
+1. `jdk`: Generate fingerprints for JDK classes. |
 
-> `sbom` is a CycloneDX 1.4 JSON file.
+2. `supply-chain`: Generate fingerprints for all the dependencies captured in
+   the SBOM.
+    - **Required Parameters**
 
-**Optional Parameters**
+      | Parameter |  Type  | Description            |
+      |:---------:|:------:|------------------------|
+      |  `sbom`   | `File` | Path to the sbom file. |
 
-|   Parameter    |   Type    | Description                                                                                                                                                                                                  |
-|:--------------:|:---------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `skipShutdown` | `boolean` | If `true`, the JVM will not shutdown if a prohibited class is loaded. Default: `false`.                                                                                                                      |
-|  `algorithm`   | `String`  | Algorithm used to generate the hash sum. Default: `SHA256`.<br/> All options are [written here](https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html#messagedigest-algorithms). |
-| `externalJars` |  `Path`   | Configuration file to specify external jars. Default: `null`.                                                                                                                                                |
+      > `sbom` could be CycloneDX 1.4 or 1.5 JSON document.
 
+3. `runtime`: Generate fingerprints for all the classes loaded at runtime.
+    - **Required Parameters**
 
-### Using pre-generated fingerprints from maven plugin - DEPRECATED
+      | Parameter |  Type   | Description                                                      |
+      |:---------:|:-------:|------------------------------------------------------------------|
+      | `project` | `File`  | Path to the project.                                             |
+      |     `executable-jar-module`      | `String` | The module <br/>(`artifactID`)that generates the executable jar. |
+
+    - **Optional Parameters**
+
+      | Parameter |  Type  | Description             |
+      |:---------:|:------:|-------------------------|
+      |  `cleanup`   | `File` | Delete the temporary project after the process. |
+
+## Watching for prohibited classes
+
+The `watchdog-agent` is a Java agent that watches for prohibited classes.
+
+It takes in the following parameters:
 
 **Required Parameters**
 
-|   Parameter    |  Type  | Description                                                         |
-|:--------------:|:------:|---------------------------------------------------------------------|
-| `fingerprints` | `File` | Path to the fingerprints file generated by `classfile-fingerprint`. |
+| Parameter |  Type  | Description             |
+|:---------:|:------:|-------------------------|
+|  `sbom`   | `File` | Path to the index file. |
 
 **Optional Parameters**
 
-|   Parameter    |   Type    | Description                                                                                      |
-|:--------------:|:---------:|--------------------------------------------------------------------------------------------------|
-| `skipShutdown` | `boolean` | If `true`, the JVM will not shutdown if a prohibited class is loaded. Default: `false`.          |
+|   Parameter    |   Type    | Description                                                                             |
+|:--------------:|:---------:|-----------------------------------------------------------------------------------------|
+| `skipShutdown` | `boolean` | If `true`, the JVM will not shutdown if a prohibited class is loaded. Default: `false`. |
