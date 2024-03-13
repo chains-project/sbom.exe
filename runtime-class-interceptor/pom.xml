@@ -11,6 +11,11 @@
   <description>Intercepts classes at runtime outputs a list of classfiles</description>
   <url>${project.parent.url}</url>
 
+  <properties>
+    <maven.compiler.release>11</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>io.github.algomaster99</groupId>
