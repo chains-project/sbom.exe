@@ -77,6 +77,7 @@ public class Terminator {
         final String WHITE = "\u001B[97m";
         final String BOLD = "\u001B[1m";
         final String BACKGROUND_LIGHT_BLUE = "\u001B[104m";
+        final String RESET = "\u001B[0m";
 
         String message = "                \n" + "             _  \n"
                 + "           .' ) \n"
@@ -85,7 +86,7 @@ public class Terminator {
                 + "\\\\    / / /     \n"
                 + " `'--' . '      \n"
                 + " ,.--. | |      \n"
-                + "//   \\' '      \n"
+                + "//   \\' '       \n"
                 + "\\\\    / \\ \\     \n"
                 + " `'--'   \\ \\    \n"
                 + "          \\ '.  \n"
@@ -99,5 +100,6 @@ public class Terminator {
 
         System.out.println(BACKGROUND_LIGHT_BLUE + BOLD + WHITE);
         System.out.println(message);
+        System.out.println(RESET);
     }
 }
