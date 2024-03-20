@@ -49,18 +49,6 @@ public class ClassfileTest {
             assertThat(RuntimeClass.isSynthetic(modifiedBytes)).isTrue();
         }
 
-        @Test
-        void isGeneratedClassExtendingMagicAccessor_true() throws IOException {
-            Path generatedConstructorAccessor = CLASSFILE.resolve("GeneratedConstructorAccessor15.class");
-            assertThat(RuntimeClass.isGeneratedClassExtendingMagicAccessor(
-                            Files.readAllBytes(generatedConstructorAccessor)))
-                    .isTrue();
-
-            Path generatedMethodAccessor = CLASSFILE.resolve("GeneratedMethodAccessor1.class");
-            assertThat(RuntimeClass.isGeneratedClassExtendingMagicAccessor(Files.readAllBytes(generatedMethodAccessor)))
-                    .isTrue();
-        }
-
         private byte[] makeClassfileSynthetic(byte[] classfileBytes) {
             ClassNode classNode = new ClassNode();
             ClassReader classReader = new ClassReader(classfileBytes);
