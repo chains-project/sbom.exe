@@ -1,3 +1,37 @@
+# 0.12.2
+## Changelog
+
+## 🐛 Fixes
+- 6e28a50 fix: include magic accessors class (#193)
+- ae9bc98 fix: index all versions of classes in multi-release jars (#192)
+
+## 🔄️ Changes
+- f6cadef refactor: be politically correct (#194)
+- d620751 style: reset color after bsod (#187)
+
+## 🧰 Tasks
+- e5c6460 chore: releasing version 0.12.2
+- 56b9582 chore(deps): update dependency org.apache.maven.plugins:maven-compiler-plugin to v3.13.0
+- 9148c55 chore: setting SNAPSHOT version 0.12.1-SNAPSHOT
+
+## 📝 Documentation
+- 4c5abcc docs: update diagram
+- 4900a73 docs: update diagram
+- c60cc5c docs: update diagram
+- 658ba0f docs: update diagram
+- 3692c68 docs: update diagram
+- 52d84ed docs: update diagram
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ()
+- Elias Lundell ([@LogFlames](https://github.com/LogFlames))
+- GitHub ()
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+- renovate[bot] ([@renovate[bot]](https://github.com/apps/renovate))
+- repo-visualizer ()
+
 # 0.12.0
 ## Changelog
 
