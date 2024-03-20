@@ -25,12 +25,12 @@ public class Terminator {
                     ProtectionDomain protectionDomain,
                     byte[] classfileBuffer) {
 
-                return isLoadedClassWhitelisted(className, classfileBuffer);
+                return isLoadedClassAllowlisted(className, classfileBuffer);
             }
         });
     }
 
-    private static byte[] isLoadedClassWhitelisted(String className, byte[] classfileBuffer) {
+    private static byte[] isLoadedClassAllowlisted(String className, byte[] classfileBuffer) {
         Map<String, Set<ClassFileAttributes>> fingerprints = options.getSbom();
         if (RuntimeClass.isProxyClass(classfileBuffer)
                 || RuntimeClass.isGeneratedClassExtendingMagicAccessor(classfileBuffer)
@@ -64,10 +64,10 @@ public class Terminator {
             }
         }
         if (options.shouldSkipShutdown()) {
-            System.err.println("[NOT WHITELISTED]: " + className);
+            System.err.println("[NOT ALLOWLISTED]: " + className);
             return classfileBuffer;
         } else {
-            blueScreenOfDeath("[NOT WHITELISTED]: " + className);
+            blueScreenOfDeath("[NOT ALLOWLISTED]: " + className);
             System.exit(1);
             return null;
         }
