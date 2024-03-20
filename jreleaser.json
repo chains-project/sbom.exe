@@ -20,7 +20,7 @@
 
   "release": {
     "github": {
-      "owner": "ASSERT-KTH",
+      "owner": "chains-project",
       "releaseName": "{{tagName}}",
       "changelog": {
         "formatted": "ALWAYS",
