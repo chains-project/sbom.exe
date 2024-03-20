@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +37,8 @@ public class JarScanner {
 
                     String jarEntryName =
                             jarEntry.getName().substring(0, jarEntry.getName().length() - ".class".length());
+                    String strippedJarEntryName = stripMetaInf(jarEntryName);
+
                     byte[] classfileBytes = jarFile.getInputStream(jarEntry).readAllBytes();
                     String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
                     String hashOfClass = computeHash(classfileBytes, algorithm);
@@ -42,13 +46,13 @@ public class JarScanner {
                     ClassFileAttributes classFileAttributes =
                             new ClassFileAttributes(classfileVersion, hashOfClass, algorithm);
 
-                    if (fingerprints.containsKey(jarEntryName)) {
-                        Set<ClassFileAttributes> alreadyExistingProvenance = fingerprints.get(jarEntryName);
+                    if (fingerprints.containsKey(strippedJarEntryName)) {
+                        Set<ClassFileAttributes> alreadyExistingProvenance = fingerprints.get(strippedJarEntryName);
                         alreadyExistingProvenance.add(classFileAttributes);
                     } else {
                         Set<ClassFileAttributes> newProvenance = new HashSet<>();
                         newProvenance.add(classFileAttributes);
-                        fingerprints.put(jarEntryName, newProvenance);
+                        fingerprints.put(strippedJarEntryName, newProvenance);
                     }
                 }
             }
@@ -58,5 +62,17 @@ public class JarScanner {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /** Strips the META-INF/versions/{java_version}/ from the class name. */
+    private static String stripMetaInf(String jarEntryName) {
+        if (!jarEntryName.startsWith("META-INF")) {
+            return jarEntryName;
+        }
+        final String regex = "META-INF\\/versions\\/[0-9]+\\/(.*)";
+        final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+        final Matcher matcher = pattern.matcher(jarEntryName);
+        matcher.find();
+        return matcher.group(1);
     }
 }
