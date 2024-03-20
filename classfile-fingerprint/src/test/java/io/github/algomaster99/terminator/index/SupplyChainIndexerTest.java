@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -44,7 +45,7 @@ class SupplyChainIndexerTest {
 
         // assert
         Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(indexFile);
-        assertThat(referenceProvenance.keySet().size()).isEqualTo(18929);
+        assertThat(referenceProvenance.keySet().size()).isEqualTo(17790);
         referenceProvenance.forEach((key, value) ->
                 assertThat(value.stream().findAny().get().algorithm()).isEqualTo("MD5"));
     }
@@ -61,6 +62,26 @@ class SupplyChainIndexerTest {
 
         // assert
         Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(indexFile);
-        assertThat(referenceProvenance.keySet().size()).isEqualTo(1273);
+        assertThat(referenceProvenance.keySet().size()).isEqualTo(1269);
+
+        for (var referenceProvenanceEntry : referenceProvenance.entrySet()) {
+            if (referenceProvenanceEntry.getKey().equals("org/apache/logging/log4j/util/StackLocator")) {
+                assertThat(referenceProvenanceEntry.getValue()).size().isEqualTo(2);
+                assertThat(referenceProvenanceEntry.getValue().stream()
+                                .map(ClassFileAttributes::classfileVersion)
+                                .collect(Collectors.toSet()))
+                        .contains("52.0", "53.0");
+            }
+            // log4j-core has two versions of SystemClock
+            // one as is and one in META-INF/versions/9/org/apache/logging/log4j/core/util/SystemClock
+            // Even though they are kept in different directories, they have the same classfile version
+            if (referenceProvenanceEntry.getKey().equals("org/apache/logging/log4j/core/util/SystemClock")) {
+                assertThat(referenceProvenanceEntry.getValue()).size().isEqualTo(2);
+                assertThat(referenceProvenanceEntry.getValue().stream()
+                                .map(ClassFileAttributes::classfileVersion)
+                                .collect(Collectors.toSet()))
+                        .contains("52.0");
+            }
+        }
     }
 }
