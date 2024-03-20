@@ -32,9 +32,7 @@ public class Terminator {
 
     private static byte[] isLoadedClassWhitelisted(String className, byte[] classfileBuffer) {
         Map<String, Set<ClassFileAttributes>> fingerprints = options.getSbom();
-        if (RuntimeClass.isProxyClass(classfileBuffer)
-                || RuntimeClass.isGeneratedClassExtendingMagicAccessor(classfileBuffer)
-                || RuntimeClass.isBoundMethodHandle(classfileBuffer)) {
+        if (RuntimeClass.isProxyClass(classfileBuffer) || RuntimeClass.isBoundMethodHandle(classfileBuffer)) {
             return classfileBuffer;
         }
         for (String expectedClassName : fingerprints.keySet()) {
