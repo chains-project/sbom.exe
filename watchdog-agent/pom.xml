@@ -57,10 +57,6 @@
           </transformers>
           <relocations>
             <relocation>
-              <pattern>net.bytebuddy</pattern>
-              <shadedPattern>rtf.net.bytebuddy</shadedPattern>
-            </relocation>
-            <relocation>
               <pattern>org.objectweb.asm</pattern>
               <shadedPattern>rtf.org.objectweb.asm</shadedPattern>
             </relocation>
