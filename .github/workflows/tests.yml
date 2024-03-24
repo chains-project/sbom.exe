@@ -14,6 +14,9 @@ jobs:
         os: [ ubuntu-latest]
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
       - name: Setup JDK${{ matrix.java-version }}
         uses: actions/setup-java@v4
         with:
