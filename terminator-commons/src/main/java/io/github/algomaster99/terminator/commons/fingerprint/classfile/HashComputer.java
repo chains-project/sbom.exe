@@ -11,7 +11,7 @@ public class HashComputer {
 
     public static String computeHash(byte[] bytes, String algorithm) throws NoSuchAlgorithmException {
         ClassReader reader = new ClassReader(bytes);
-        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         reader.accept(writer, 0);
 
         // apparently, ASM is not preserving the order of the constant pool table
