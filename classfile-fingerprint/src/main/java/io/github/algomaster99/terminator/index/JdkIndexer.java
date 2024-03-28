@@ -5,7 +5,6 @@ import io.github.algomaster99.terminator.commons.fingerprint.JdkClassFinder;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassfileVersion;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
-import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +28,7 @@ public class JdkIndexer extends BaseIndexer implements Callable<Integer> {
         List<JdkClass> jdkClasses = JdkClassFinder.listJdkClasses();
         jdkClasses.forEach(resource -> {
             try {
-                byte[] classfileBytes = getBytesFromBuffer(resource.bytes());
+                byte[] classfileBytes = resource.bytes();
                 String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
                 String hash = HashComputer.computeHash(classfileBytes, algorithm);
                 referenceProvenance.computeIfAbsent(
@@ -43,20 +42,5 @@ public class JdkIndexer extends BaseIndexer implements Callable<Integer> {
             }
         });
         return referenceProvenance;
-    }
-
-    /**
-     * Converts a bytebuffer to a byte array. If the buffer has an array, it returns it, otherwise it copies the bytes. This is needed because the buffer is not guaranteed to have an array.
-     * See {@link java.nio.ByteBuffer#hasArray()} and {link java.nio.DirectByteBuffer}.
-     * @param buffer  the buffer to convert
-     * @return  the byte array
-     */
-    private static byte[] getBytesFromBuffer(ByteBuffer buffer) {
-        if (buffer.hasArray()) {
-            return buffer.array();
-        }
-        byte[] bytes = new byte[buffer.remaining()];
-        buffer.get(bytes);
-        return bytes;
     }
 }
