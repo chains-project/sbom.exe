@@ -1,6 +1,7 @@
 package io.github.algomaster99.terminator.index;
 
 import io.github.algomaster99.terminator.commons.fingerprint.JdkClass;
+import io.github.algomaster99.terminator.commons.fingerprint.JdkClassFinder;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassfileVersion;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
@@ -25,7 +26,7 @@ public class JdkIndexer extends BaseIndexer implements Callable<Integer> {
 
     Map<String, Set<ClassFileAttributes>> createOrMergeProvenances(
             Map<String, Set<ClassFileAttributes>> referenceProvenance) {
-        List<JdkClass> jdkClasses = io.github.algomaster99.terminator.commons.fingerprint.JdkIndexer.listJdkClasses();
+        List<JdkClass> jdkClasses = JdkClassFinder.listJdkClasses();
         jdkClasses.forEach(resource -> {
             try {
                 byte[] classfileBytes = getBytesFromBuffer(resource.bytes());
@@ -46,7 +47,7 @@ public class JdkIndexer extends BaseIndexer implements Callable<Integer> {
 
     /**
      * Converts a bytebuffer to a byte array. If the buffer has an array, it returns it, otherwise it copies the bytes. This is needed because the buffer is not guaranteed to have an array.
-     * See {@link java.nio.ByteBuffer#hasArray()} and {@link java.nio.DirectByteBuffer}.
+     * See {@link java.nio.ByteBuffer#hasArray()} and {link java.nio.DirectByteBuffer}.
      * @param buffer  the buffer to convert
      * @return  the byte array
      */
