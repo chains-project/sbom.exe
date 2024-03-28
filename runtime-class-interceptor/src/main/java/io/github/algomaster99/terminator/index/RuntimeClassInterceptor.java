@@ -8,7 +8,6 @@ import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptor
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
-import java.security.NoSuchAlgorithmException;
 import java.security.ProtectionDomain;
 import java.util.Map;
 import java.util.Set;
@@ -42,19 +41,13 @@ public class RuntimeClassInterceptor {
     }
 
     private static byte[] recordClass(String className, byte[] classfileBuffer) {
-        try {
-            Set<ClassFileAttributes> candidates = exhaustiveListOfClasses.get(className);
-            String classFileVersion = ClassfileVersion.getVersion(classfileBuffer);
-            String hash = HashComputer.computeHash(classfileBuffer, "SHA-256");
-            if (candidates == null) {
-                exhaustiveListOfClasses.put(
-                        className, Set.of(new ClassFileAttributes(classFileVersion, hash, "SHA-256")));
-            } else {
-                candidates.add(new ClassFileAttributes(classFileVersion, hash, "SHA-256"));
-            }
-        } catch (NoSuchAlgorithmException e) {
-            LOGGER.error("No such algorithm: " + e.getMessage());
-            System.exit(1);
+        Set<ClassFileAttributes> candidates = exhaustiveListOfClasses.get(className);
+        String classFileVersion = ClassfileVersion.getVersion(classfileBuffer);
+        String hash = HashComputer.computeHash(classfileBuffer);
+        if (candidates == null) {
+            exhaustiveListOfClasses.put(className, Set.of(new ClassFileAttributes(classFileVersion, hash, "SHA-256")));
+        } else {
+            candidates.add(new ClassFileAttributes(classFileVersion, hash, "SHA-256"));
         }
         return classfileBuffer;
     }

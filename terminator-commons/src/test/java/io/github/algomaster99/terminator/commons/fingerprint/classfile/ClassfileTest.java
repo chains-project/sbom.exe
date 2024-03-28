@@ -7,7 +7,6 @@ import io.github.algomaster99.terminator.commons.fingerprint.JdkClassFinder;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -75,11 +74,7 @@ public class ClassfileTest {
 
         jdkClasses.stream().forEach(jdkClass -> {
             String expectedHash = null;
-            try {
-                expectedHash = HashComputer.computeHash(jdkClass.bytes(), "SHA-256");
-            } catch (NoSuchAlgorithmException e) {
-                throw new RuntimeException(e);
-            }
+            expectedHash = HashComputer.computeHash(jdkClass.bytes());
 
             ClassReader reader = new ClassReader(jdkClass.bytes());
             ClassWriter writer = new ClassWriter(reader, 0);
@@ -87,11 +82,7 @@ public class ClassfileTest {
 
             byte[] modifiedBytesButShouldNotHaveBeen = writer.toByteArray();
             String actualHash = null;
-            try {
-                actualHash = HashComputer.computeHash(modifiedBytesButShouldNotHaveBeen, "SHA-256");
-            } catch (NoSuchAlgorithmException e) {
-                throw new RuntimeException(e);
-            }
+            actualHash = HashComputer.computeHash(modifiedBytesButShouldNotHaveBeen);
 
             assertThat(actualHash).isEqualTo(expectedHash);
         });
