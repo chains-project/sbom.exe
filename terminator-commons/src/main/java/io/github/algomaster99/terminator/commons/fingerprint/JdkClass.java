@@ -22,8 +22,8 @@ public final class JdkClass {
         return name;
     }
 
-    public ByteBuffer bytes() {
-        return bytes;
+    public byte[] bytes() {
+        return getBytesFromBuffer(bytes);
     }
 
     @Override
@@ -42,5 +42,20 @@ public final class JdkClass {
     @Override
     public String toString() {
         return "JdkClass[" + "name=" + name + ", " + "bytes=" + bytes + ']';
+    }
+
+    /**
+     * Converts a bytebuffer to a byte array. If the buffer has an array, it returns it, otherwise it copies the bytes. This is needed because the buffer is not guaranteed to have an array.
+     * See {@link java.nio.ByteBuffer#hasArray()} and {link java.nio.DirectByteBuffer}.
+     * @param buffer  the buffer to convert
+     * @return  the byte array
+     */
+    private static byte[] getBytesFromBuffer(ByteBuffer buffer) {
+        if (buffer.hasArray()) {
+            return buffer.array();
+        }
+        byte[] bytes = new byte[buffer.remaining()];
+        buffer.get(bytes);
+        return bytes;
     }
 }

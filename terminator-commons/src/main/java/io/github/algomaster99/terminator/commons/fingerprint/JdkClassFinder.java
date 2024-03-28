@@ -12,9 +12,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * The JdkIndexer class provides a utility to list all JDK classes by scanning the JDK used for the execution of the application.
+ * The class provides a utility to list all JDK classes by scanning the JDK used for the execution of the application.
  */
-public class JdkIndexer {
+public class JdkClassFinder {
 
     /**
      * Returns a list of all JDK classes. The list is populated by scanning the JDK used for the execution of this application.

@@ -11,11 +11,9 @@ public class HashComputer {
 
     public static String computeHash(byte[] bytes, String algorithm) throws NoSuchAlgorithmException {
         ClassReader reader = new ClassReader(bytes);
-        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        ClassWriter writer = new ClassWriter(reader, 0);
         reader.accept(writer, 0);
 
-        // apparently, ASM is not preserving the order of the constant pool table
-        // see: https://stackoverflow.com/questions/78221149/asm-does-not-preserve-order-in-the-constant-pool-table
         byte[] modifiedBytesButShouldNotHaveBeen = writer.toByteArray();
 
         byte[] algorithmSum = MessageDigest.getInstance(algorithm).digest(modifiedBytesButShouldNotHaveBeen);
