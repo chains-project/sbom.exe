@@ -5,7 +5,6 @@ import io.github.algomaster99.terminator.commons.fingerprint.JdkClassFinder;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassfileVersion;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -27,19 +26,12 @@ public class JdkIndexer extends BaseIndexer implements Callable<Integer> {
             Map<String, Set<ClassFileAttributes>> referenceProvenance) {
         List<JdkClass> jdkClasses = JdkClassFinder.listJdkClasses();
         jdkClasses.forEach(resource -> {
-            try {
-                byte[] classfileBytes = resource.bytes();
-                String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
-                String hash = HashComputer.computeHash(classfileBytes, algorithm);
-                referenceProvenance.computeIfAbsent(
-                        resource.name(),
-                        k -> new HashSet<>(Set.of(new ClassFileAttributes(classfileVersion, hash, algorithm))));
-            } catch (NoSuchAlgorithmException e) {
-                LOGGER.error("Failed to compute hash with algorithm: " + algorithm, e);
-                throw new RuntimeException(e);
-            } catch (Exception e) {
-                LOGGER.error("Failed to compute hash for: " + resource, e);
-            }
+            byte[] classfileBytes = resource.bytes();
+            String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
+            String hash = HashComputer.computeHash(classfileBytes);
+            referenceProvenance.computeIfAbsent(
+                    resource.name(),
+                    k -> new HashSet<>(Set.of(new ClassFileAttributes(classfileVersion, hash, algorithm))));
         });
         return referenceProvenance;
     }

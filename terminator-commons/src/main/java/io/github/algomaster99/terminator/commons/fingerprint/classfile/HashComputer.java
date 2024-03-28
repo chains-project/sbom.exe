@@ -9,14 +9,19 @@ import org.objectweb.asm.ClassWriter;
 public class HashComputer {
     private HashComputer() {}
 
-    public static String computeHash(byte[] bytes, String algorithm) throws NoSuchAlgorithmException {
+    public static String computeHash(byte[] bytes) {
         ClassReader reader = new ClassReader(bytes);
         ClassWriter writer = new ClassWriter(reader, 0);
         reader.accept(writer, 0);
 
         byte[] modifiedBytesButShouldNotHaveBeen = writer.toByteArray();
 
-        byte[] algorithmSum = MessageDigest.getInstance(algorithm).digest(modifiedBytesButShouldNotHaveBeen);
+        byte[] algorithmSum;
+        try {
+            algorithmSum = MessageDigest.getInstance("SHA-256").digest(modifiedBytesButShouldNotHaveBeen);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
         return toHexString(algorithmSum);
     }
 

@@ -6,7 +6,6 @@ import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFile
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassfileVersion;
 import java.io.File;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Map;
@@ -41,7 +40,7 @@ public class JarScanner {
 
                     byte[] classfileBytes = jarFile.getInputStream(jarEntry).readAllBytes();
                     String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
-                    String hashOfClass = computeHash(classfileBytes, algorithm);
+                    String hashOfClass = computeHash(classfileBytes);
 
                     ClassFileAttributes classFileAttributes =
                             new ClassFileAttributes(classfileVersion, hashOfClass, algorithm);
@@ -58,8 +57,6 @@ public class JarScanner {
             }
         } catch (IOException e) {
             LOGGER.error("Could not open JAR file: " + artifactFileOnSystem);
-            throw new RuntimeException(e);
-        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }

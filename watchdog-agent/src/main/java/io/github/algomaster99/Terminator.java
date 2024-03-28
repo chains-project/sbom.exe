@@ -6,7 +6,6 @@ import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFile
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.RuntimeClass;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
-import java.security.NoSuchAlgorithmException;
 import java.security.ProtectionDomain;
 import java.util.Map;
 import java.util.Set;
@@ -39,14 +38,7 @@ public class Terminator {
             if (expectedClassName.equals(className)) {
                 Set<ClassFileAttributes> candidates = fingerprints.get(expectedClassName);
                 for (ClassFileAttributes candidate : candidates) {
-                    String hash;
-                    try {
-                        hash = computeHash(classfileBuffer, candidate.algorithm());
-                    } catch (NoSuchAlgorithmException e) {
-                        System.err.println("No such algorithm: " + e.getMessage());
-                        System.exit(1);
-                        return null;
-                    }
+                    String hash = computeHash(classfileBuffer);
                     if (hash.equals(candidate.hash())) {
                         return classfileBuffer;
                     }
