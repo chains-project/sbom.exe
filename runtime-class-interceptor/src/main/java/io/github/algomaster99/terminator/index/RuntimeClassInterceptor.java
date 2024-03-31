@@ -21,9 +21,7 @@ public class RuntimeClassInterceptor {
     public static void premain(String agentArgs, Instrumentation inst) {
         RuntimeClassInterceptorOptions options = new RuntimeClassInterceptorOptions(agentArgs);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            synchronized (exhaustiveListOfClasses) {
-                ParsingHelper.serialiseFingerprints(exhaustiveListOfClasses.build(), options.getOutput());
-            }
+            ParsingHelper.serialiseFingerprints(exhaustiveListOfClasses.build(), options.getOutput());
         }));
         inst.addTransformer(
                 new ClassFileTransformer() {
@@ -42,7 +40,7 @@ public class RuntimeClassInterceptor {
                 false);
     }
 
-    private static byte[] recordClass(String className, byte[] classfileBuffer) {
+    private static synchronized byte[] recordClass(String className, byte[] classfileBuffer) {
         Optional<ClassFile> classFileCanidate = BomiUtility.isClassFilePresent(exhaustiveListOfClasses, className);
         String classFileVersion = ClassfileVersion.getVersion(classfileBuffer);
         String hash = HashComputer.computeHash(classfileBuffer);
