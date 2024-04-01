@@ -3,9 +3,12 @@ package io.github.algomaster99.terminator.index;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.algomaster99.terminator.commons.fingerprint.protobuf.Bomi;
+import io.github.algomaster99.terminator.commons.fingerprint.protobuf.BomiUtility;
+import io.github.algomaster99.terminator.commons.fingerprint.protobuf.ClassFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -40,6 +43,30 @@ public class RuntimeIndexerTest {
         // This ensures that the project compiles
         assertThat(Bomi.parseFrom(first).getClassFileCount())
                 .isGreaterThan(Bomi.parseFrom(jdkIndex).getClassFileCount());
+
+        int expected = Bomi.parseFrom(first).getClassFileCount();
+        int actual = Bomi.parseFrom(second).getClassFileCount();
+
+        if (expected > actual) {
+            for (ClassFile classFile : Bomi.parseFrom(first).getClassFileList()) {
+                Optional<ClassFile> classFileOptional =
+                        BomiUtility.isClassFilePresent(Bomi.parseFrom(second).toBuilder(), classFile.getClassName());
+                if (classFileOptional.isEmpty()) {
+                    System.out.println("Class not found: " + classFile.getClassName());
+                    break;
+                }
+            }
+        } else {
+            for (ClassFile classFile : Bomi.parseFrom(second).getClassFileList()) {
+                Optional<ClassFile> classFileOptional =
+                        BomiUtility.isClassFilePresent(Bomi.parseFrom(first).toBuilder(), classFile.getClassName());
+                if (classFileOptional.isEmpty()) {
+                    System.out.println("Class not found: " + classFile.getClassName());
+                    break;
+                }
+            }
+        }
+
         assertThat(Bomi.parseFrom(first).getClassFileCount())
                 .isEqualTo(Bomi.parseFrom(second).getClassFileCount());
         assertThat(first).isEqualTo(second);
