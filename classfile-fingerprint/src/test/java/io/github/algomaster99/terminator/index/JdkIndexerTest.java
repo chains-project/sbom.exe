@@ -35,7 +35,7 @@ class JdkIndexerTest {
     @Test
     void jdk21_0_2_indexShouldBeReproducible_temurin(@TempDir Path tempDir) throws IOException {
         // arrange
-        Path actualIndex = tempDir.resolve("jdk.bomi");
+        Path actualIndex = tempDir.resolve("jdk.jsonl");
         Path expectedIndex = Path.of("src", "test", "resources", "jdk-index", "21.0.2-tem.bomi");
 
         // act
@@ -57,7 +57,7 @@ class JdkIndexerTest {
     @Test
     void jdk17_0_10_indexShouldBeReproducibleAcrossMultiple_implementations(@TempDir Path tempDir) throws IOException {
         // arrange
-        Path actualIndex = tempDir.resolve("jdk.bomi");
+        Path actualIndex = tempDir.resolve("jdk.jsonl");
         Path expectedIndex = Path.of("src", "test", "resources", "jdk-index", "17.0.10-tem.bomi");
 
         // act
