@@ -1,7 +1,7 @@
 package io.github.algomaster99.terminator.index;
 
 import io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper;
-import io.github.algomaster99.terminator.commons.fingerprint.protobuf.Bomi;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.maven.MavenModule;
 import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptorOptions;
 import io.github.algomaster99.terminator.preprocess.PomTransformer;
@@ -13,7 +13,10 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
@@ -66,13 +69,13 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
 
             if (indexFile.output != null) {
                 String suffix = module.getSelf().getArtifactId();
-                Path output = Path.of(indexFile.output.toString() + "_" + suffix + ".bomi");
+                Path output = Path.of(indexFile.output.toString() + "_" + suffix + ".jsonl");
                 options.setOutput(output);
                 candidateIndexForMerge.add(output);
             }
             if (indexFile.input != null) {
                 String prefix = module.getSelf().getArtifactId();
-                Path temporaryFile = Files.createTempFile(prefix, ".bomi");
+                Path temporaryFile = Files.createTempFile(prefix, ".jsonl");
                 options.setOutput(temporaryFile);
                 candidateIndexForMerge.add(temporaryFile);
             }
@@ -88,29 +91,56 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
         Invoker invoker = new DefaultInvoker();
         invoker.execute(request);
 
-        final Bomi.Builder bomiBuilder = Bomi.newBuilder();
+        final Map<String, Set<ClassFileAttributes>> referenceProvenance = new HashMap<>();
 
         for (Path index : candidateIndexForMerge) {
-            Bomi generatedReferenceProvenance = ParsingHelper.deserializeFingerprints(index);
-            bomiBuilder.mergeFrom(generatedReferenceProvenance);
-            createOrMergeBomi(bomiBuilder);
+            Map<String, Set<ClassFileAttributes>> generatedReferenceProvenance =
+                    ParsingHelper.deserializeFingerprints(index);
+            Map<String, Set<ClassFileAttributes>> updatedReferenceProvenance =
+                    createOrMergeProvenances(generatedReferenceProvenance);
+            referenceProvenance.putAll(updatedReferenceProvenance);
         }
 
         if (indexFile.input != null) {
-            ParsingHelper.serialiseFingerprints(bomiBuilder.build(), indexFile.input.toPath());
+            ParsingHelper.serialiseFingerprints(referenceProvenance, indexFile.input.toPath());
         } else if (indexFile.output != null) {
-            ParsingHelper.serialiseFingerprints(bomiBuilder.build(), indexFile.output.toPath());
+            ParsingHelper.serialiseFingerprints(referenceProvenance, indexFile.output.toPath());
         }
 
         return 0;
     }
 
     @Override
-    void createOrMergeBomi(Bomi.Builder bomiBuilder) {
+    Map<String, Set<ClassFileAttributes>> createOrMergeProvenances(
+            Map<String, Set<ClassFileAttributes>> referenceProvenance) {
         if (indexFile.input != null) {
-            Bomi currentBomi = ParsingHelper.deserializeFingerprints(indexFile.input.toPath());
-            bomiBuilder.mergeFrom(currentBomi);
+            Map<String, Set<ClassFileAttributes>> currentReferenceProvenance =
+                    ParsingHelper.deserializeFingerprints(indexFile.input.toPath());
+
+            referenceProvenance.forEach((k, v) -> {
+                if (!currentReferenceProvenance.containsKey(k)) {
+                    currentReferenceProvenance.put(k, v);
+                }
+            });
+            return currentReferenceProvenance;
         }
+        if (indexFile.output != null) {
+            Map<String, Set<ClassFileAttributes>> currentReferenceProvenance;
+            if (indexFile.output.toPath().toFile().exists()) {
+                currentReferenceProvenance = ParsingHelper.deserializeFingerprints(indexFile.output.toPath());
+            } else {
+                currentReferenceProvenance = new HashMap<>();
+            }
+            referenceProvenance.forEach((k, v) -> {
+                if (currentReferenceProvenance.containsKey(k)) {
+                    currentReferenceProvenance.get(k).addAll(v);
+                } else {
+                    currentReferenceProvenance.put(k, v);
+                }
+            });
+            return currentReferenceProvenance;
+        }
+        throw new IllegalArgumentException("Either --input or --output must be specified");
     }
 
     private static Path createCopyOfProject(Path project) {

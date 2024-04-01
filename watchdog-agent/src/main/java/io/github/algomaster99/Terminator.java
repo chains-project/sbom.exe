@@ -2,12 +2,13 @@ package io.github.algomaster99;
 
 import static io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer.computeHash;
 
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.RuntimeClass;
-import io.github.algomaster99.terminator.commons.fingerprint.protobuf.Bomi;
-import io.github.algomaster99.terminator.commons.fingerprint.protobuf.ClassFile;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
+import java.util.Map;
+import java.util.Set;
 
 public class Terminator {
     private static Options options;
@@ -29,15 +30,16 @@ public class Terminator {
     }
 
     private static byte[] isLoadedClassAllowlisted(String className, byte[] classfileBuffer) {
-        Bomi fingerprints = options.getSbom();
+        Map<String, Set<ClassFileAttributes>> fingerprints = options.getSbom();
         if (RuntimeClass.isProxyClass(classfileBuffer) || RuntimeClass.isBoundMethodHandle(classfileBuffer)) {
             return classfileBuffer;
         }
-        for (ClassFile classFile : fingerprints.getClassFileList()) {
-            if (classFile.getClassName().equals(className)) {
-                String hash = computeHash(classfileBuffer);
-                for (ClassFile.Attribute attribute : classFile.getAttributeList()) {
-                    if (hash.equals(attribute.getHash())) {
+        for (String expectedClassName : fingerprints.keySet()) {
+            if (expectedClassName.equals(className)) {
+                Set<ClassFileAttributes> candidates = fingerprints.get(expectedClassName);
+                for (ClassFileAttributes candidate : candidates) {
+                    String hash = computeHash(classfileBuffer);
+                    if (hash.equals(candidate.hash())) {
                         return classfileBuffer;
                     }
                 }

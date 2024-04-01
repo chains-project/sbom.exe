@@ -2,15 +2,17 @@ package io.github.algomaster99;
 
 import static io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper.deserializeFingerprints;
 
-import io.github.algomaster99.terminator.commons.fingerprint.protobuf.Bomi;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import java.nio.file.Path;
+import java.util.Map;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Options {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Options.class);
-    private Bomi sbom;
+    private Map<String, Set<ClassFileAttributes>> sbom;
     private boolean skipShutdown = false;
 
     public Options(String agentArgs) {
@@ -36,7 +38,7 @@ public class Options {
         }
     }
 
-    public Bomi getSbom() {
+    public Map<String, Set<ClassFileAttributes>> getSbom() {
         return sbom;
     }
 
