@@ -56,7 +56,7 @@ public class RuntimeIndexerTest {
                     break;
                 }
             }
-        } else {
+        } else if (expected < actual) {
             for (ClassFile classFile : Bomi.parseFrom(second).getClassFileList()) {
                 Optional<ClassFile> classFileOptional =
                         BomiUtility.isClassFilePresent(Bomi.parseFrom(first).toBuilder(), classFile.getClassName());
@@ -67,8 +67,7 @@ public class RuntimeIndexerTest {
             }
         }
 
-        assertThat(Bomi.parseFrom(first).getClassFileCount())
-                .isEqualTo(Bomi.parseFrom(second).getClassFileCount());
+        assertThat(actual).isEqualTo(expected);
         assertThat(first).isEqualTo(second);
     }
 }
