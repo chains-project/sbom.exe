@@ -4,24 +4,44 @@ import io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassfileVersion;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
 import io.github.algomaster99.terminator.commons.fingerprint.protobuf.Bomi;
-import io.github.algomaster99.terminator.commons.fingerprint.protobuf.BomiUtility;
 import io.github.algomaster99.terminator.commons.fingerprint.protobuf.ClassFile;
 import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptorOptions;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
-import java.util.Optional;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RuntimeClassInterceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(RuntimeClassInterceptor.class);
-    private static final Bomi.Builder exhaustiveListOfClasses = Bomi.newBuilder();
+
+    // we do not directly use the protobuf builder here because it is not thread-safe
+    private static final Map<String, Set<ClassFileAttribute>> exhaustiveListOfClasses = new ConcurrentHashMap<>();
 
     public static void premain(String agentArgs, Instrumentation inst) {
         RuntimeClassInterceptorOptions options = new RuntimeClassInterceptorOptions(agentArgs);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            ParsingHelper.serialiseFingerprints(exhaustiveListOfClasses.build(), options.getOutput());
+            Bomi.Builder bomiBuilder = Bomi.newBuilder();
+
+            for (var entry : exhaustiveListOfClasses.entrySet()) {
+                ClassFile.Builder classFileBuilder = ClassFile.newBuilder();
+                classFileBuilder.setClassName(entry.getKey());
+
+                for (var classFileAttribute : entry.getValue()) {
+                    ClassFile.Attribute.Builder attributeBuilder = ClassFile.Attribute.newBuilder();
+
+                    classFileBuilder.addAttribute(attributeBuilder
+                            .setVersion(classFileAttribute.version)
+                            .setHash(classFileAttribute.hash)
+                            .build());
+                }
+                bomiBuilder.addClassFile(classFileBuilder.build());
+            }
+            ParsingHelper.serialiseFingerprints(bomiBuilder.build(), options.getOutput());
         }));
         inst.addTransformer(
                 new ClassFileTransformer() {
@@ -41,41 +61,44 @@ public class RuntimeClassInterceptor {
     }
 
     private static synchronized byte[] recordClass(String className, byte[] classfileBuffer) {
-        Optional<ClassFile> classFileCanidate = BomiUtility.isClassFilePresent(exhaustiveListOfClasses, className);
+        Set<ClassFileAttribute> candidates = exhaustiveListOfClasses.get(className);
         String classFileVersion = ClassfileVersion.getVersion(classfileBuffer);
         String hash = HashComputer.computeHash(classfileBuffer);
 
-        if (classFileCanidate.isPresent()) {
-            ClassFile classFile = classFileCanidate.get();
+        if (candidates == null) {
+            exhaustiveListOfClasses.put(className, Set.of(new ClassFileAttribute(classFileVersion, hash)));
 
-            if (BomiUtility.isHashSame(classFile, hash)) {
-                return classfileBuffer;
-            }
-
-            int indexOfClassFile = exhaustiveListOfClasses.getClassFileList().indexOf(classFile);
-
-            ClassFile.Builder classFileBuilder = ClassFile.newBuilder();
-            classFileBuilder.mergeFrom(classFile);
-
-            classFileBuilder.addAttribute(ClassFile.Attribute.newBuilder()
-                    .setVersion(classFileVersion)
-                    .setHash(hash)
-                    .build());
-
-            exhaustiveListOfClasses.removeClassFile(indexOfClassFile);
-            exhaustiveListOfClasses.addClassFile(indexOfClassFile, classFileBuilder.build());
         } else {
-            ClassFile.Builder classFileBuilder = ClassFile.newBuilder();
-            classFileBuilder
-                    .setClassName(className)
-                    .addAttribute(ClassFile.Attribute.newBuilder()
-                            .setVersion(classFileVersion)
-                            .setHash(hash)
-                            .build());
-
-            exhaustiveListOfClasses.addClassFile(classFileBuilder.build());
+            candidates.add(new ClassFileAttribute(classFileVersion, hash));
         }
 
         return classfileBuffer;
+    }
+
+    private static class ClassFileAttribute {
+        private final String version;
+        private final String hash;
+
+        public ClassFileAttribute(String version, String hash) {
+            this.version = version;
+            this.hash = hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null || getClass() != obj.getClass()) {
+                return false;
+            }
+            ClassFileAttribute that = (ClassFileAttribute) obj;
+            return Objects.equals(version, that.version) && Objects.equals(hash, that.hash);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(version, hash);
+        }
     }
 }
