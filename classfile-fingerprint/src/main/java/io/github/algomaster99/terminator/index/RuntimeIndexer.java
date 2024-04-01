@@ -66,13 +66,13 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
 
             if (indexFile.output != null) {
                 String suffix = module.getSelf().getArtifactId();
-                Path output = Path.of(indexFile.output.toString() + "_" + suffix + ".jsonl");
+                Path output = Path.of(indexFile.output.toString() + "_" + suffix + ".bomi");
                 options.setOutput(output);
                 candidateIndexForMerge.add(output);
             }
             if (indexFile.input != null) {
                 String prefix = module.getSelf().getArtifactId();
-                Path temporaryFile = Files.createTempFile(prefix, ".jsonl");
+                Path temporaryFile = Files.createTempFile(prefix, ".bomi");
                 options.setOutput(temporaryFile);
                 candidateIndexForMerge.add(temporaryFile);
             }
