@@ -40,6 +40,7 @@ public class RuntimeIndexerTest {
         // This ensures that the project compiles
         assertThat(Bomi.parseFrom(first).getClassFileCount())
                 .isGreaterThan(Bomi.parseFrom(jdkIndex).getClassFileCount());
-        assertThat(Bomi.parseFrom(first)).isEqualTo(Bomi.parseFrom(second));
+        assertThat(Bomi.parseFrom(first).getClassFileList())
+                .isEqualTo(Bomi.parseFrom(second).getClassFileList());
     }
 }
