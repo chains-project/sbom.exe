@@ -1,8 +1,11 @@
 package io.github.algomaster99.terminator.index;
 
 import io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper;
-import io.github.algomaster99.terminator.commons.fingerprint.protobuf.Bomi;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import picocli.CommandLine;
 
@@ -37,21 +40,22 @@ public abstract class BaseIndexer implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
         if (indexFile.input != null) {
-            Bomi.Builder bomi = Bomi.newBuilder();
-            Bomi currentBomi = ParsingHelper.deserializeFingerprints(indexFile.input.toPath());
-            bomi.mergeFrom(currentBomi);
-            createOrMergeBomi(bomi);
-            ParsingHelper.serialiseFingerprints(bomi.build(), indexFile.input.toPath());
+            Map<String, Set<ClassFileAttributes>> currentReferenceProvenance =
+                    ParsingHelper.deserializeFingerprints(indexFile.input.toPath());
+            Map<String, Set<ClassFileAttributes>> updatedReferenceProvenance =
+                    createOrMergeProvenances(currentReferenceProvenance);
+            ParsingHelper.serialiseFingerprints(updatedReferenceProvenance, indexFile.input.toPath());
             return 0;
         }
         if (indexFile.output != null) {
-            Bomi.Builder bomi = Bomi.newBuilder();
-            createOrMergeBomi(bomi);
-            ParsingHelper.serialiseFingerprints(bomi.build(), indexFile.output.toPath());
+            Map<String, Set<ClassFileAttributes>> updatedReferenceProvenance =
+                    createOrMergeProvenances(new HashMap<>());
+            ParsingHelper.serialiseFingerprints(updatedReferenceProvenance, indexFile.output.toPath());
             return 0;
         }
         throw new IllegalArgumentException("Either --input or --output must be specified");
     }
 
-    abstract void createOrMergeBomi(Bomi.Builder bomiBuilder);
+    abstract Map<String, Set<ClassFileAttributes>> createOrMergeProvenances(
+            Map<String, Set<ClassFileAttributes>> referenceProvenance);
 }
