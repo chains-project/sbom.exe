@@ -60,7 +60,7 @@ public class RuntimeClassInterceptor {
                 false);
     }
 
-    private static synchronized byte[] recordClass(String className, byte[] classfileBuffer) {
+    private static byte[] recordClass(String className, byte[] classfileBuffer) {
         Set<ClassFileAttribute> candidates = exhaustiveListOfClasses.get(className);
         String classFileVersion = ClassfileVersion.getVersion(classfileBuffer);
         String hash = HashComputer.computeHash(classfileBuffer);
