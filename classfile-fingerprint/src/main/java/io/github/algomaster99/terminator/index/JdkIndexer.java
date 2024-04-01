@@ -2,13 +2,13 @@ package io.github.algomaster99.terminator.index;
 
 import io.github.algomaster99.terminator.commons.fingerprint.JdkClass;
 import io.github.algomaster99.terminator.commons.fingerprint.JdkClassFinder;
-import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassfileVersion;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
-import java.util.HashSet;
+import io.github.algomaster99.terminator.commons.fingerprint.protobuf.Bomi;
+import io.github.algomaster99.terminator.commons.fingerprint.protobuf.BomiUtility;
+import io.github.algomaster99.terminator.commons.fingerprint.protobuf.ClassFile;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,17 +22,31 @@ public class JdkIndexer extends BaseIndexer implements Callable<Integer> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JdkIndexer.class);
 
-    Map<String, Set<ClassFileAttributes>> createOrMergeProvenances(
-            Map<String, Set<ClassFileAttributes>> referenceProvenance) {
+    void createOrMergeBomi(Bomi.Builder bomiBuilder) {
         List<JdkClass> jdkClasses = JdkClassFinder.listJdkClasses();
-        jdkClasses.forEach(resource -> {
+        for (JdkClass resource : jdkClasses) {
             byte[] classfileBytes = resource.bytes();
             String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
             String hash = HashComputer.computeHash(classfileBytes);
-            referenceProvenance.computeIfAbsent(
-                    resource.name(),
-                    k -> new HashSet<>(Set.of(new ClassFileAttributes(classfileVersion, hash, algorithm))));
-        });
-        return referenceProvenance;
+            ClassFile.Builder classFile = ClassFile.newBuilder().setClassName(resource.name());
+
+            ClassFile.Attribute attribute = ClassFile.Attribute.newBuilder()
+                    .setVersion(classfileVersion)
+                    .setHash(hash)
+                    .build();
+
+            classFile.addAttribute(attribute);
+
+            Optional<ClassFile> classFileCandidate = BomiUtility.isClassFilePresent(bomiBuilder, resource.name());
+
+            if (classFileCandidate.isPresent()) {
+                // ensure that JDK does not have multiple versions of the same class
+                assert classFileCandidate.get().getAttributeList().stream()
+                        .map(ClassFile.Attribute::getHash)
+                        .allMatch(h -> h.equals(hash));
+            } else {
+                bomiBuilder.addClassFile(classFile);
+            }
+        }
     }
 }

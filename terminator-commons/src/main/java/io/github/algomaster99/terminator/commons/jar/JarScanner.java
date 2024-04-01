@@ -2,14 +2,14 @@ package io.github.algomaster99.terminator.commons.jar;
 
 import static io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer.computeHash;
 
-import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassfileVersion;
+import io.github.algomaster99.terminator.commons.fingerprint.protobuf.Bomi;
+import io.github.algomaster99.terminator.commons.fingerprint.protobuf.BomiUtility;
+import io.github.algomaster99.terminator.commons.fingerprint.protobuf.ClassFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
@@ -22,11 +22,7 @@ public class JarScanner {
 
     private JarScanner() {}
 
-    public static void goInsideJarAndUpdateFingerprints(
-            File artifactFileOnSystem,
-            Map<String, Set<ClassFileAttributes>> fingerprints,
-            String algorithm,
-            String... provenanceInformation) {
+    public static void goInsideJarAndUpdateFingerprints(File artifactFileOnSystem, Bomi.Builder bomiBuilder) {
         try (JarFile jarFile = new JarFile(artifactFileOnSystem)) {
             Enumeration<JarEntry> jarEntries = jarFile.entries();
             while (jarEntries.hasMoreElements()) {
@@ -42,16 +38,36 @@ public class JarScanner {
                     String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
                     String hashOfClass = computeHash(classfileBytes);
 
-                    ClassFileAttributes classFileAttributes =
-                            new ClassFileAttributes(classfileVersion, hashOfClass, algorithm);
+                    Optional<ClassFile> classFileCandidate =
+                            BomiUtility.isClassFilePresent(bomiBuilder, strippedJarEntryName);
 
-                    if (fingerprints.containsKey(strippedJarEntryName)) {
-                        Set<ClassFileAttributes> alreadyExistingProvenance = fingerprints.get(strippedJarEntryName);
-                        alreadyExistingProvenance.add(classFileAttributes);
+                    if (classFileCandidate.isPresent()) {
+                        ClassFile classFile = classFileCandidate.get();
+
+                        if (BomiUtility.isHashSame(classFile, hashOfClass)) {
+                            continue;
+                        }
+
+                        int indexOfClassFile = bomiBuilder.getClassFileList().indexOf(classFile);
+
+                        ClassFile.Builder classFileBuilder = ClassFile.newBuilder();
+                        classFileBuilder.mergeFrom(classFile);
+
+                        classFileBuilder.addAttribute(ClassFile.Attribute.newBuilder()
+                                .setVersion(classfileVersion)
+                                .setHash(hashOfClass)
+                                .build());
+                        bomiBuilder.removeClassFile(indexOfClassFile); // remove the old one
+                        bomiBuilder.addClassFile(indexOfClassFile, classFileBuilder.build());
                     } else {
-                        Set<ClassFileAttributes> newProvenance = new HashSet<>();
-                        newProvenance.add(classFileAttributes);
-                        fingerprints.put(strippedJarEntryName, newProvenance);
+                        ClassFile classFile = ClassFile.newBuilder()
+                                .setClassName(strippedJarEntryName)
+                                .addAttribute(ClassFile.Attribute.newBuilder()
+                                        .setVersion(classfileVersion)
+                                        .setHash(hashOfClass)
+                                        .build())
+                                .build();
+                        bomiBuilder.addClassFile(classFile);
                     }
                 }
             }

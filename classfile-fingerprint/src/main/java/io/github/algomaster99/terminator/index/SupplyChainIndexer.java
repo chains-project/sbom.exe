@@ -6,14 +6,12 @@ import io.github.algomaster99.terminator.commons.cyclonedx.Component;
 import io.github.algomaster99.terminator.commons.cyclonedx.CycloneDX;
 import io.github.algomaster99.terminator.commons.cyclonedx.CycloneDXWrapper;
 import io.github.algomaster99.terminator.commons.cyclonedx.Metadata;
-import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
+import io.github.algomaster99.terminator.commons.fingerprint.protobuf.Bomi;
 import io.github.algomaster99.terminator.commons.jar.JarDownloader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +31,7 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
     private Path sbomPath;
 
     @Override
-    Map<String, Set<ClassFileAttributes>> createOrMergeProvenances(
-            Map<String, Set<ClassFileAttributes>> referenceProvenance) {
+    void createOrMergeBomi(Bomi.Builder bomiBuilder) {
         CycloneDXWrapper sbom;
         try {
             sbom = CycloneDX.getPojo(Files.readString(sbomPath));
@@ -44,15 +41,13 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
         }
         if (sbom.getMetadata() != null) {
             LOGGER.debug("Processing root component");
-            processRootComponent(sbom, referenceProvenance);
+            processRootComponent(sbom, bomiBuilder);
         }
         LOGGER.debug("Processing all components");
-        processAllComponents(sbom, referenceProvenance);
-        return referenceProvenance;
+        processAllComponents(sbom, bomiBuilder);
     }
 
-    private void processRootComponent(
-            CycloneDXWrapper sbom, Map<String, Set<ClassFileAttributes>> referenceProvenance) {
+    private void processRootComponent(CycloneDXWrapper sbom, Bomi.Builder bomiBuilder) {
         Metadata metadata = sbom.getMetadata();
         if (metadata == null) {
             LOGGER.warn("Metadata is not present.");
@@ -70,17 +65,10 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-        goInsideJarAndUpdateFingerprints(
-                jarFile,
-                referenceProvenance,
-                algorithm,
-                rootComponent.getGroup(),
-                rootComponent.getName(),
-                rootComponent.getVersion());
+        goInsideJarAndUpdateFingerprints(jarFile, bomiBuilder);
     }
 
-    private void processAllComponents(
-            CycloneDXWrapper sbom, Map<String, Set<ClassFileAttributes>> referenceProvenance) {
+    private void processAllComponents(CycloneDXWrapper sbom, Bomi.Builder bomiBuilder) {
         for (Component component : sbom.getComponents()) {
             try {
                 File jarFile =
@@ -93,13 +81,7 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
                             component.getVersion());
                     continue;
                 }
-                goInsideJarAndUpdateFingerprints(
-                        jarFile,
-                        referenceProvenance,
-                        algorithm,
-                        component.getGroup(),
-                        component.getName(),
-                        component.getVersion());
+                goInsideJarAndUpdateFingerprints(jarFile, bomiBuilder);
             } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }

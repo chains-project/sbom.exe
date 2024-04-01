@@ -117,6 +117,11 @@
         <artifactId>commons-io</artifactId>
         <version>2.15.1</version>
       </dependency>
+      <dependency>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java</artifactId>
+        <version>4.26.1</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
