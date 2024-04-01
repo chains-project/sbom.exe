@@ -42,7 +42,6 @@ public class RuntimeIndexerTest {
                 .isGreaterThan(Bomi.parseFrom(jdkIndex).getClassFileCount());
         assertThat(Bomi.parseFrom(first).getClassFileCount())
                 .isEqualTo(Bomi.parseFrom(second).getClassFileCount());
-        assertThat(Bomi.parseFrom(first).getClassFileList())
-                .isEqualTo(Bomi.parseFrom(second).getClassFileList());
+        assertThat(first).isEqualTo(second);
     }
 }
