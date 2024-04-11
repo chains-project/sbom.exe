@@ -7,14 +7,20 @@ import io.github.algomaster99.terminator.commons.fingerprint.classfile.RuntimeCl
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class Terminator {
     private static Options options;
 
+    private static Map<String, Set<ClassFileAttributes>> fingerprints;
+
     public static void premain(String agentArgs, Instrumentation inst) {
         options = new Options(agentArgs);
+        fingerprints = options.getSbom();
+
         inst.addTransformer(new ClassFileTransformer() {
             @Override
             public byte[] transform(
@@ -30,9 +36,8 @@ public class Terminator {
     }
 
     private static byte[] isLoadedClassAllowlisted(String className, byte[] classfileBuffer) {
-        Map<String, Set<ClassFileAttributes>> fingerprints = options.getSbom();
-        if (RuntimeClass.isProxyClass(classfileBuffer) || RuntimeClass.isBoundMethodHandle(classfileBuffer)) {
-            return classfileBuffer;
+        if (RuntimeClass.isProxyClass(classfileBuffer, getAllHashes(fingerprints.values()))) {
+            return null;
         }
         for (String expectedClassName : fingerprints.keySet()) {
             if (expectedClassName.equals(className)) {
@@ -61,6 +66,16 @@ public class Terminator {
             System.exit(1);
             return null;
         }
+    }
+
+    private static Set<String> getAllHashes(Collection<Set<ClassFileAttributes>> classFileAttributesOfAllClasses) {
+        Set<String> result = new HashSet<>();
+        for (Set<ClassFileAttributes> attrOfOneClass : classFileAttributesOfAllClasses) {
+            for (ClassFileAttributes attr : attrOfOneClass) {
+                result.add(attr.hash());
+            }
+        }
+        return result;
     }
 
     private static void blueScreenOfDeath(String classViolation) {

@@ -1,5 +1,6 @@
 package io.github.algomaster99.terminator.commons.fingerprint.classfile;
 
+import io.github.algomaster99.terminator.commons.fingerprint.constant_pool.ConstantPoolParser;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Formatter;
@@ -14,11 +15,11 @@ public class HashComputer {
         ClassWriter writer = new ClassWriter(reader, 0);
         reader.accept(writer, 0);
 
-        byte[] modifiedBytesButShouldNotHaveBeen = writer.toByteArray();
+        byte[] rewrittenBytes = ConstantPoolParser.rewriteThisClass(bytes, "foo");
 
         byte[] algorithmSum;
         try {
-            algorithmSum = MessageDigest.getInstance("SHA-256").digest(modifiedBytesButShouldNotHaveBeen);
+            algorithmSum = MessageDigest.getInstance("SHA-256").digest(rewrittenBytes);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }

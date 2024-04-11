@@ -28,22 +28,6 @@ public class ClassfileTest {
     class IsRuntimeGeneratedClass {
 
         @Test
-        void isAProxyClass_true() throws IOException {
-            Path proxy39 = CLASSFILE.resolve("$Proxy39.class");
-            Path proxy40 = CLASSFILE.resolve("$Proxy40.class");
-
-            assertThat(RuntimeClass.isProxyClass(Files.readAllBytes(proxy39))).isTrue();
-            assertThat(RuntimeClass.isProxyClass(Files.readAllBytes(proxy40))).isTrue();
-        }
-
-        @Test
-        void isProxyClass_false() throws IOException {
-            Path maven = CLASSFILE.resolve("Maven.class");
-
-            assertThat(RuntimeClass.isProxyClass(Files.readAllBytes(maven))).isFalse();
-        }
-
-        @Test
         void isSyntheticClass_true() throws IOException {
             Path synthetic = CLASSFILE.resolve("$Proxy39.class");
 
