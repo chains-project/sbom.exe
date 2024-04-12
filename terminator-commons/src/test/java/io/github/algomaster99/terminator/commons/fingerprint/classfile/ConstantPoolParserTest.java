@@ -13,6 +13,19 @@ public class ConstantPoolParserTest {
     private static final Path CLASSFILE = Path.of("src/test/resources/classfile");
 
     @Test
+    void proxy7ShouldBeEqualToProxy8InBehaviour() throws IOException {
+        // arrange
+        Path proxy7 = CLASSFILE.resolve("proxy").resolve("$Proxy7Runtime.class");
+        Path proxy8 = CLASSFILE.resolve("proxy").resolve("$Proxy8Bomi.class");
+        String newName = "Bar";
+        byte[] proxy7BytesRewritten = ConstantPoolParser.rewriteAllClassInfo(Files.readAllBytes(proxy7), newName);
+        byte[] proxy8BytesRewritten = ConstantPoolParser.rewriteAllClassInfo(Files.readAllBytes(proxy8), newName);
+
+        // assert
+        assertThat(proxy7BytesRewritten).isEqualTo(proxy8BytesRewritten);
+    }
+
+    @Test
     void fooShouldBeConvertedToBar() throws IOException {
         // arrange
         Path foo = CLASSFILE.resolve("fooToBar").resolve("Foo.class");
