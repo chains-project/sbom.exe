@@ -1,3 +1,62 @@
+# 0.13.0
+## Changelog
+
+## 🚀 Features
+- bc3070a feat: add `Class_info` rewriter (#211)
+
+## 🐛 Fixes
+- 9f09b80 fix: preserve the constant pool order (#200)
+
+## 🔄️ Changes
+- 99b9a05 refactor: revert `protobuf` (#206)
+- bd1fc21 refactor: use protobuf instead of `jsonl` (#204)
+- 904d3f5 refactor: use try-catch in HashComputer to catch error (#201)
+- 79d74f1 refactor: apply a supposedly idempotent operation (#199)
+
+## 🧰 Tasks
+- 450602e chore: releasing version 0.13.0
+- df39b22 chore: remove 61 version for JdkClass.java
+- 398ba60 chore(deps): update dependency commons-io:commons-io to v2.16.1
+- d78f317 chore(deps): update dependency org.apache.maven.plugins:maven-plugin-plugin to v3.12.0
+- d33a4dd chore(deps): update dependency org.apache.maven.plugins:maven-source-plugin to v3.3.1
+- c2007ed chore(deps): update dependency io.github.classgraph:classgraph to v4.8.170
+- 334e1b0 chore(deps): update dependency commons-io:commons-io to v2.16.0
+- bbbc747 chore(deps): update dependency org.ow2.asm:asm-util to v9.7
+- 391e22a chore(deps): update dependency org.ow2.asm:asm-tree to v9.7
+- 09ef620 chore(deps): update dependency org.ow2.asm:asm to v9.7
+- 73488af chore: fix release script
+- 9898ece chore: setting SNAPSHOT version 0.12.3-SNAPSHOT
+
+## 📝 Documentation
+- 642c542 docs: update diagram
+- a795df5 docs: update diagram
+- 4694c03 docs: update diagram
+- 828c91e docs: update diagram
+- 1e2fcf4 docs: update diagram
+- 93879c1 docs: update diagram
+- 6f9cf5f docs: update diagram
+- ba71760 docs: update diagram
+- abf0486 docs: update diagram
+- c38cdcc docs: update diagram
+- 3b1619e docs: update diagram
+- 4d6ee04 docs: update diagram
+- f144928 docs: update diagram
+- e2b55d1 docs: update diagram
+- b2bf6d0 docs: update diagram
+- 920a13e docs: update diagram
+
+---
+- f715b3b Replace `jsonl` with `bomi`
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- GitHub ()
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+- renovate[bot] ([@renovate[bot]](https://github.com/apps/renovate))
+- repo-visualizer ()
+
 # 0.12.2
 ## Changelog
 
