@@ -15,7 +15,7 @@ public class HashComputer {
         ClassWriter writer = new ClassWriter(reader, 0);
         reader.accept(writer, 0);
 
-        byte[] rewrittenBytes = ConstantPoolParser.rewriteThisClass(bytes, "foo");
+        byte[] rewrittenBytes = ConstantPoolParser.rewriteAllClassInfo(bytes, "foo");
 
         byte[] algorithmSum;
         try {

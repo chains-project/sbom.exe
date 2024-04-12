@@ -65,11 +65,11 @@ public class ConstantPoolParser {
         throw new IllegalStateException("Utility class");
     }
 
-    public static byte[] rewriteThisClass(byte[] b, String newName) {
-        return parseConstantPoolClassReferences(ByteBuffer.wrap(b), newName);
+    public static byte[] rewriteAllClassInfo(byte[] b, String newName) {
+        return rewriteAllClassInfo(ByteBuffer.wrap(b), newName);
     }
 
-    private static byte[] parseConstantPoolClassReferences(ByteBuffer buf, String newName) {
+    private static byte[] rewriteAllClassInfo(ByteBuffer buf, String newName) {
         if (buf.order(ByteOrder.BIG_ENDIAN).getInt() != HEAD) {
             throw new RuntimeException("Not a valid classfile");
         }
