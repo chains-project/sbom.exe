@@ -4,7 +4,10 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * A small parser to read the constant pool directly, in case it contains references ASM does not support.
@@ -70,7 +73,7 @@ public class ConstantPoolParser {
         if (buf.order(ByteOrder.BIG_ENDIAN).getInt() != HEAD) {
             throw new RuntimeException("Not a valid classfile");
         }
-        Map<Short, Constant_Class> cpIndexToConstantClass = new HashMap<>();
+        Set<Constant_Class> cpIndexToConstantClass = new HashSet<>();
         Map<Short, Constant_Utf8> cpIndexToConstantUtf8 = new HashMap<>();
         buf.getChar();
         buf.getChar(); // minor + ver
@@ -82,7 +85,7 @@ public class ConstantPoolParser {
                     cpIndexToConstantUtf8.put((short) ix, createUtf8Entry(buf, startPosition));
                     break;
                 case CONSTANT_CLASS:
-                    cpIndexToConstantClass.put((short) ix, new Constant_Class(buf.getShort(), startPosition));
+                    cpIndexToConstantClass.add(new Constant_Class(buf.getShort(), startPosition, (short) ix));
                     break;
                 case CONSTANT_STRING:
                 case CONSTANT_METHOD_TYPE:
@@ -126,25 +129,45 @@ public class ConstantPoolParser {
             }
         }
         buf.getChar(); // access flags
-        short cpIndexOfThisClass = buf.getShort(); // this class
+        buf.getShort(); // this class
         buf.rewind();
 
-        Constant_Class thisClass = cpIndexToConstantClass.get(cpIndexOfThisClass);
-        Constant_Utf8 utf8OfThisClass = cpIndexToConstantUtf8.get(thisClass.classIndex);
+        Set<Constant_Utf8> toBeModifiedUtf8Entries = new TreeSet<>();
+        for (Constant_Class constantClass : cpIndexToConstantClass) {
+            Constant_Utf8 utf8 = cpIndexToConstantUtf8.get(constantClass.classIndex);
+            toBeModifiedUtf8Entries.add(utf8);
+        }
+
+        int sizeOfAllUtf8Entries =
+                toBeModifiedUtf8Entries.stream().mapToInt(u -> u.length).sum();
 
         int newNameByteSize = newName.getBytes(StandardCharsets.UTF_8).length;
         int oldBufferSize = buf.limit();
-        int newBufferSize = oldBufferSize - utf8OfThisClass.length + newNameByteSize;
+        int newBufferSize = oldBufferSize - sizeOfAllUtf8Entries + newNameByteSize * toBeModifiedUtf8Entries.size();
 
         ByteBuffer byteBuffer = ByteBuffer.allocate(newBufferSize);
-        byteBuffer.put(buf.array(), 0, utf8OfThisClass.startPosition);
-        byteBuffer.putShort(utf8OfThisClass.startPosition, (short) newNameByteSize);
-        byteBuffer.position(utf8OfThisClass.startPosition + newNameByteSize);
-        for (int i = 0; i < newName.getBytes().length; ++i) {
-            byteBuffer.put(i + utf8OfThisClass.startPosition + 2, newName.getBytes()[i]);
+
+        int oldBufferIndexToCopyFrom = 0;
+
+        for (Constant_Utf8 utf8Entry : toBeModifiedUtf8Entries) {
+            // copy the bytes from the old buffer to the new buffer until the start of the current utf8 entry
+            byteBuffer.put(buf.array(), oldBufferIndexToCopyFrom, utf8Entry.startPosition - oldBufferIndexToCopyFrom);
+            // write the size of the new name
+            byteBuffer.putShort(byteBuffer.position(), (short) newNameByteSize);
+            // update the position after writing the size in the new buffer
+            byteBuffer.position(byteBuffer.position() + Short.BYTES);
+
+            // write the new name
+            for (int i = 0; i < newName.getBytes().length; ++i) {
+                byteBuffer.put(i + byteBuffer.position(), newName.getBytes()[i]);
+            }
+            // update the position after writing the new name in the new buffer
+            byteBuffer.position(byteBuffer.position() + newName.getBytes().length);
+            // update the old buffer index to copy from
+            oldBufferIndexToCopyFrom = utf8Entry.getEndPosition();
         }
-        byteBuffer.position(utf8OfThisClass.startPosition + 2 + newName.getBytes().length);
-        byteBuffer.put(buf.array(), utf8OfThisClass.getEndPosition(), oldBufferSize - utf8OfThisClass.getEndPosition());
+        // copy the remaining bytes from the old buffer to the new buffer
+        byteBuffer.put(buf.array(), oldBufferIndexToCopyFrom, oldBufferSize - oldBufferIndexToCopyFrom);
 
         return byteBuffer.array();
     }

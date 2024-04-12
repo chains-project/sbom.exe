@@ -6,14 +6,17 @@ import java.util.Objects;
 
 public class Constant_Class {
     final byte tag = CONSTANT_CLASS;
-    short classIndex; // 2 bytes
+
+    short constantPoolIndex; // constant pool index of the Class_info structure
+    short classIndex; // this points to a UTF8 entry in the constant pool
 
     // extended fields
     int startPosition;
 
-    public Constant_Class(short classIndex, int startPosition) {
+    public Constant_Class(short classIndex, int startPosition, short constantPoolIndex) {
         this.classIndex = classIndex;
         this.startPosition = startPosition;
+        this.constantPoolIndex = constantPoolIndex;
     }
 
     public int getEndPosition() {
@@ -25,11 +28,19 @@ public class Constant_Class {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Constant_Class that = (Constant_Class) o;
-        return tag == that.tag && classIndex == that.classIndex && startPosition == that.startPosition;
+        return tag == that.tag
+                && classIndex == that.classIndex
+                && startPosition == that.startPosition
+                && constantPoolIndex == that.constantPoolIndex;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tag, classIndex, startPosition);
+        return Objects.hash(tag, classIndex, startPosition, constantPoolIndex);
+    }
+
+    @Override
+    public String toString() {
+        return "# " + constantPoolIndex + "Class " + classIndex;
     }
 }

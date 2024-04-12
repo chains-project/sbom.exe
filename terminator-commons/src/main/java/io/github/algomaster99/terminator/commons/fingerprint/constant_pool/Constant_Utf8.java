@@ -4,7 +4,7 @@ import static io.github.algomaster99.terminator.commons.fingerprint.constant_poo
 
 import java.util.Objects;
 
-class Constant_Utf8 {
+class Constant_Utf8 implements Comparable<Constant_Utf8> {
     final byte tag = CONSTANT_UTF8;
 
     short length;
@@ -37,5 +37,15 @@ class Constant_Utf8 {
     @Override
     public int hashCode() {
         return Objects.hash(tag, length, bytes, startPosition);
+    }
+
+    @Override
+    public int compareTo(Constant_Utf8 o) {
+        return startPosition - o.startPosition;
+    }
+
+    @Override
+    public String toString() {
+        return bytes;
     }
 }
