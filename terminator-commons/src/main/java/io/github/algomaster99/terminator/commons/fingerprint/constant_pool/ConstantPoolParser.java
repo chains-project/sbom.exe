@@ -128,8 +128,7 @@ public class ConstantPoolParser {
                     throw new RuntimeException("Unknown constant pool type '" + tag + "'");
             }
         }
-        buf.getChar(); // access flags
-        buf.getShort(); // this class
+        // reset the buffer position to the start of the buffer (cafebabe)
         buf.rewind();
 
         Set<Constant_Utf8> toBeModifiedUtf8Entries = new TreeSet<>();
