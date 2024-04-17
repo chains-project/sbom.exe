@@ -93,7 +93,7 @@ jobs:
       # Time to update some files with the new version
       # Commit and push changes
       - name: Commit & Push changes
-        uses: actions-js/push@v1.4
+        uses: actions-js/push@v1.5
         with:
           github_token: ${{ secrets.JRELEASER_GITHUB_TOKEN }}
           message: 'chore: setting SNAPSHOT version ${{ env.NEXT_RELEASE_VERSION }}'
