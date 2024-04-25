@@ -53,7 +53,7 @@ public class Terminator {
                     return classfileBuffer;
                 } else {
                     blueScreenOfDeath("[MODIFIED]: " + className);
-                    System.exit(1);
+                    Runtime.getRuntime().halt(1);
                     return null;
                 }
             }
@@ -63,7 +63,7 @@ public class Terminator {
             return classfileBuffer;
         } else {
             blueScreenOfDeath("[NOT ALLOWLISTED]: " + className);
-            System.exit(1);
+            Runtime.getRuntime().halt(1);
             return null;
         }
     }
