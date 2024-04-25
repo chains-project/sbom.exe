@@ -3,6 +3,7 @@ package io.github.algomaster99.terminator.commons.fingerprint.classfile;
 import io.github.algomaster99.terminator.commons.fingerprint.constant_pool.ConstantPoolParser;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Formatter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -16,6 +17,7 @@ public class HashComputer {
         reader.accept(writer, 0);
 
         byte[] rewrittenBytes = ConstantPoolParser.rewriteAllClassInfo(bytes, "foo");
+        Arrays.sort(rewrittenBytes);
 
         byte[] algorithmSum;
         try {
