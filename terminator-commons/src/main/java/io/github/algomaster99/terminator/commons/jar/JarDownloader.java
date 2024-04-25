@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.net.ssl.SSLParameters;
 import org.jsoup.Jsoup;
 
 public class JarDownloader {
@@ -22,7 +23,11 @@ public class JarDownloader {
     private JarDownloader() {}
 
     private static String getIndexPageOfRepository(String artifactUrl) throws IOException, InterruptedException {
-        HttpClient client = HttpClient.newHttpClient();
+        SSLParameters sslParameters = new SSLParameters();
+        sslParameters.setProtocols(new String[] {"TLSv1.2"});
+        sslParameters.setNeedClientAuth(false);
+        HttpClient client = HttpClient.newBuilder().sslParameters(sslParameters).build();
+
         HttpRequest request =
                 HttpRequest.newBuilder().uri(URI.create(artifactUrl)).build();
         HttpResponse<String> result = client.send(request, HttpResponse.BodyHandlers.ofString());
