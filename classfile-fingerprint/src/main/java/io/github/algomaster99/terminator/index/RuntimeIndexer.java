@@ -51,6 +51,8 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
+        System.out.println("--------------------");
+        System.out.println("Indexing all runtime classes ...");
         Path pathToTempProject = createCopyOfProject(project);
         MavenModule rootProject = MavenModule.createMavenModuleGraph(pathToTempProject);
         MavenModule executableJar = rootProject.findSubmodule(executableJarModule);
@@ -88,8 +90,15 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
         File pomFile = pathToTempProject.resolve("pom.xml").toFile();
         request.setPomFile(pomFile);
         request.setGoals(List.of("clean", "package"));
+        request.setBatchMode(true);
+        request.setQuiet(true);
         Invoker invoker = new DefaultInvoker();
+
+        System.out.println("Ignore the test output below.");
+
         invoker.execute(request);
+
+        System.out.println("Ignore the test output above.");
 
         final Map<String, Set<ClassFileAttributes>> referenceProvenance = new HashMap<>();
 
@@ -103,8 +112,14 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
 
         if (indexFile.input != null) {
             ParsingHelper.serialiseFingerprints(referenceProvenance, indexFile.input.toPath());
+            System.out.println(
+                    String.format("Classes in %s: %d.", indexFile.input.getName(), referenceProvenance.size()));
+            System.out.println("--------------------");
         } else if (indexFile.output != null) {
             ParsingHelper.serialiseFingerprints(referenceProvenance, indexFile.output.toPath());
+            System.out.println(
+                    String.format("Classes in %s: %d.", indexFile.output.getName(), referenceProvenance.size()));
+            System.out.println("--------------------");
         }
 
         return 0;

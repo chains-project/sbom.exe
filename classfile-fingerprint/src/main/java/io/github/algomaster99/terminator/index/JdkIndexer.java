@@ -24,6 +24,8 @@ public class JdkIndexer extends BaseIndexer implements Callable<Integer> {
 
     Map<String, Set<ClassFileAttributes>> createOrMergeProvenances(
             Map<String, Set<ClassFileAttributes>> referenceProvenance) {
+        System.out.println("--------------------");
+        System.out.println("Indexing all JDK classes ...");
         List<JdkClass> jdkClasses = JdkClassFinder.listJdkClasses();
         jdkClasses.forEach(resource -> {
             byte[] classfileBytes = resource.bytes();
