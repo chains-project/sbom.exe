@@ -36,6 +36,7 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
     Map<String, Set<ClassFileAttributes>> createOrMergeProvenances(
             Map<String, Set<ClassFileAttributes>> referenceProvenance) {
         CycloneDXWrapper sbom;
+        System.out.println("Indexing all supply chain classes ...");
         try {
             sbom = CycloneDX.getPojo(Files.readString(sbomPath));
         } catch (IOException e) {

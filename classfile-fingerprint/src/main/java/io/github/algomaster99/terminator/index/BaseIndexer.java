@@ -45,12 +45,18 @@ public abstract class BaseIndexer implements Callable<Integer> {
             Map<String, Set<ClassFileAttributes>> updatedReferenceProvenance =
                     createOrMergeProvenances(currentReferenceProvenance);
             ParsingHelper.serialiseFingerprints(updatedReferenceProvenance, indexFile.input.toPath());
+            System.out.println(
+                    String.format("Classes in %s: %d.", indexFile.input.getName(), updatedReferenceProvenance.size()));
+            System.out.println("--------------------");
             return 0;
         }
         if (indexFile.output != null) {
             Map<String, Set<ClassFileAttributes>> updatedReferenceProvenance =
                     createOrMergeProvenances(new HashMap<>());
             ParsingHelper.serialiseFingerprints(updatedReferenceProvenance, indexFile.output.toPath());
+            System.out.println(
+                    String.format("Classes in %s: %d.", indexFile.output.getName(), updatedReferenceProvenance.size()));
+            System.out.println("--------------------");
             return 0;
         }
         throw new IllegalArgumentException("Either --input or --output must be specified");
