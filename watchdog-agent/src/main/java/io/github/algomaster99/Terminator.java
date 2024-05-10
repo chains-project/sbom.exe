@@ -51,17 +51,12 @@ public class Terminator {
         // this only works for Java 11
         if (className.startsWith("com/sun/proxy/$Proxy")) {
             String moreReadableName = ClassFileUtilities.getNameForProxyClass(classfileBuffer);
-            Set<ClassFileAttributes> attributes = fingerprints.get(moreReadableName);
-            if (attributes != null) {
-                for (ClassFileAttributes attribute : attributes) {
-                    String hash = HashComputer.computeHash(classfileBuffer);
-                    if (hash.equals(attribute.hash())) {
-                        return classfileBuffer;
-                    }
-                }
-                return modified(className, classfileBuffer);
-            }
-            return notAllowlisted(className, classfileBuffer);
+            return lookupReadableName(className, classfileBuffer, moreReadableName);
+        }
+        if (className.startsWith("jdk/internal/reflect/GeneratedConstructorAccessor")) {
+            String correspondingClassName =
+                    ClassFileUtilities.getClassNameForGeneratedConstructorAccessor(classfileBuffer);
+            return lookupReadableName(className, classfileBuffer, correspondingClassName);
         }
         for (String expectedClassName : fingerprints.keySet()) {
             if (expectedClassName.equals(className)) {
@@ -74,6 +69,20 @@ public class Terminator {
                 }
                 return modified(className, classfileBuffer);
             }
+        }
+        return notAllowlisted(className, classfileBuffer);
+    }
+
+    private static byte[] lookupReadableName(String className, byte[] classfileBuffer, String correspondingClassName) {
+        Set<ClassFileAttributes> attributes = fingerprints.get(correspondingClassName);
+        if (attributes != null) {
+            for (ClassFileAttributes attribute : attributes) {
+                String hash = HashComputer.computeHash(classfileBuffer);
+                if (hash.equals(attribute.hash())) {
+                    return classfileBuffer;
+                }
+            }
+            return modified(className, classfileBuffer);
         }
         return notAllowlisted(className, classfileBuffer);
     }

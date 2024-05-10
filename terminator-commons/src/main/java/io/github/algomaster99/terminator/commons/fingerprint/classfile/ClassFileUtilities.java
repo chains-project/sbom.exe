@@ -4,6 +4,9 @@ import static io.github.algomaster99.terminator.commons.fingerprint.classfile.Ha
 
 import java.util.Arrays;
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
 
 public class ClassFileUtilities {
 
@@ -42,6 +45,30 @@ public class ClassFileUtilities {
         }
 
         return sb.toString();
+    }
+
+    /**
+     * Returns the name of the class that the Generated Constructor Accessor is for.
+     */
+    public static String getClassNameForGeneratedConstructorAccessor(byte[] bytes) {
+        ClassReader reader = new ClassReader(bytes);
+        ClassNode rootNode = new ClassNode();
+        reader.accept(rootNode, 0);
+
+        for (MethodNode method : rootNode.methods) {
+            if (method.name.equals("newInstance")) {
+                for (AbstractInsnNode insnNode : method.instructions) {
+                    // this should be a NEW instruction
+                    // GCA creates a new instance of the `desc` class
+                    if (insnNode.getOpcode() == 187) {
+                        String owner = ((org.objectweb.asm.tree.TypeInsnNode) insnNode).desc;
+                        return getSimpleNameFromQualifiedName(owner);
+                    }
+                }
+                return getSimpleNameFromQualifiedName(rootNode.name) + "_ConstructorAccessor";
+            }
+        }
+        throw new RuntimeException("This is a weird Generated Constructor Accessor: " + rootNode.name);
     }
 
     private static String getSimpleNameFromQualifiedName(String qualifiedName) {

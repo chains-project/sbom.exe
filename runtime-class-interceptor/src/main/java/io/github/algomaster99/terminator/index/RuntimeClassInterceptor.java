@@ -5,7 +5,6 @@ import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFile
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileUtilities;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
 import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptorOptions;
-
 import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
@@ -59,6 +58,9 @@ public class RuntimeClassInterceptor {
         }
         if (className.startsWith("com/sun/proxy/$Proxy")) {
             className = ClassFileUtilities.getNameForProxyClass(classfileBuffer);
+        }
+        if (className.startsWith("jdk/internal/reflect/GeneratedConstructorAccessor")) {
+            className = ClassFileUtilities.getClassNameForGeneratedConstructorAccessor(classfileBuffer);
         }
         if (candidates == null) {
             exhaustiveListOfClasses.put(className, Set.of(new ClassFileAttributes(classFileVersion, hash, "SHA-256")));

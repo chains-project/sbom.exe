@@ -20,4 +20,17 @@ public class ClassFileUtilitiesTest {
         // assert
         assertThat(moreReadableName).isEqualTo("Proxy_Retention");
     }
+
+    @Test
+    void getClassNameForGeneratedConstructorAccessor() throws IOException {
+        // arrange
+        Path pathToGeneratedConstructorAccessor = Path.of("src/test/resources/classfile/GCAIndex_35.class");
+        byte[] bytes = Files.readAllBytes(pathToGeneratedConstructorAccessor);
+
+        // act
+        String correspondingClassName = ClassFileUtilities.getClassNameForGeneratedConstructorAccessor(bytes);
+
+        // assert
+        assertThat(correspondingClassName).isEqualTo("AuthorityKeyIdentifierExtension");
+    }
 }
