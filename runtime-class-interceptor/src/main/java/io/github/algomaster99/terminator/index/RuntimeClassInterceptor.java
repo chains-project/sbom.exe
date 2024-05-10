@@ -5,12 +5,9 @@ import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFile
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileUtilities;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
 import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptorOptions;
-import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.ProtectionDomain;
 import java.util.Map;
 import java.util.Set;
@@ -47,10 +44,11 @@ public class RuntimeClassInterceptor {
         Set<ClassFileAttributes> candidates = exhaustiveListOfClasses.get(className);
         String classFileVersion = ClassFileUtilities.getVersion(classfileBuffer);
         String hash = HashComputer.computeHash(classfileBuffer);
+        if (className.startsWith("com/sun/proxy/$Proxy")) {
+            className = ClassFileUtilities.getNameForProxyClass(classfileBuffer);
+        }
         if (candidates == null) {
-            exhaustiveListOfClasses.put(
-                    ClassFileUtilities.getNameForProxyClass(classfileBuffer),
-                    Set.of(new ClassFileAttributes(classFileVersion, hash, "SHA-256")));
+            exhaustiveListOfClasses.put(className, Set.of(new ClassFileAttributes(classFileVersion, hash, "SHA-256")));
         } else {
             candidates.add(new ClassFileAttributes(classFileVersion, hash, "SHA-256"));
         }
