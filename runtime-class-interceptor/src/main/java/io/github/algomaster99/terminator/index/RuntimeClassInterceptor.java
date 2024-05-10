@@ -5,9 +5,13 @@ import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFile
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileUtilities;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
 import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptorOptions;
+
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.ProtectionDomain;
 import java.util.Map;
 import java.util.Set;
@@ -44,6 +48,15 @@ public class RuntimeClassInterceptor {
         Set<ClassFileAttributes> candidates = exhaustiveListOfClasses.get(className);
         String classFileVersion = ClassFileUtilities.getVersion(classfileBuffer);
         String hash = HashComputer.computeHash(classfileBuffer);
+        if (className.contains("com/sun/proxy/$Proxy")) {
+            try {
+                String moreReadableName = ClassFileUtilities.getNameForProxyClass(classfileBuffer);
+                int number = Integer.parseInt(className.split("/")[3].substring(6));
+                Files.write(Path.of("/home/aman/Desktop/chains/sbom.exe/$ProxyIndex" + moreReadableName + "_" + number + ".class"), classfileBuffer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         if (className.startsWith("com/sun/proxy/$Proxy")) {
             className = ClassFileUtilities.getNameForProxyClass(classfileBuffer);
         }
