@@ -2,12 +2,15 @@ package io.github.algomaster99.terminator.index;
 
 import io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
-import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassfileVersion;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileUtilities;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
 import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptorOptions;
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.ProtectionDomain;
 import java.util.Map;
 import java.util.Set;
@@ -42,10 +45,12 @@ public class RuntimeClassInterceptor {
 
     private static byte[] recordClass(String className, byte[] classfileBuffer) {
         Set<ClassFileAttributes> candidates = exhaustiveListOfClasses.get(className);
-        String classFileVersion = ClassfileVersion.getVersion(classfileBuffer);
+        String classFileVersion = ClassFileUtilities.getVersion(classfileBuffer);
         String hash = HashComputer.computeHash(classfileBuffer);
         if (candidates == null) {
-            exhaustiveListOfClasses.put(className, Set.of(new ClassFileAttributes(classFileVersion, hash, "SHA-256")));
+            exhaustiveListOfClasses.put(
+                    ClassFileUtilities.getNameForProxyClass(classfileBuffer),
+                    Set.of(new ClassFileAttributes(classFileVersion, hash, "SHA-256")));
         } else {
             candidates.add(new ClassFileAttributes(classFileVersion, hash, "SHA-256"));
         }

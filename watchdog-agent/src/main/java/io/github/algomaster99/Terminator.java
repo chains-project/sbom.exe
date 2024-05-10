@@ -1,11 +1,13 @@
 package io.github.algomaster99;
 
-import static io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer.computeHash;
-
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
-import io.github.algomaster99.terminator.commons.fingerprint.classfile.RuntimeClass;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileUtilities;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.ProtectionDomain;
 import java.util.Collection;
 import java.util.HashSet;
@@ -36,36 +38,34 @@ public class Terminator {
     }
 
     private static byte[] isLoadedClassAllowlisted(String className, byte[] classfileBuffer) {
-        if (RuntimeClass.isProxyClass(classfileBuffer, getAllHashes(fingerprints.values()))) {
-            return null;
+        // this only works for Java 11
+        if (className.startsWith("com/sun/proxy/$Proxy")) {
+            String moreReadableName = ClassFileUtilities.getNameForProxyClass(classfileBuffer);
+            Set<ClassFileAttributes> attributes = fingerprints.get(moreReadableName);
+            if (attributes != null) {
+                for (ClassFileAttributes attribute : attributes) {
+                    String hash = HashComputer.computeHash(classfileBuffer);
+                    if (hash.equals(attribute.hash())) {
+                        return classfileBuffer;
+                    }
+                }
+                return modified(className, classfileBuffer);
+            }
+            return notAllowlisted(className, classfileBuffer);
         }
         for (String expectedClassName : fingerprints.keySet()) {
             if (expectedClassName.equals(className)) {
                 Set<ClassFileAttributes> candidates = fingerprints.get(expectedClassName);
                 for (ClassFileAttributes candidate : candidates) {
-                    String hash = computeHash(classfileBuffer);
+                    String hash = HashComputer.computeHash(classfileBuffer);
                     if (hash.equals(candidate.hash())) {
                         return classfileBuffer;
                     }
                 }
-                if (options.shouldSkipShutdown()) {
-                    System.err.println("[MODIFIED]: " + className);
-                    return classfileBuffer;
-                } else {
-                    blueScreenOfDeath("[MODIFIED]: " + className);
-                    Runtime.getRuntime().halt(1);
-                    return null;
-                }
+                return modified(className, classfileBuffer);
             }
         }
-        if (options.shouldSkipShutdown()) {
-            System.err.println("[NOT ALLOWLISTED]: " + className);
-            return classfileBuffer;
-        } else {
-            blueScreenOfDeath("[NOT ALLOWLISTED]: " + className);
-            Runtime.getRuntime().halt(1);
-            return null;
-        }
+        return notAllowlisted(className, classfileBuffer);
     }
 
     private static Set<String> getAllHashes(Collection<Set<ClassFileAttributes>> classFileAttributesOfAllClasses) {
@@ -76,6 +76,28 @@ public class Terminator {
             }
         }
         return result;
+    }
+
+    private static byte[] modified(String className, byte[] classfileBuffer) {
+        if (options.shouldSkipShutdown()) {
+            System.err.println("[MODIFIED]: " + className);
+            return classfileBuffer;
+        } else {
+            blueScreenOfDeath("[MODIFIED]: " + className);
+            Runtime.getRuntime().halt(1);
+            return null;
+        }
+    }
+
+    private static byte[] notAllowlisted(String className, byte[] classfileBuffer) {
+        if (options.shouldSkipShutdown()) {
+            System.err.println("[NOT ALLOWLISTED]: " + className);
+            return classfileBuffer;
+        } else {
+            blueScreenOfDeath("[NOT ALLOWLISTED]: " + className);
+            Runtime.getRuntime().halt(1);
+            return null;
+        }
     }
 
     private static void blueScreenOfDeath(String classViolation) {
