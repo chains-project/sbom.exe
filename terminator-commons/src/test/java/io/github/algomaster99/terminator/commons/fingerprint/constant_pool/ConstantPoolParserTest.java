@@ -52,7 +52,8 @@ public class ConstantPoolParserTest {
         assertThat(fooLength
                         - "java/lang/Object".getBytes().length // "Foo" extends "java/lang/Object"
                         - "Foo".getBytes().length // "Foo" class name
-                        + newName.getBytes().length * 2) // "Bar" replaces both classes
+                        + newName.getBytes().length * 2 // "Bar" replaces both classes
+                        - 5) // 5 bytes are removed because "Foo.java" is replaced by "Bar" in SourceFile attribute
                 .isEqualTo(barLength);
     }
 
@@ -114,6 +115,48 @@ public class ConstantPoolParserTest {
 
         ConstantPoolParser transformedParser = originalParser.rewriteAllFieldRef("bar");
         assertThat(fieldNames(transformedParser)).containsOnly("bar");
+    }
+
+    @Test
+    void orderShouldNotMatter() throws IOException {
+        // arrange
+        Path foo = CLASSFILE.resolve("fooToBar").resolve("Foo.class");
+        Path bar = CLASSFILE.resolve("fooToBar").resolve("Bar.class");
+        String newName = "terraform_mars";
+        byte[] fooRewritten = new ConstantPoolParser(Files.readAllBytes(foo))
+                .rewriteAllClassInfo(newName)
+                .rewriteAllFieldRef(newName)
+                .getBytecode();
+        byte[] barRewritten = new ConstantPoolParser(Files.readAllBytes(bar))
+                .rewriteAllClassInfo(newName)
+                .rewriteAllFieldRef(newName)
+                .getBytecode();
+
+        // assert
+        assertThat(HashComputer.computeHash(fooRewritten)).isEqualTo(HashComputer.computeHash(barRewritten));
+    }
+
+    @Test
+    void proxy9_to_proxy13() throws IOException {
+        // arrange
+        Path proxy9 = CLASSFILE
+                .resolve("proxy-class-with-incorrect-method-mapping")
+                .resolve("$ProxyRuntimeProxy_CommandLine$Command_9.class");
+        Path proxy13 = CLASSFILE
+                .resolve("proxy-class-with-incorrect-method-mapping")
+                .resolve("$ProxyIndexProxy_CommandLine$Command_13.class");
+        String newName = "Bar";
+        byte[] proxy9BytesRewritten = new ConstantPoolParser(Files.readAllBytes(proxy9))
+                .rewriteAllClassInfo(newName)
+                .rewriteAllFieldRef(newName)
+                .getBytecode();
+        byte[] proxy13BytesRewritten = new ConstantPoolParser(Files.readAllBytes(proxy13))
+                .rewriteAllClassInfo(newName)
+                .rewriteAllFieldRef(newName)
+                .getBytecode();
+
+        // assert
+        assertThat(proxy9BytesRewritten).isEqualTo(proxy13BytesRewritten);
     }
 
     @Nested

@@ -5,4 +5,8 @@ public class Foo {
     public int sum() {
         return Foo.x + Foo.y;
     }
+
+    public int subtract() {
+        return Foo.x - Foo.y;
+    }
 }
