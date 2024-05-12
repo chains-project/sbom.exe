@@ -47,11 +47,11 @@ public class RuntimeClassInterceptor {
         Set<ClassFileAttributes> candidates = exhaustiveListOfClasses.get(className);
         String classFileVersion = ClassFileUtilities.getVersion(classfileBuffer);
         String hash = HashComputer.computeHash(classfileBuffer);
-        if (className.contains("com/sun/proxy/$Proxy")) {
+        if (className.contains("jdk/internal/reflect/GeneratedConstructorAccessor")) {
             try {
-                String moreReadableName = ClassFileUtilities.getNameForProxyClass(classfileBuffer);
-                int number = Integer.parseInt(className.split("/")[3].substring(6));
-                Files.write(Path.of("/home/aman/Desktop/chains/sbom.exe/$ProxyIndex" + moreReadableName + "_" + number + ".class"), classfileBuffer);
+                int number = Integer.parseInt(className.substring(className.lastIndexOf("Accessor") + 8));
+                Files.write(
+                        Path.of("/home/aman/Desktop/chains/sbom.exe/GCAIndex_" + number + ".class"), classfileBuffer);
             } catch (IOException e) {
                 e.printStackTrace();
             }

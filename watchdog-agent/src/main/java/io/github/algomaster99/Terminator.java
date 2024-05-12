@@ -3,7 +3,6 @@ package io.github.algomaster99;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileUtilities;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
-
 import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
@@ -39,11 +38,11 @@ public class Terminator {
     }
 
     private static byte[] isLoadedClassAllowlisted(String className, byte[] classfileBuffer) {
-        if (className.contains("com/sun/proxy/$Proxy")) {
+        if (className.contains("jdk/internal/reflect/GeneratedConstructorAccessor")) {
             try {
-                String moreReadableName = ClassFileUtilities.getNameForProxyClass(classfileBuffer);
-                int number = Integer.parseInt(className.split("/")[3].substring(6));
-                Files.write(Path.of("/home/aman/Desktop/chains/sbom.exe/$ProxyRuntime" + moreReadableName + "_" + number + ".class"), classfileBuffer);
+                int number = Integer.parseInt(className.substring(className.lastIndexOf("Accessor") + 8));
+                Files.write(
+                        Path.of("/home/aman/Desktop/chains/sbom.exe/GCARuntime_" + number + ".class"), classfileBuffer);
             } catch (IOException e) {
                 e.printStackTrace();
             }

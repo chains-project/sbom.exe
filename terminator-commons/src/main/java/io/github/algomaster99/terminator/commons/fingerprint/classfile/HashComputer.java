@@ -10,7 +10,8 @@ public class HashComputer {
     private HashComputer() {}
 
     public static String computeHash(byte[] bytes) {
-        byte[] rewrittenBytes = ConstantPoolParser.rewriteAllClassInfo(bytes, "foo");
+        byte[] rewrittenBytes =
+                new ConstantPoolParser(bytes).rewriteAllClassInfo("foo").getBytecode();
         Arrays.sort(rewrittenBytes);
 
         byte[] algorithmSum;
