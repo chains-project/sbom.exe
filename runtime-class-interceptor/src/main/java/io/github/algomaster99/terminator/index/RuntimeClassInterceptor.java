@@ -5,12 +5,9 @@ import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFile
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileUtilities;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
 import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptorOptions;
-import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.security.ProtectionDomain;
 import java.util.Map;
 import java.util.Set;
@@ -47,16 +44,7 @@ public class RuntimeClassInterceptor {
         Set<ClassFileAttributes> candidates = exhaustiveListOfClasses.get(className);
         String classFileVersion = ClassFileUtilities.getVersion(classfileBuffer);
         String hash = HashComputer.computeHash(classfileBuffer);
-        if (className.contains("jdk/internal/reflect/GeneratedConstructorAccessor")) {
-            try {
-                int number = Integer.parseInt(className.substring(className.lastIndexOf("Accessor") + 8));
-                Files.write(
-                        Path.of("/home/aman/Desktop/chains/sbom.exe/GCAIndex_" + number + ".class"), classfileBuffer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        if (className.startsWith("com/sun/proxy/$Proxy")) {
+        if (className.startsWith("com/sun/proxy/$Proxy") || className.startsWith("com/sun/proxy/jdk/")) {
             className = ClassFileUtilities.getNameForProxyClass(classfileBuffer);
         }
         if (className.startsWith("jdk/internal/reflect/GeneratedConstructorAccessor")) {

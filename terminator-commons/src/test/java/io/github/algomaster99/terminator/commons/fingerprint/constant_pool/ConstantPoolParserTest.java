@@ -6,6 +6,7 @@ import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashCompu
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -133,7 +134,9 @@ public class ConstantPoolParserTest {
                 .getBytecode();
 
         // assert
-        assertThat(HashComputer.computeHash(fooRewritten)).isEqualTo(HashComputer.computeHash(barRewritten));
+        Arrays.sort(fooRewritten);
+        Arrays.sort(barRewritten);
+        assertThat(fooRewritten).isEqualTo(barRewritten);
     }
 
     @Test
@@ -156,7 +159,30 @@ public class ConstantPoolParserTest {
                 .getBytecode();
 
         // assert
+        Arrays.sort(proxy9BytesRewritten);
+        Arrays.sort(proxy13BytesRewritten);
         assertThat(proxy9BytesRewritten).isEqualTo(proxy13BytesRewritten);
+    }
+
+    @Test
+    void A_to_B() throws IOException {
+        // arrange
+        Path A = CLASSFILE.resolve("something-wrong-with-clint").resolve("A.class");
+        Path B = CLASSFILE.resolve("something-wrong-with-clint").resolve("B.class");
+        String newName = "Bar";
+        byte[] ABytesRewritten = new ConstantPoolParser(Files.readAllBytes(A))
+                .rewriteAllClassInfo(newName)
+                .rewriteAllFieldRef(newName)
+                .getBytecode();
+        byte[] BBytesRewritten = new ConstantPoolParser(Files.readAllBytes(B))
+                .rewriteAllClassInfo(newName)
+                .rewriteAllFieldRef(newName)
+                .getBytecode();
+
+        // assert
+        Arrays.sort(ABytesRewritten);
+        Arrays.sort(BBytesRewritten);
+        assertThat(ABytesRewritten).isEqualTo(BBytesRewritten);
     }
 
     @Nested

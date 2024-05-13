@@ -3,11 +3,15 @@ package io.github.algomaster99.terminator.commons.fingerprint.constant_pool;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * A small parser to read the constant pool directly, in case it contains references ASM does not support.
@@ -71,6 +75,8 @@ public class ConstantPoolParser {
     final Set<Constant_NameAndType> nameAndTypeInfo = new HashSet<>();
 
     Constant_Utf8 sourceFileValue;
+
+    int constantPoolEndPosition;
 
     String thisClass;
 
@@ -141,7 +147,7 @@ public class ConstantPoolParser {
                     throw new RuntimeException("Unknown constant pool type '" + tag + "'");
             }
         }
-        // reset the buffer position to the start of the buffer (cafebabe)
+        constantPoolEndPosition = buf.position();
         buf.getShort(); // access flags
         Map<Short, Constant_Class> cpIndexToConstantClass = setToMap(classInfo);
         thisClass =
@@ -168,41 +174,17 @@ public class ConstantPoolParser {
         }
 
         int methodCount = buf.getShort(); // methods_count
-        for (int ix = 0, num = methodCount; ix < num; ix++) {
+        for (int ix = 0; ix < methodCount; ix++) {
             buf.getShort(); // access flags
-            short indexOfMethodName = buf.getShort(); // name index
-            short descriptor = buf.getShort(); // descriptor index
+            buf.getShort(); // name index
+            buf.getShort(); // descriptor index
             int attributeCount = buf.getShort(); // attributes count
-            for (int jx = 0, attrCount = attributeCount; jx < attrCount; jx++) {
-                short indexOfAttributeName = buf.getShort(); // attribute name index
-                if ("Code".equals(cpIndexToConstantUtf8.get(indexOfAttributeName).bytes)) {
-                    int attrLength = buf.getInt(); // attribute length
-                    buf.getShort(); // max stack
-                    buf.getShort(); // max locals
-                    int codeLength = buf.getInt(); // code length
-                    for (int kx = 0, len = codeLength; kx < len; kx++) {
-                        buf.get(); // code
-                    }
-                    int exceptionTableLength = buf.getShort(); // exception table length
-                    for (int kx = 0, len = exceptionTableLength; kx < len; kx++) {
-                        buf.getShort(); // start pc
-                        buf.getShort(); // end pc
-                        buf.getShort(); // handler pc
-                        buf.getShort(); // catch type
-                    }
-                    int codeAttributeCount = buf.getShort(); // attributes count
-                    for (int kx = 0, len = codeAttributeCount; kx < len; kx++) {
-                        short indexOfCodeAttributeName = buf.getShort(); // attribute name index
-                        int codeAttrLength = buf.getInt(); // attribute length
-                        for (int lx = 0, clen = codeAttrLength; lx < clen; lx++) {
-                            buf.get(); // info
-                        }
-                    }
-                } else {
-                    int attrLength = buf.getInt(); // attribute length
-                    for (int kx = 0, len = attrLength; kx < len; kx++) {
-                        buf.get(); // info
-                    }
+            for (int jx = 0; jx < attributeCount; jx++) {
+                buf.getShort(); // attribute name index
+                int attrLength = buf.getInt(); // attribute length
+                // TODO: consider bytecode opcodes for canonicalization
+                for (int kx = 0; kx < attrLength; kx++) {
+                    buf.get(); // info
                 }
             }
         }
@@ -210,15 +192,18 @@ public class ConstantPoolParser {
         int attributeCount = buf.getShort(); // attributes count
         for (int ix = 0, num = attributeCount; ix < num; ix++) {
             short indexOfAttributeName = buf.getShort(); // attribute name index
-            if (ATTRIBUTE_SOURCE_FILE.equals(cpIndexToConstantUtf8.get(indexOfAttributeName).bytes)) {
-                int attrLength = buf.getInt(); // attribute length = 2
-                short indexOfSourceFileValue = buf.getShort(); // source file index
-                sourceFileValue = cpIndexToConstantUtf8.get(indexOfSourceFileValue);
-            } else {
-                int attrLength = buf.getInt(); // attribute length
-                for (int kx = 0, len = attrLength; kx < len; kx++) {
-                    buf.get(); // info
-                }
+            switch (cpIndexToConstantUtf8.get(indexOfAttributeName).bytes) {
+                case ATTRIBUTE_SOURCE_FILE:
+                    buf.getInt(); // attribute length
+                    short indexOfSourceFileValue = buf.getShort(); // source file index
+                    sourceFileValue = cpIndexToConstantUtf8.get(indexOfSourceFileValue);
+                    break;
+                default:
+                    int attrLength = buf.getInt(); // attribute length
+                    for (int kx = 0, len = attrLength; kx < len; kx++) {
+                        buf.get(); // info
+                    }
+                    break;
             }
         }
         buf.rewind();
@@ -260,7 +245,23 @@ public class ConstantPoolParser {
     }
 
     public byte[] getBytecode() {
-        return bytecode;
+        List<Byte> constantPoolEntriesWithoutIndex = getConstantPoolEntry();
+        byte[] constantPoolBytes = new byte[constantPoolEntriesWithoutIndex.size()];
+        int i = 0;
+        for (Byte b : constantPoolEntriesWithoutIndex) {
+            constantPoolBytes[i++] = b;
+        }
+        return constantPoolBytes;
+    }
+
+    private List<Byte> getConstantPoolEntry() {
+        List<Byte> constantPoolEntriesWithoutIndex = new ArrayList<>();
+        cpIndexToConstantUtf8.forEach((k, v) -> {
+            constantPoolEntriesWithoutIndex.addAll(IntStream.range(0, v.bytes.getBytes().length)
+                    .mapToObj(i -> v.bytes.getBytes()[i])
+                    .collect(Collectors.toList()));
+        });
+        return constantPoolEntriesWithoutIndex;
     }
 
     public ConstantPoolParser rewriteAllClassInfo(String newName) {

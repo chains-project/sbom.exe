@@ -48,7 +48,7 @@ public class Terminator {
             }
         }
         // this only works for Java 11
-        if (className.startsWith("com/sun/proxy/$Proxy")) {
+        if (className.startsWith("com/sun/proxy/$Proxy") || className.startsWith("com/sun/proxy/jdk/")) {
             String moreReadableName = ClassFileUtilities.getNameForProxyClass(classfileBuffer);
             return lookupReadableName(className, classfileBuffer, moreReadableName);
         }
