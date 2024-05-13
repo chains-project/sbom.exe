@@ -173,8 +173,7 @@ public class ConstantPoolParserTest {
 
         // act
         ConstantPoolParser AParser = new ConstantPoolParser(Files.readAllBytes(A));
-        AParser
-                .setNewName(newName)
+        AParser.setNewName(newName)
                 .rewriteAllClassInfo()
                 .rewriteAllFieldRef()
                 .rewriteSourceFileAttribute()
@@ -182,8 +181,7 @@ public class ConstantPoolParserTest {
         byte[] ABytesRewritten = AParser.getConstantPoolBytesOnly();
 
         ConstantPoolParser BParser = new ConstantPoolParser(Files.readAllBytes(B));
-        BParser
-                .setNewName(newName)
+        BParser.setNewName(newName)
                 .rewriteAllFieldRef()
                 .rewriteAllClassInfo()
                 .rewriteSourceFileAttribute()
@@ -196,16 +194,16 @@ public class ConstantPoolParserTest {
         assertThat(ABytesRewritten).isEqualTo(BBytesRewritten);
     }
 
-//    @Test
-//    void rewriteSourceFileAttribute() throws IOException {
-//        // arrange
-//        Path valueObject = CLASSFILE.resolve("ValueObject.class");
-//        byte[] bytes = Files.readAllBytes(valueObject);
-//
-//        // act
-//        ConstantPoolParser parser = new ConstantPoolParser(bytes);
-//        ConstantPoolParser rewritten = parser.rewriteAllClassInfo("dfd").rewriteSourceFileAttribute("Bar");
-//    }
+    //    @Test
+    //    void rewriteSourceFileAttribute() throws IOException {
+    //        // arrange
+    //        Path valueObject = CLASSFILE.resolve("ValueObject.class");
+    //        byte[] bytes = Files.readAllBytes(valueObject);
+    //
+    //        // act
+    //        ConstantPoolParser parser = new ConstantPoolParser(bytes);
+    //        ConstantPoolParser rewritten = parser.rewriteAllClassInfo("dfd").rewriteSourceFileAttribute("Bar");
+    //    }
 
     @Nested
     class ChainOperations {
@@ -222,7 +220,11 @@ public class ConstantPoolParserTest {
             assertThat(fieldNames(originalParser)).containsOnly("x", "y");
             assertThat(originalParser.getThisClassName()).isEqualTo("Foo");
 
-            originalParser.rewriteAllFieldRef().rewriteAllClassInfo().setNewName(newName).modify();
+            originalParser
+                    .rewriteAllFieldRef()
+                    .rewriteAllClassInfo()
+                    .setNewName(newName)
+                    .modify();
             assertThat(fieldNames(originalParser)).containsOnly(newName);
             assertThat(originalParser.getThisClassName()).isEqualTo(newName);
         }
@@ -234,14 +236,17 @@ public class ConstantPoolParserTest {
             Path foo = directoryWithIncorrectMethodMapping.resolve("Foo.class");
             String newName = "gone";
 
-
             // assert
             byte[] firstBytes = Files.readAllBytes(foo);
             ConstantPoolParser originalParser = new ConstantPoolParser(firstBytes);
             assertThat(fieldNames(originalParser)).containsOnly("x", "y");
             assertThat(originalParser.getThisClassName()).isEqualTo("Foo");
 
-            originalParser.rewriteAllClassInfo().rewriteAllFieldRef().setNewName(newName).modify();
+            originalParser
+                    .rewriteAllClassInfo()
+                    .rewriteAllFieldRef()
+                    .setNewName(newName)
+                    .modify();
             assertThat(fieldNames(originalParser)).containsOnly(newName);
             assertThat(originalParser.getThisClassName()).isEqualTo(newName);
         }
