@@ -23,12 +23,13 @@ public class ConstantPoolParserTest {
         Path proxy7 = CLASSFILE.resolve("proxy").resolve("$Proxy7Runtime.class");
         Path proxy8 = CLASSFILE.resolve("proxy").resolve("$Proxy8Bomi.class");
         String newName = "Bar";
-        byte[] proxy7BytesRewritten = new ConstantPoolParser(Files.readAllBytes(proxy7))
-                .rewriteAllClassInfo(newName)
-                .getBytecode();
-        byte[] proxy8BytesRewritten = new ConstantPoolParser(Files.readAllBytes(proxy8))
-                .rewriteAllClassInfo(newName)
-                .getBytecode();
+        ConstantPoolParser proxy7Parser = new ConstantPoolParser(Files.readAllBytes(proxy7));
+        proxy7Parser.setNewName(newName).rewriteAllClassInfo().modify();
+        byte[] proxy7BytesRewritten = proxy7Parser.getConstantPoolBytesOnly();
+
+        ConstantPoolParser proxy8Parser = new ConstantPoolParser(Files.readAllBytes(proxy8));
+        proxy8Parser.setNewName(newName).rewriteAllClassInfo().modify();
+        byte[] proxy8BytesRewritten = proxy8Parser.getConstantPoolBytesOnly();
 
         // assert
         assertThat(proxy7BytesRewritten).isEqualTo(proxy8BytesRewritten);
@@ -61,7 +62,8 @@ public class ConstantPoolParserTest {
         assertThat(fieldNames(parser)).containsOnly("x", "y");
 
         // act
-        ConstantPoolParser rewritten = parser.rewriteAllFieldRef("z");
+        ConstantPoolParser rewritten = new ConstantPoolParser(bytes);
+        rewritten.rewriteAllFieldRef().setNewName("z").modify();
 
         // assert
         assertThat(fieldNames(rewritten)).containsOnly("z");
@@ -90,8 +92,8 @@ public class ConstantPoolParserTest {
         ConstantPoolParser originalParser = new ConstantPoolParser(firstBytes);
         assertThat(fieldNames(originalParser)).containsOnly("x", "y");
 
-        ConstantPoolParser transformedParser = originalParser.rewriteAllFieldRef("bar");
-        assertThat(fieldNames(transformedParser)).containsOnly("bar");
+        originalParser.rewriteAllFieldRef().setNewName("bar").modify();
+        assertThat(fieldNames(originalParser)).containsOnly("bar");
     }
 
     @Test
@@ -100,14 +102,25 @@ public class ConstantPoolParserTest {
         Path foo = CLASSFILE.resolve("fooToBar").resolve("Foo.class");
         Path bar = CLASSFILE.resolve("fooToBar").resolve("Bar.class");
         String newName = "terraform_mars";
-        byte[] fooRewritten = new ConstantPoolParser(Files.readAllBytes(foo))
-                .rewriteAllClassInfo(newName)
-                .rewriteAllFieldRef(newName)
-                .getBytecode();
-        byte[] barRewritten = new ConstantPoolParser(Files.readAllBytes(bar))
-                .rewriteAllClassInfo(newName)
-                .rewriteAllFieldRef(newName)
-                .getBytecode();
+
+        // act
+        ConstantPoolParser fooParser = new ConstantPoolParser(Files.readAllBytes(foo));
+        fooParser
+                .setNewName(newName)
+                .rewriteAllClassInfo()
+                .rewriteAllFieldRef()
+                .rewriteSourceFileAttribute()
+                .modify();
+        byte[] fooRewritten = fooParser.getConstantPoolBytesOnly();
+
+        ConstantPoolParser barParser = new ConstantPoolParser(Files.readAllBytes(bar));
+        barParser
+                .setNewName(newName)
+                .rewriteAllFieldRef()
+                .rewriteAllClassInfo()
+                .rewriteSourceFileAttribute()
+                .modify();
+        byte[] barRewritten = barParser.getConstantPoolBytesOnly();
 
         // assert
         Arrays.sort(fooRewritten);
@@ -125,14 +138,25 @@ public class ConstantPoolParserTest {
                 .resolve("proxy-class-with-incorrect-method-mapping")
                 .resolve("$ProxyIndexProxy_CommandLine$Command_13.class");
         String newName = "Bar";
-        byte[] proxy9BytesRewritten = new ConstantPoolParser(Files.readAllBytes(proxy9))
-                .rewriteAllClassInfo(newName)
-                .rewriteAllFieldRef(newName)
-                .getBytecode();
-        byte[] proxy13BytesRewritten = new ConstantPoolParser(Files.readAllBytes(proxy13))
-                .rewriteAllClassInfo(newName)
-                .rewriteAllFieldRef(newName)
-                .getBytecode();
+
+        // act
+        ConstantPoolParser proxy9Parser = new ConstantPoolParser(Files.readAllBytes(proxy9));
+        proxy9Parser
+                .setNewName(newName)
+                .rewriteAllClassInfo()
+                .rewriteAllFieldRef()
+                .rewriteSourceFileAttribute()
+                .modify();
+        byte[] proxy9BytesRewritten = proxy9Parser.getConstantPoolBytesOnly();
+
+        ConstantPoolParser proxy13Parser = new ConstantPoolParser(Files.readAllBytes(proxy13));
+        proxy13Parser
+                .setNewName(newName)
+                .rewriteAllFieldRef()
+                .rewriteAllClassInfo()
+                .rewriteSourceFileAttribute()
+                .modify();
+        byte[] proxy13BytesRewritten = proxy13Parser.getConstantPoolBytesOnly();
 
         // assert
         Arrays.sort(proxy9BytesRewritten);
@@ -146,20 +170,42 @@ public class ConstantPoolParserTest {
         Path A = CLASSFILE.resolve("something-wrong-with-clint").resolve("A.class");
         Path B = CLASSFILE.resolve("something-wrong-with-clint").resolve("B.class");
         String newName = "Bar";
-        byte[] ABytesRewritten = new ConstantPoolParser(Files.readAllBytes(A))
-                .rewriteAllClassInfo(newName)
-                .rewriteAllFieldRef(newName)
-                .getBytecode();
-        byte[] BBytesRewritten = new ConstantPoolParser(Files.readAllBytes(B))
-                .rewriteAllClassInfo(newName)
-                .rewriteAllFieldRef(newName)
-                .getBytecode();
+
+        // act
+        ConstantPoolParser AParser = new ConstantPoolParser(Files.readAllBytes(A));
+        AParser
+                .setNewName(newName)
+                .rewriteAllClassInfo()
+                .rewriteAllFieldRef()
+                .rewriteSourceFileAttribute()
+                .modify();
+        byte[] ABytesRewritten = AParser.getConstantPoolBytesOnly();
+
+        ConstantPoolParser BParser = new ConstantPoolParser(Files.readAllBytes(B));
+        BParser
+                .setNewName(newName)
+                .rewriteAllFieldRef()
+                .rewriteAllClassInfo()
+                .rewriteSourceFileAttribute()
+                .modify();
+        byte[] BBytesRewritten = BParser.getConstantPoolBytesOnly();
 
         // assert
         Arrays.sort(ABytesRewritten);
         Arrays.sort(BBytesRewritten);
         assertThat(ABytesRewritten).isEqualTo(BBytesRewritten);
     }
+
+//    @Test
+//    void rewriteSourceFileAttribute() throws IOException {
+//        // arrange
+//        Path valueObject = CLASSFILE.resolve("ValueObject.class");
+//        byte[] bytes = Files.readAllBytes(valueObject);
+//
+//        // act
+//        ConstantPoolParser parser = new ConstantPoolParser(bytes);
+//        ConstantPoolParser rewritten = parser.rewriteAllClassInfo("dfd").rewriteSourceFileAttribute("Bar");
+//    }
 
     @Nested
     class ChainOperations {
@@ -168,17 +214,17 @@ public class ConstantPoolParserTest {
             // arrange
             Path directoryWithIncorrectMethodMapping = Path.of("src/test/resources/classfile/fooToBar");
             Path foo = directoryWithIncorrectMethodMapping.resolve("Foo.class");
+            String newName = "fakeClazz";
 
             // assert
             byte[] firstBytes = Files.readAllBytes(foo);
             ConstantPoolParser originalParser = new ConstantPoolParser(firstBytes);
             assertThat(fieldNames(originalParser)).containsOnly("x", "y");
-            assertThat(originalParser.thisClass).isEqualTo("Foo");
+            assertThat(originalParser.getThisClassName()).isEqualTo("Foo");
 
-            ConstantPoolParser transformedParser =
-                    originalParser.rewriteAllFieldRef("bar").rewriteAllClassInfo("fakeClazz");
-            assertThat(fieldNames(transformedParser)).containsOnly("bar");
-            assertThat(transformedParser.thisClass).isEqualTo("fakeClazz");
+            originalParser.rewriteAllFieldRef().rewriteAllClassInfo().setNewName(newName).modify();
+            assertThat(fieldNames(originalParser)).containsOnly(newName);
+            assertThat(originalParser.getThisClassName()).isEqualTo(newName);
         }
 
         @Test
@@ -186,17 +232,18 @@ public class ConstantPoolParserTest {
             // arrange
             Path directoryWithIncorrectMethodMapping = Path.of("src/test/resources/classfile/fooToBar");
             Path foo = directoryWithIncorrectMethodMapping.resolve("Foo.class");
+            String newName = "gone";
+
 
             // assert
             byte[] firstBytes = Files.readAllBytes(foo);
             ConstantPoolParser originalParser = new ConstantPoolParser(firstBytes);
             assertThat(fieldNames(originalParser)).containsOnly("x", "y");
-            assertThat(originalParser.thisClass).isEqualTo("Foo");
+            assertThat(originalParser.getThisClassName()).isEqualTo("Foo");
 
-            ConstantPoolParser transformedParser =
-                    originalParser.rewriteAllClassInfo("fakeClazz").rewriteAllFieldRef("bar");
-            assertThat(fieldNames(transformedParser)).containsOnly("bar");
-            assertThat(transformedParser.thisClass).isEqualTo("fakeClazz");
+            originalParser.rewriteAllClassInfo().rewriteAllFieldRef().setNewName(newName).modify();
+            assertThat(fieldNames(originalParser)).containsOnly(newName);
+            assertThat(originalParser.getThisClassName()).isEqualTo(newName);
         }
     }
 }

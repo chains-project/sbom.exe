@@ -74,11 +74,15 @@ public class ConstantPoolParser {
     final Set<Constant_Fieldref> fieldRefInfo = new HashSet<>();
     final Set<Constant_NameAndType> nameAndTypeInfo = new HashSet<>();
 
+    final Set<Constant_Utf8> toBeModifiedUtf8Entries = new TreeSet<>();
+
     Constant_Utf8 sourceFileValue;
 
     int constantPoolEndPosition;
 
-    String thisClass;
+    short thisClassIndex;
+
+    String newName;
 
     public ConstantPoolParser(byte[] bytes) {
         this(ByteBuffer.wrap(bytes));
@@ -96,7 +100,7 @@ public class ConstantPoolParser {
             int startPosition = buf.position();
             switch (tag) {
                 case CONSTANT_UTF8:
-                    cpIndexToConstantUtf8.put((short) ix, createUtf8Entry(buf, startPosition));
+                    cpIndexToConstantUtf8.put((short) ix, createUtf8Entry(buf, startPosition, (short) ix));
                     break;
                 case CONSTANT_CLASS:
                     classInfo.add(new Constant_Class(buf.getShort(), startPosition, (short) ix));
@@ -150,8 +154,7 @@ public class ConstantPoolParser {
         constantPoolEndPosition = buf.position();
         buf.getShort(); // access flags
         Map<Short, Constant_Class> cpIndexToConstantClass = setToMap(classInfo);
-        thisClass =
-                cpIndexToConstantUtf8.get(cpIndexToConstantClass.get(buf.getShort()).classIndex).bytes; // this class
+        thisClassIndex = cpIndexToConstantClass.get(buf.getShort()).classIndex; // this class
         buf.getShort(); // super class
         int interfaceCount = buf.getShort(); // interface_count
         for (int ix = 0, num = interfaceCount; ix < num; ix++) {
@@ -209,7 +212,7 @@ public class ConstantPoolParser {
         buf.rewind();
     }
 
-    private static Constant_Utf8 createUtf8Entry(ByteBuffer buf, int startPosition) {
+    private static Constant_Utf8 createUtf8Entry(ByteBuffer buf, int startPosition, short index) {
         int size = buf.getChar();
         int oldLimit = buf.limit();
         buf.limit(buf.position() + size);
@@ -232,7 +235,7 @@ public class ConstantPoolParser {
         buf.limit(oldLimit);
         String utf8Value = sb.toString();
 
-        return new Constant_Utf8((short) size, utf8Value, startPosition);
+        return new Constant_Utf8((short) size, utf8Value, startPosition, index);
     }
 
     // TODO: not sure why ? extends T works
@@ -244,7 +247,7 @@ public class ConstantPoolParser {
         return map;
     }
 
-    public byte[] getBytecode() {
+    public byte[] getConstantPoolBytesOnly() {
         List<Byte> constantPoolEntriesWithoutIndex = getConstantPoolEntry();
         byte[] constantPoolBytes = new byte[constantPoolEntriesWithoutIndex.size()];
         int i = 0;
@@ -264,37 +267,46 @@ public class ConstantPoolParser {
         return constantPoolEntriesWithoutIndex;
     }
 
-    public ConstantPoolParser rewriteAllClassInfo(String newName) {
-        ByteBuffer buf = ByteBuffer.wrap(bytecode);
-        Set<Constant_Utf8> toBeModifiedUtf8Entries = new TreeSet<>();
+    public ConstantPoolParser rewriteAllClassInfo() {
         for (Constant_Class constantClass : classInfo) {
             Constant_Utf8 utf8 = cpIndexToConstantUtf8.get(constantClass.classIndex);
             toBeModifiedUtf8Entries.add(utf8);
         }
-        // generated classes do not have SourceFile attribute
-        return modifyUtfEntries(newName, toBeModifiedUtf8Entries, buf);
+        return this;
     }
 
-    public ConstantPoolParser rewriteAllFieldRef(String newName) {
-        ByteBuffer buf = ByteBuffer.wrap(bytecode);
-        Set<Constant_Utf8> toBeModifiedUtf8Entries = new TreeSet<>();
+    public ConstantPoolParser rewriteAllFieldRef() {
         Map<Short, Constant_NameAndType> cpIndexToConstantNameAndType = setToMap(nameAndTypeInfo);
         for (Constant_Fieldref fieldref : fieldRefInfo) {
             Constant_NameAndType nameAndType = cpIndexToConstantNameAndType.get(fieldref.nameAndTypeIndex);
             Constant_Utf8 utf8 = cpIndexToConstantUtf8.get(nameAndType.nameIndex);
             toBeModifiedUtf8Entries.add(utf8);
         }
-        return modifyUtfEntries(newName, toBeModifiedUtf8Entries, buf);
+        return this;
     }
 
-    private ConstantPoolParser modifyUtfEntries(
-            String newName, Set<Constant_Utf8> toBeModifiedUtf8Entries, ByteBuffer buf) {
+    public String getThisClassName() {
+        return this.cpIndexToConstantUtf8.get(this.thisClassIndex).bytes;
+    }
+
+    public ConstantPoolParser setNewName(String newName) {
+        this.newName = newName;
+        return this;
+    }
+
+    public ConstantPoolParser rewriteSourceFileAttribute() {
         // generated classes do not have SourceFile attribute
         if (sourceFileValue != null) {
-            // modify SourceFile attribute as well
             toBeModifiedUtf8Entries.add(sourceFileValue);
         }
+        return this;
+    }
 
+    public void modify() {
+        modifyUtfEntries(ByteBuffer.wrap(bytecode));
+    }
+
+    private void modifyUtfEntries(ByteBuffer buf) {
         int sizeOfAllUtf8Entries =
                 toBeModifiedUtf8Entries.stream().mapToInt(u -> u.length).sum();
 
@@ -311,25 +323,26 @@ public class ConstantPoolParser {
             // copy the bytes from the old buffer to the new buffer until the start of the current utf8 entry
             byteBuffer.put(buf.array(), oldBufferIndexToCopyFrom, utf8Entry.startPosition - oldBufferIndexToCopyFrom);
             // write the size of the new name
-            byteBuffer.putShort(byteBuffer.position(), (short) newNameByteSize);
+            int newPosition = byteBuffer.position();
+            byteBuffer.putShort(newPosition, (short) newNameByteSize);
             // update the position after writing the size in the new buffer
-            byteBuffer.position(byteBuffer.position() + Short.BYTES);
+            byteBuffer.position(newPosition + Short.BYTES);
 
             // write the new name
-            for (int i = 0; i < newName.getBytes().length; ++i) {
+            for (int i = 0; i < newNameByteSize; ++i) {
                 byteBuffer.put(i + byteBuffer.position(), newName.getBytes()[i]);
             }
             // update the position after writing the new name in the new buffer
-            byteBuffer.position(byteBuffer.position() + newName.getBytes().length);
+            byteBuffer.position(byteBuffer.position() + newNameByteSize);
             // update the old buffer index to copy from
             oldBufferIndexToCopyFrom = utf8Entry.getEndPosition();
+            cpIndexToConstantUtf8.put(
+                    utf8Entry.constantPoolIndex,
+                    new Constant_Utf8((short) newNameByteSize, newName, newPosition, utf8Entry.constantPoolIndex));
         }
         // copy the remaining bytes from the old buffer to the new buffer
         byteBuffer.put(buf.array(), oldBufferIndexToCopyFrom, oldBufferSize - oldBufferIndexToCopyFrom);
 
         this.bytecode = byteBuffer.array();
-
-        // refreshes the info structures
-        return new ConstantPoolParser(this.bytecode);
     }
 }

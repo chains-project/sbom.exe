@@ -4,9 +4,10 @@ import static io.github.algomaster99.terminator.commons.fingerprint.constant_poo
 
 import java.util.Objects;
 
-// Not implementing ConstantPoolInfo here because we only need it as a map
-class Constant_Utf8 implements Comparable<Constant_Utf8> {
+class Constant_Utf8 implements Comparable<Constant_Utf8>, ConstantPoolInfo {
     final byte tag = CONSTANT_UTF8;
+
+    short constantPoolIndex; // constant pool index of the UTF8_info structure
 
     short length;
 
@@ -14,10 +15,11 @@ class Constant_Utf8 implements Comparable<Constant_Utf8> {
 
     int startPosition;
 
-    public Constant_Utf8(short length, String bytes, int startPosition) {
+    public Constant_Utf8(short length, String bytes, int startPosition, short constantPoolIndex) {
         this.length = length;
         this.bytes = bytes;
         this.startPosition = startPosition;
+        this.constantPoolIndex = constantPoolIndex;
     }
 
     /**
@@ -55,5 +57,10 @@ class Constant_Utf8 implements Comparable<Constant_Utf8> {
     @Override
     public String toString() {
         return bytes;
+    }
+
+    @Override
+    public short getConstantPoolIndex() {
+        return constantPoolIndex;
     }
 }
