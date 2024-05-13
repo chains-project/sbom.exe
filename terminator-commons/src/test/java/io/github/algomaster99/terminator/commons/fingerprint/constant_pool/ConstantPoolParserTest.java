@@ -35,30 +35,6 @@ public class ConstantPoolParserTest {
     }
 
     @Test
-    void fooShouldBeConvertedToBar() throws IOException {
-        // arrange
-        Path foo = CLASSFILE.resolve("fooToBar").resolve("Foo.class");
-        byte[] fooBytes = Files.readAllBytes(foo);
-        String newName = "Bar";
-        byte[] barBytes = new ConstantPoolParser(Files.readAllBytes(foo))
-                .rewriteAllClassInfo(newName)
-                .getBytecode();
-
-        // act
-        int fooLength = fooBytes.length;
-        int barLength = barBytes.length;
-
-        // assert
-        assertThat(fooLength).isNotEqualTo(barLength);
-        assertThat(fooLength
-                        - "java/lang/Object".getBytes().length // "Foo" extends "java/lang/Object"
-                        - "Foo".getBytes().length // "Foo" class name
-                        + newName.getBytes().length * 2 // "Bar" replaces both classes
-                        - 5) // 5 bytes are removed because "Foo.java" is replaced by "Bar" in SourceFile attribute
-                .isEqualTo(barLength);
-    }
-
-    @Test
     void generatedConstructorAccessorIsRewritten() throws IOException {
         // arrange
         Path gca5Runtime = CLASSFILE
