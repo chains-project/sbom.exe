@@ -3,15 +3,11 @@ package io.github.algomaster99.terminator.commons.fingerprint.constant_pool;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * A small parser to read the constant pool directly, in case it contains references ASM does not support.
@@ -248,23 +244,15 @@ public class ConstantPoolParser {
     }
 
     public byte[] getConstantPoolBytesOnly() {
-        List<Byte> constantPoolEntriesWithoutIndex = getConstantPoolEntry();
-        byte[] constantPoolBytes = new byte[constantPoolEntriesWithoutIndex.size()];
-        int i = 0;
-        for (Byte b : constantPoolEntriesWithoutIndex) {
-            constantPoolBytes[i++] = b;
-        }
-        return constantPoolBytes;
+        return getConstantPoolEntries();
     }
 
-    private List<Byte> getConstantPoolEntry() {
-        List<Byte> constantPoolEntriesWithoutIndex = new ArrayList<>();
+    private byte[] getConstantPoolEntries() {
+        StringBuilder sb = new StringBuilder();
         cpIndexToConstantUtf8.forEach((k, v) -> {
-            constantPoolEntriesWithoutIndex.addAll(IntStream.range(0, v.bytes.getBytes().length)
-                    .mapToObj(i -> v.bytes.getBytes()[i])
-                    .collect(Collectors.toList()));
+            sb.append(v.bytes);
         });
-        return constantPoolEntriesWithoutIndex;
+        return sb.toString().getBytes(StandardCharsets.UTF_8);
     }
 
     public ConstantPoolParser rewriteAllClassInfo() {

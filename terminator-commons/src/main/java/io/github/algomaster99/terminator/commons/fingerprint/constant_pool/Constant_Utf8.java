@@ -29,6 +29,10 @@ class Constant_Utf8 implements Comparable<Constant_Utf8>, ConstantPoolInfo {
         this.bytes = bytes;
     }
 
+    public byte[] getBytes() {
+        return bytes.getBytes();
+    }
+
     public int getEndPosition() {
         return startPosition + 2 + length;
     }
