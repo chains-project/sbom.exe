@@ -59,7 +59,7 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
         if (executableJar == null) {
             throw new RuntimeException("The module " + executableJarModule + " is not found in the project");
         }
-        List<MavenModule> requiredModules = executableJar.getSubmodulesThatAreDependencies();
+        Set<MavenModule> requiredModules = executableJar.getSubmodulesThatAreDependencies();
         // we want to instrument the executable jar module as well
         requiredModules.add(executableJar);
         if (cleanup) {

@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
@@ -64,8 +66,8 @@ public class MavenModule {
         return parent.topLevelParent();
     }
 
-    public List<MavenModule> getSubmodulesThatAreDependencies() {
-        List<MavenModule> subModulesThatAreDependencies = new ArrayList<>();
+    public Set<MavenModule> getSubmodulesThatAreDependencies() {
+        Set<MavenModule> subModulesThatAreDependencies = new HashSet<>();
         List<Dependency> dependencies = self.getDependencies();
         for (Dependency dependency : dependencies) {
             String artifactId = dependency.getArtifactId();
@@ -74,7 +76,8 @@ public class MavenModule {
                 continue;
             }
             subModulesThatAreDependencies.add(submodule);
-            submodule.getSubmodulesThatAreDependencies();
+            // look for transitive dependencies that are submodules
+            subModulesThatAreDependencies.addAll(submodule.getSubmodulesThatAreDependencies());
         }
         return subModulesThatAreDependencies;
     }
