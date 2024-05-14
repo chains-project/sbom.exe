@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Set;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.jupiter.api.Test;
@@ -109,6 +108,25 @@ public class MavenModuleTest {
         MavenModule module1 = root.getSubmodules().get(0);
         MavenModule module2 = root.getSubmodules().get(1);
 
-        assertThat(module1.getSubmodulesThatAreDependencies()).isEqualTo(List.of(module2));
+        assertThat(module1.getSubmodulesThatAreDependencies()).isEqualTo(Set.of(module2));
+    }
+
+    @Test
+    void createMavenModuleGraph_pdfbox() throws XmlPullParserException, IOException {
+        // arrange
+        Path projectRoot = Path.of("src/test/resources/maven-modules/pdfbox").toAbsolutePath();
+
+        // act
+        MavenModule root = MavenModule.createMavenModuleGraph(projectRoot);
+
+        // assert
+        assertThat(root).isNotNull();
+        MavenModule pdfboxApp = root.getSubmodules().get(6);
+        assertThat(pdfboxApp.getSelf().getArtifactId()).isEqualTo("pdfbox-app");
+
+        Set<MavenModule> submodulesThatAreDependencies = pdfboxApp.getSubmodulesThatAreDependencies();
+        assertThat(submodulesThatAreDependencies).hasSize(5);
+        assertThat(submodulesThatAreDependencies.stream().map(m -> m.getSelf().getArtifactId()))
+                .containsOnly("pdfbox-tools", "pdfbox-debugger", "pdfbox", "fontbox", "pdfbox-io");
     }
 }
