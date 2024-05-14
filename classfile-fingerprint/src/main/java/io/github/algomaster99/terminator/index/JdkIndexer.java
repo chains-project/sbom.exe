@@ -3,7 +3,7 @@ package io.github.algomaster99.terminator.index;
 import io.github.algomaster99.terminator.commons.fingerprint.JdkClass;
 import io.github.algomaster99.terminator.commons.fingerprint.JdkClassFinder;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
-import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassfileVersion;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileUtilities;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +29,7 @@ public class JdkIndexer extends BaseIndexer implements Callable<Integer> {
         List<JdkClass> jdkClasses = JdkClassFinder.listJdkClasses();
         jdkClasses.forEach(resource -> {
             byte[] classfileBytes = resource.bytes();
-            String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
+            String classfileVersion = ClassFileUtilities.getVersion(classfileBytes);
             String hash = HashComputer.computeHash(classfileBytes);
             referenceProvenance.computeIfAbsent(
                     resource.name(),

@@ -4,7 +4,7 @@ import static io.github.algomaster99.terminator.commons.fingerprint.constant_poo
 
 import java.util.Objects;
 
-public class Constant_Class {
+public class Constant_Class implements ConstantPoolInfo {
     final byte tag = CONSTANT_CLASS;
 
     short constantPoolIndex; // constant pool index of the Class_info structure
@@ -42,5 +42,10 @@ public class Constant_Class {
     @Override
     public String toString() {
         return "# " + constantPoolIndex + "Class " + classIndex;
+    }
+
+    @Override
+    public short getConstantPoolIndex() {
+        return constantPoolIndex;
     }
 }

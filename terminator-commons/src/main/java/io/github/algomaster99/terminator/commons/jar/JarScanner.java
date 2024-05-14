@@ -3,7 +3,7 @@ package io.github.algomaster99.terminator.commons.jar;
 import static io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer.computeHash;
 
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
-import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassfileVersion;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileUtilities;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
@@ -39,7 +39,7 @@ public class JarScanner {
                     String strippedJarEntryName = stripMetaInf(jarEntryName);
 
                     byte[] classfileBytes = jarFile.getInputStream(jarEntry).readAllBytes();
-                    String classfileVersion = ClassfileVersion.getVersion(classfileBytes);
+                    String classfileVersion = ClassFileUtilities.getVersion(classfileBytes);
                     String hashOfClass = computeHash(classfileBytes);
 
                     ClassFileAttributes classFileAttributes =

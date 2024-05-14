@@ -5,18 +5,19 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Formatter;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
 
 public class HashComputer {
     private HashComputer() {}
 
     public static String computeHash(byte[] bytes) {
-        ClassReader reader = new ClassReader(bytes);
-        ClassWriter writer = new ClassWriter(reader, 0);
-        reader.accept(writer, 0);
+        ConstantPoolParser parser = new ConstantPoolParser(bytes);
+        parser.rewriteAllClassInfo()
+                .rewriteAllFieldRef()
+                .rewriteSourceFileAttribute()
+                .setNewName("Bar")
+                .modify();
+        byte[] rewrittenBytes = parser.getConstantPoolBytesOnly();
 
-        byte[] rewrittenBytes = ConstantPoolParser.rewriteAllClassInfo(bytes, "foo");
         Arrays.sort(rewrittenBytes);
 
         byte[] algorithmSum;
