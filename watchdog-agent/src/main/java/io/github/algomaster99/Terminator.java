@@ -6,8 +6,6 @@ import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashCompu
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -72,16 +70,6 @@ public class Terminator {
             return modified(className, classfileBuffer);
         }
         return notAllowlisted(className, classfileBuffer);
-    }
-
-    private static Set<String> getAllHashes(Collection<Set<ClassFileAttributes>> classFileAttributesOfAllClasses) {
-        Set<String> result = new HashSet<>();
-        for (Set<ClassFileAttributes> attrOfOneClass : classFileAttributesOfAllClasses) {
-            for (ClassFileAttributes attr : attrOfOneClass) {
-                result.add(attr.hash());
-            }
-        }
-        return result;
     }
 
     private static byte[] modified(String className, byte[] classfileBuffer) {
