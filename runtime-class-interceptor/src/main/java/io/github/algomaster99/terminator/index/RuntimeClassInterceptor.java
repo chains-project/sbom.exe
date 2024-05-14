@@ -46,8 +46,7 @@ public class RuntimeClassInterceptor {
         String hash = HashComputer.computeHash(classfileBuffer);
         if (className.startsWith("com/sun/proxy/$Proxy") || className.startsWith("com/sun/proxy/jdk/")) {
             className = ClassFileUtilities.getNameForProxyClass(classfileBuffer);
-        }
-        if (className.startsWith("jdk/internal/reflect/GeneratedConstructorAccessor")) {
+        } else if (className.startsWith("jdk/internal/reflect/GeneratedConstructorAccessor")) {
             className = ClassFileUtilities.getClassNameForGeneratedConstructorAccessor(classfileBuffer);
         }
         if (candidates == null) {
