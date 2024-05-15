@@ -19,6 +19,9 @@ public class RuntimeClassInterceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(RuntimeClassInterceptor.class);
     private static final Map<String, Set<ClassFileAttributes>> exhaustiveListOfClasses = new ConcurrentHashMap<>();
 
+    // This is a map of proxy class names to their names with interfaces
+    private static final Map<String, String> proxies = new ConcurrentHashMap<>();
+
     public static void premain(String agentArgs, Instrumentation inst) {
         RuntimeClassInterceptorOptions options = new RuntimeClassInterceptorOptions(agentArgs);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -45,9 +48,19 @@ public class RuntimeClassInterceptor {
         String classFileVersion = ClassFileUtilities.getVersion(classfileBuffer);
         String hash = HashComputer.computeHash(classfileBuffer);
         if (className.startsWith("com/sun/proxy/$Proxy") || className.startsWith("com/sun/proxy/jdk/")) {
-            className = ClassFileUtilities.getNameForProxyClass(classfileBuffer);
+            String nameThatNeedsToBeDisplayedInBomi =
+                    "Proxy_" + ClassFileUtilities.getInterfacesOfProxyClass(classfileBuffer);
+            proxies.put(className, nameThatNeedsToBeDisplayedInBomi);
+            className = nameThatNeedsToBeDisplayedInBomi;
         } else if (className.startsWith("jdk/internal/reflect/GeneratedConstructorAccessor")) {
-            className = ClassFileUtilities.getClassNameForGeneratedConstructorAccessor(classfileBuffer);
+            String classForWhichTheConstructorIs =
+                    ClassFileUtilities.getClassForWhichGeneratedAccessorIsFor(classfileBuffer);
+            String isProxy = proxies.get(classForWhichTheConstructorIs);
+            if (isProxy != null) {
+                className = "GCA_" + isProxy;
+            } else {
+                className = "GCA_" + classForWhichTheConstructorIs;
+            }
         }
         if (candidates == null) {
             exhaustiveListOfClasses.put(className, Set.of(new ClassFileAttributes(classFileVersion, hash, "SHA-256")));

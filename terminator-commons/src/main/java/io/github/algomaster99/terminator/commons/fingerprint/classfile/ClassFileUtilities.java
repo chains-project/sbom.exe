@@ -3,6 +3,7 @@ package io.github.algomaster99.terminator.commons.fingerprint.classfile;
 import static io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer.toHexString;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -31,16 +32,16 @@ public class ClassFileUtilities {
     }
 
     /**
-     * Returns a name for a proxy class that also includes the names of the interfaces that the proxy class implements.
+     * Returns the interfaces that the proxy class implements.
      */
-    public static String getNameForProxyClass(byte[] bytes) {
+    public static String getInterfacesOfProxyClass(byte[] bytes) {
         ClassReader reader = new ClassReader(bytes);
         String[] interfaces = reader.getInterfaces();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("Proxy_");
 
-        for (String i : interfaces) {
+        // sort the interfaces to make the name deterministic
+        for (String i : Arrays.stream(interfaces).sorted().collect(Collectors.toList())) {
             sb.append(getSimpleNameFromQualifiedName(i));
         }
 
@@ -48,9 +49,9 @@ public class ClassFileUtilities {
     }
 
     /**
-     * Returns the name of the class that the Generated Constructor Accessor is for.
+     * Returns the fully qualified name of the class that the Generated Constructor Accessor is for.
      */
-    public static String getClassNameForGeneratedConstructorAccessor(byte[] bytes) {
+    public static String getClassForWhichGeneratedAccessorIsFor(byte[] bytes) {
         ClassReader reader = new ClassReader(bytes);
         ClassNode rootNode = new ClassNode();
         reader.accept(rootNode, 0);
@@ -61,13 +62,15 @@ public class ClassFileUtilities {
                     // this should be a NEW instruction
                     // GCA creates a new instance of the `desc` class
                     if (insnNode.getOpcode() == 187) {
-                        String owner = ((org.objectweb.asm.tree.TypeInsnNode) insnNode).desc;
-                        return getSimpleNameFromQualifiedName(owner);
+                        return ((org.objectweb.asm.tree.TypeInsnNode) insnNode).desc;
                     }
                 }
-                return getSimpleNameFromQualifiedName(rootNode.name) + "_ConstructorAccessor";
+                return rootNode.name;
             }
         }
+        System.err.println("This is a weird Generated Constructor Accessor: " + rootNode.name);
+        // we exit violently because agent consumes exception
+        Runtime.getRuntime().halt(1);
         throw new RuntimeException("This is a weird Generated Constructor Accessor: " + rootNode.name);
     }
 

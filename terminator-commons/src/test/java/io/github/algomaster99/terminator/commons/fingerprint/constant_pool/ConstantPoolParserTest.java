@@ -194,16 +194,19 @@ public class ConstantPoolParserTest {
         assertThat(ABytesRewritten).isEqualTo(BBytesRewritten);
     }
 
-    //    @Test
-    //    void rewriteSourceFileAttribute() throws IOException {
-    //        // arrange
-    //        Path valueObject = CLASSFILE.resolve("ValueObject.class");
-    //        byte[] bytes = Files.readAllBytes(valueObject);
-    //
-    //        // act
-    //        ConstantPoolParser parser = new ConstantPoolParser(bytes);
-    //        ConstantPoolParser rewritten = parser.rewriteAllClassInfo("dfd").rewriteSourceFileAttribute("Bar");
-    //    }
+    @Test
+    void gca_shouldBeSameAfterRewriting() throws IOException {
+        // arrange
+        Path gca7Runtime = CLASSFILE.resolve("gca").resolve("GCARuntime_7_.class");
+        Path gca9Bomi = CLASSFILE.resolve("gca").resolve("GCAIndex_9_.class");
+
+        // act
+        String actualHash = HashComputer.computeHash(Files.readAllBytes(gca7Runtime));
+        String expectedHash = HashComputer.computeHash(Files.readAllBytes(gca9Bomi));
+
+        // assert
+        assertThat(actualHash).isEqualTo(expectedHash);
+    }
 
     @Nested
     class ChainOperations {

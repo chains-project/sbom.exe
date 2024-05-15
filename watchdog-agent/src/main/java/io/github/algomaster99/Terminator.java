@@ -8,11 +8,14 @@ import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Terminator {
     private static Options options;
 
     private static Map<String, Set<ClassFileAttributes>> fingerprints;
+
+    private static final Map<String, String> proxyOriginalNamesToReadableNames = new ConcurrentHashMap<>();
 
     public static void premain(String agentArgs, Instrumentation inst) {
         options = new Options(agentArgs);
@@ -33,15 +36,25 @@ public class Terminator {
     }
 
     private static byte[] isLoadedClassAllowlisted(String className, byte[] classfileBuffer) {
-        // this only works for Java 11
+
+        // this only works for Java 11 (atleast I have only tested for that)
         if (className.startsWith("com/sun/proxy/$Proxy") || className.startsWith("com/sun/proxy/jdk/")) {
-            String moreReadableName = ClassFileUtilities.getNameForProxyClass(classfileBuffer);
-            return lookupReadableName(className, classfileBuffer, moreReadableName);
+            String nameThatNeedsToBeDisplayedInBomi =
+                    "Proxy_" + ClassFileUtilities.getInterfacesOfProxyClass(classfileBuffer);
+            proxyOriginalNamesToReadableNames.put(className, nameThatNeedsToBeDisplayedInBomi);
+            return lookupReadableName(className, classfileBuffer, nameThatNeedsToBeDisplayedInBomi);
         }
         if (className.startsWith("jdk/internal/reflect/GeneratedConstructorAccessor")) {
-            String correspondingClassName =
-                    ClassFileUtilities.getClassNameForGeneratedConstructorAccessor(classfileBuffer);
-            return lookupReadableName(className, classfileBuffer, correspondingClassName);
+            String classForWhichTheConstructorIs =
+                    ClassFileUtilities.getClassForWhichGeneratedAccessorIsFor(classfileBuffer);
+            String isProxy = proxyOriginalNamesToReadableNames.get(classForWhichTheConstructorIs);
+            String actualGCAName;
+            if (isProxy != null) {
+                actualGCAName = "GCA_" + isProxy;
+            } else {
+                actualGCAName = "GCA_" + classForWhichTheConstructorIs;
+            }
+            return lookupReadableName(className, classfileBuffer, actualGCAName);
         }
         for (String expectedClassName : fingerprints.keySet()) {
             if (expectedClassName.equals(className)) {
