@@ -5,12 +5,9 @@ import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFile
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileUtilities;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
 import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptorOptions;
-import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.security.ProtectionDomain;
 import java.util.Map;
 import java.util.Set;
@@ -56,14 +53,6 @@ public class RuntimeClassInterceptor {
                     "Proxy_" + ClassFileUtilities.getInterfacesOfProxyClass(classfileBuffer);
             proxies.put(className, nameThatNeedsToBeDisplayedInBomi);
             newClassName = nameThatNeedsToBeDisplayedInBomi;
-            try {
-                Files.writeString(
-                        Path.of("/home/aman/Desktop/chains/sbom.exe/b.txt"),
-                        className + ":" + newClassName + "\n",
-                        java.nio.file.StandardOpenOption.APPEND);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
         } else if (ClassFileUtilities.getSimpleNameFromQualifiedName(className)
                 .startsWith("GeneratedConstructorAccessor")) {
             String classForWhichTheConstructorIs =
@@ -73,14 +62,6 @@ public class RuntimeClassInterceptor {
                 newClassName = "GCA_" + isProxy;
             } else {
                 newClassName = "GCA_" + classForWhichTheConstructorIs;
-            }
-            try {
-                Files.writeString(
-                        Path.of("/home/aman/Desktop/chains/sbom.exe/b.txt"),
-                        className + ":proxy:" + classForWhichTheConstructorIs + ":" + newClassName + "\n",
-                        java.nio.file.StandardOpenOption.APPEND);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
         }
         if (candidates == null) {
