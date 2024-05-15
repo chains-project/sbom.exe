@@ -36,25 +36,23 @@ public class Terminator {
     }
 
     private static byte[] isLoadedClassAllowlisted(String className, byte[] classfileBuffer) {
-
-        // this only works for Java 11 (atleast I have only tested for that)
-        if (className.startsWith("com/sun/proxy/$Proxy") || className.startsWith("com/sun/proxy/jdk/")) {
-            String nameThatNeedsToBeDisplayedInBomi =
-                    "Proxy_" + ClassFileUtilities.getInterfacesOfProxyClass(classfileBuffer);
-            proxyOriginalNamesToReadableNames.put(className, nameThatNeedsToBeDisplayedInBomi);
-            return lookupReadableName(className, classfileBuffer, nameThatNeedsToBeDisplayedInBomi);
+        if (ClassFileUtilities.getSimpleNameFromQualifiedName(className).startsWith("$Proxy")) {
+            String nameThatIsDisplayedInBomi = "Proxy_" + ClassFileUtilities.getInterfacesOfProxyClass(classfileBuffer);
+            proxyOriginalNamesToReadableNames.put(className, nameThatIsDisplayedInBomi);
+            return lookupReadableName(className, classfileBuffer, nameThatIsDisplayedInBomi);
         }
-        if (className.startsWith("jdk/internal/reflect/GeneratedConstructorAccessor")) {
+        if (ClassFileUtilities.getSimpleNameFromQualifiedName(className).startsWith("GeneratedConstructorAccessor")) {
             String classForWhichTheConstructorIs =
                     ClassFileUtilities.getClassForWhichGeneratedAccessorIsFor(classfileBuffer);
             String isProxy = proxyOriginalNamesToReadableNames.get(classForWhichTheConstructorIs);
-            String actualGCAName;
+            String nameThatIsDisplayedInBomi;
             if (isProxy != null) {
-                actualGCAName = "GCA_" + isProxy;
+                nameThatIsDisplayedInBomi = "GCA_" + isProxy;
+
             } else {
-                actualGCAName = "GCA_" + classForWhichTheConstructorIs;
+                nameThatIsDisplayedInBomi = "GCA_" + classForWhichTheConstructorIs;
             }
-            return lookupReadableName(className, classfileBuffer, actualGCAName);
+            return lookupReadableName(className, classfileBuffer, nameThatIsDisplayedInBomi);
         }
         for (String expectedClassName : fingerprints.keySet()) {
             if (expectedClassName.equals(className)) {

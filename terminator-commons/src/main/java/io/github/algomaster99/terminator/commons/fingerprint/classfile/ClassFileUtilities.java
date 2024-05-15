@@ -74,7 +74,7 @@ public class ClassFileUtilities {
         throw new RuntimeException("This is a weird Generated Constructor Accessor: " + rootNode.name);
     }
 
-    private static String getSimpleNameFromQualifiedName(String qualifiedName) {
+    public static String getSimpleNameFromQualifiedName(String qualifiedName) {
         return qualifiedName.substring(qualifiedName.lastIndexOf("/") + 1);
     }
 }
