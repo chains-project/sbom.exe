@@ -9,28 +9,28 @@ import org.junit.jupiter.api.Test;
 
 public class ClassFileUtilitiesTest {
     @Test
-    void getNameForProxyClass() throws IOException {
+    void getInterfacesOfProxyClass() throws IOException {
         // arrange
         Path pathToProxyClass = Path.of("src/test/resources/classfile/$Proxy0Index.class");
         byte[] bytes = Files.readAllBytes(pathToProxyClass);
 
         // act
-        String moreReadableName = ClassFileUtilities.getNameForProxyClass(bytes);
+        String moreReadableName = ClassFileUtilities.getInterfacesOfProxyClass(bytes);
 
         // assert
-        assertThat(moreReadableName).isEqualTo("Proxy_Retention");
+        assertThat(moreReadableName).isEqualTo("Retention");
     }
 
     @Test
-    void getClassNameForGeneratedConstructorAccessor() throws IOException {
+    void getClassForWhichGeneratedAccessorIsFor() throws IOException {
         // arrange
         Path pathToGeneratedConstructorAccessor = Path.of("src/test/resources/classfile/GCAIndex_35.class");
         byte[] bytes = Files.readAllBytes(pathToGeneratedConstructorAccessor);
 
         // act
-        String correspondingClassName = ClassFileUtilities.getClassNameForGeneratedConstructorAccessor(bytes);
+        String correspondingClassName = ClassFileUtilities.getClassForWhichGeneratedAccessorIsFor(bytes);
 
         // assert
-        assertThat(correspondingClassName).isEqualTo("AuthorityKeyIdentifierExtension");
+        assertThat(correspondingClassName).isEqualTo("sun/security/x509/AuthorityKeyIdentifierExtension");
     }
 }
