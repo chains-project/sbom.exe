@@ -55,7 +55,6 @@
               <manifestEntries>
                 <Premain-Class>io.github.algomaster99.Terminator</Premain-Class>
                 <Can-Retransform-Classes>true</Can-Retransform-Classes>
-                <Multi-Release>true</Multi-Release>
               </manifestEntries>
             </transformer>
           </transformers>
