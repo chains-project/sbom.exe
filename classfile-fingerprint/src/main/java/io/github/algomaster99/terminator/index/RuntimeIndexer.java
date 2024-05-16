@@ -72,6 +72,9 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
             if (indexFile.output != null) {
                 String suffix = module.getSelf().getArtifactId();
                 Path output = Path.of(indexFile.output.toString() + "_" + suffix + ".jsonl");
+                if (!output.toFile().exists()) {
+                    output.toFile().createNewFile();
+                }
                 options.setOutput(output);
                 candidateIndexForMerge.add(output);
             }
@@ -105,6 +108,10 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
         for (Path index : candidateIndexForMerge) {
             Map<String, Set<ClassFileAttributes>> generatedReferenceProvenance =
                     ParsingHelper.deserializeFingerprints(index);
+            if (generatedReferenceProvenance.isEmpty()) {
+                System.out.println("There were no tests for: " + index);
+                continue;
+            }
             Map<String, Set<ClassFileAttributes>> updatedReferenceProvenance =
                     createOrMergeProvenances(generatedReferenceProvenance);
             referenceProvenance.putAll(updatedReferenceProvenance);
