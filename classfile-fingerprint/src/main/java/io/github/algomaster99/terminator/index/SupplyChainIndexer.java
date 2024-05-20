@@ -15,8 +15,6 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -24,7 +22,6 @@ import picocli.CommandLine;
         mixinStandardHelpOptions = true,
         description = "Create an index of the classfiles from SBOM")
 public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SupplyChainIndexer.class);
 
     @CommandLine.Option(
             names = {"-s", "--sbom"},
@@ -40,14 +37,12 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
         try {
             sbom = CycloneDX.getPojo(Files.readString(sbomPath));
         } catch (IOException e) {
-            LOGGER.error("SBOM could not be parsed.");
+            System.err.println("SBOM could not be parsed.");
             throw new RuntimeException(e);
         }
         if (sbom.getMetadata() != null) {
-            LOGGER.debug("Processing root component");
             processRootComponent(sbom, referenceProvenance);
         }
-        LOGGER.debug("Processing all components");
         processAllComponents(sbom, referenceProvenance);
         return referenceProvenance;
     }
@@ -56,12 +51,10 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
             CycloneDXWrapper sbom, Map<String, Set<ClassFileAttributes>> referenceProvenance) {
         Metadata metadata = sbom.getMetadata();
         if (metadata == null) {
-            LOGGER.warn("Metadata is not present.");
             return;
         }
         Component rootComponent = metadata.getComponent();
         if (rootComponent == null) {
-            LOGGER.warn("Root component is not present.");
             return;
         }
         File jarFile;
@@ -87,11 +80,6 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
                 File jarFile =
                         JarDownloader.getJarFile(component.getGroup(), component.getName(), component.getVersion());
                 if (jarFile == null) {
-                    LOGGER.warn(
-                            "Could not find jar for {}:{}:{}",
-                            component.getGroup(),
-                            component.getName(),
-                            component.getVersion());
                     continue;
                 }
                 goInsideJarAndUpdateFingerprints(

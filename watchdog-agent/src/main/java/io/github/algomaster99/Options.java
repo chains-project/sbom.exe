@@ -6,12 +6,9 @@ import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFile
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Options {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Options.class);
     private Map<String, Set<ClassFileAttributes>> sbom;
     private boolean skipShutdown = false;
 
