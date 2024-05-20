@@ -87,7 +87,8 @@ public class ConstantPoolParser {
 
     private ConstantPoolParser(ByteBuffer buf) {
         if (buf.order(ByteOrder.BIG_ENDIAN).getInt() != HEAD) {
-            throw new RuntimeException("Not a valid classfile");
+            System.err.println("Not a valid classfile");
+            Runtime.getRuntime().halt(1);
         }
         buf.getChar();
         buf.getChar(); // minor + ver
