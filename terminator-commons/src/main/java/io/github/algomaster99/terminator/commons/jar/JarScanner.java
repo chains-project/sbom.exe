@@ -14,11 +14,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JarScanner {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JarScanner.class);
 
     private JarScanner() {}
 
@@ -32,8 +29,6 @@ public class JarScanner {
             while (jarEntries.hasMoreElements()) {
                 JarEntry jarEntry = jarEntries.nextElement();
                 if (jarEntry.getName().endsWith(".class")) {
-                    LOGGER.debug("Found class: " + jarEntry.getName());
-
                     String jarEntryName =
                             jarEntry.getName().substring(0, jarEntry.getName().length() - ".class".length());
                     String strippedJarEntryName = stripMetaInf(jarEntryName);
@@ -56,7 +51,7 @@ public class JarScanner {
                 }
             }
         } catch (IOException e) {
-            LOGGER.error("Could not open JAR file: " + artifactFileOnSystem);
+            System.err.println("Could not open JAR file: " + artifactFileOnSystem);
             throw new RuntimeException(e);
         }
     }

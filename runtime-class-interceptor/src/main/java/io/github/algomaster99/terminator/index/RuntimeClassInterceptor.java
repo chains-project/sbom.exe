@@ -12,11 +12,8 @@ import java.security.ProtectionDomain;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class RuntimeClassInterceptor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RuntimeClassInterceptor.class);
     private static final Map<String, Set<ClassFileAttributes>> exhaustiveListOfClasses = new ConcurrentHashMap<>();
 
     // This is a map of proxy class names to their names with interfaces
