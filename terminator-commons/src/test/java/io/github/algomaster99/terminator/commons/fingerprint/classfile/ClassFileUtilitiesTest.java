@@ -18,7 +18,7 @@ public class ClassFileUtilitiesTest {
         String moreReadableName = ClassFileUtilities.getInterfacesOfProxyClass(bytes);
 
         // assert
-        assertThat(moreReadableName).isEqualTo("Retention");
+        assertThat(moreReadableName).isEqualTo("java_lang_annotation_Retention");
     }
 
     @Test

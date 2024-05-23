@@ -42,7 +42,7 @@ public class ClassFileUtilities {
 
         // sort the interfaces to make the name deterministic
         for (String i : Arrays.stream(interfaces).sorted().collect(Collectors.toList())) {
-            sb.append(getSimpleNameFromQualifiedName(i));
+            sb.append(i.replace("/", "_"));
         }
 
         return sb.toString();
