@@ -55,6 +55,7 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
         }
         Component rootComponent = metadata.getComponent();
         if (rootComponent == null) {
+            System.out.println("Root component is not present.");
             return;
         }
         File jarFile;
@@ -80,6 +81,9 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
                 File jarFile =
                         JarDownloader.getJarFile(component.getGroup(), component.getName(), component.getVersion());
                 if (jarFile == null) {
+                    System.out.println(String.format(
+                            "Could not find jar for %s:%s:%s",
+                            component.getGroup(), component.getName(), component.getVersion()));
                     continue;
                 }
                 goInsideJarAndUpdateFingerprints(

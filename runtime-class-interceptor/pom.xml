@@ -45,6 +45,10 @@
           </transformers>
           <relocations>
             <relocation>
+              <pattern>com.fasterxml.jackson</pattern>
+              <shadedPattern>rtf.com.fasterxml.jackson</shadedPattern>
+            </relocation>
+            <relocation>
               <pattern>org.slf4j</pattern>
               <shadedPattern>rtf.org.slf4j</shadedPattern>
             </relocation>
