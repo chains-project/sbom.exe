@@ -12,7 +12,6 @@ public class HashComputer {
     public static String computeHash(byte[] bytes) {
         ConstantPoolParser parser = new ConstantPoolParser(bytes);
         parser.rewriteAllClassInfo()
-                .rewriteAllFieldRef()
                 .rewriteSourceFileAttribute()
                 .setNewName("Bar")
                 .modify();
