@@ -1,3 +1,6 @@
 [submodule "terminator-commons/src/test/resources/maven-modules/pdfbox"]
 	path = terminator-commons/src/test/resources/maven-modules/pdfbox
 	url = git@github.com:apache/pdfbox.git
+[submodule "exploits-for-sbom.exe"]
+	path = experiments
+	url = https://github.com/chains-project/exploits-for-sbom.exe
