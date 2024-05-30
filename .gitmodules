@@ -4,3 +4,6 @@
 [submodule "exploits-for-sbom.exe"]
 	path = experiments
 	url = https://github.com/chains-project/exploits-for-sbom.exe
+[submodule "terminator-commons/src/test/resources/maven-modules/graphhopper"]
+	path = terminator-commons/src/test/resources/maven-modules/graphhopper
+	url = git@github.com:graphhopper/graphhopper.git

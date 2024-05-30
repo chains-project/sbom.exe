@@ -129,4 +129,31 @@ public class MavenModuleTest {
         assertThat(submodulesThatAreDependencies.stream().map(m -> m.getSelf().getArtifactId()))
                 .containsOnly("pdfbox-tools", "pdfbox-debugger", "pdfbox", "fontbox", "pdfbox-io");
     }
+
+    @Test
+    void createMavenModuleGraph_graphhopper() throws XmlPullParserException, IOException {
+        // arrange
+        Path projectRoot =
+                Path.of("src/test/resources/maven-modules/graphhopper").toAbsolutePath();
+
+        // act
+        MavenModule root = MavenModule.createMavenModuleGraph(projectRoot);
+
+        // assert
+        assertThat(root).isNotNull();
+        MavenModule graphhopperWeb = root.getSubmodules().get(6);
+        assertThat(graphhopperWeb.getSelf().getArtifactId()).isEqualTo("graphhopper-web");
+
+        Set<MavenModule> submodulesThatAreDependencies = graphhopperWeb.getSubmodulesThatAreDependencies();
+        assertThat(submodulesThatAreDependencies).hasSize(7);
+        assertThat(submodulesThatAreDependencies.stream().map(m -> m.getSelf().getArtifactId()))
+                .containsOnly(
+                        "graphhopper-web-bundle",
+                        "graphhopper-map-matching",
+                        "graphhopper-nav",
+                        "graphhopper-web-api",
+                        "graphhopper-core",
+                        "graphhopper-reader-gtfs",
+                        "directions-api-client-hc");
+    }
 }
