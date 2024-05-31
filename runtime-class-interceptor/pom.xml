@@ -52,6 +52,10 @@
               <pattern>org.slf4j</pattern>
               <shadedPattern>rtf.org.slf4j</shadedPattern>
             </relocation>
+            <relocation>
+              <pattern>org.objectweb.asm</pattern>
+              <shadedPattern>rtf.org.objectweb.asm</shadedPattern>
+            </relocation>
           </relocations>
         </configuration>
         <executions>
