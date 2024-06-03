@@ -14,6 +14,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -114,7 +115,13 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
             }
             Map<String, Set<ClassFileAttributes>> updatedReferenceProvenance =
                     createOrMergeProvenances(generatedReferenceProvenance);
-            referenceProvenance.putAll(updatedReferenceProvenance);
+            updatedReferenceProvenance.forEach((k, v) -> {
+                referenceProvenance.computeIfAbsent(k, className -> new HashSet<>(v));
+                referenceProvenance.computeIfPresent(k, (className, existing) -> {
+                    existing.addAll(v);
+                    return existing;
+                });
+            });
         }
 
         if (indexFile.input != null) {
@@ -140,25 +147,22 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
                     ParsingHelper.deserializeFingerprints(indexFile.input.toPath());
 
             referenceProvenance.forEach((k, v) -> {
-                if (!currentReferenceProvenance.containsKey(k)) {
-                    currentReferenceProvenance.put(k, v);
-                }
+                currentReferenceProvenance.computeIfAbsent(k, className -> new HashSet<>(v));
+                currentReferenceProvenance.computeIfPresent(k, (className, existing) -> {
+                    existing.addAll(v);
+                    return existing;
+                });
             });
             return currentReferenceProvenance;
         }
         if (indexFile.output != null) {
-            Map<String, Set<ClassFileAttributes>> currentReferenceProvenance;
-            if (indexFile.output.toPath().toFile().exists()) {
-                currentReferenceProvenance = ParsingHelper.deserializeFingerprints(indexFile.output.toPath());
-            } else {
-                currentReferenceProvenance = new HashMap<>();
-            }
+            Map<String, Set<ClassFileAttributes>> currentReferenceProvenance = new HashMap<>();
             referenceProvenance.forEach((k, v) -> {
-                if (currentReferenceProvenance.containsKey(k)) {
-                    currentReferenceProvenance.get(k).addAll(v);
-                } else {
-                    currentReferenceProvenance.put(k, v);
-                }
+                currentReferenceProvenance.computeIfAbsent(k, className -> new HashSet<>(v));
+                currentReferenceProvenance.computeIfPresent(k, (className, existing) -> {
+                    existing.addAll(v);
+                    return existing;
+                });
             });
             return currentReferenceProvenance;
         }

@@ -9,6 +9,7 @@ import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -63,9 +64,10 @@ public class RuntimeClassInterceptor {
         }
         if (candidates == null) {
             exhaustiveListOfClasses.put(
-                    newClassName, Set.of(new ClassFileAttributes(classFileVersion, hash, "SHA-256")));
+                    newClassName, new HashSet<>(Set.of(new ClassFileAttributes(classFileVersion, hash, "SHA-256"))));
         } else {
             candidates.add(new ClassFileAttributes(classFileVersion, hash, "SHA-256"));
+            exhaustiveListOfClasses.put(newClassName, candidates);
         }
         return classfileBuffer;
     }
