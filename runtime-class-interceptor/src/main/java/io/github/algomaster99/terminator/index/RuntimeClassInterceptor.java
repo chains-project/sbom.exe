@@ -63,9 +63,10 @@ public class RuntimeClassInterceptor {
         }
         if (candidates == null) {
             exhaustiveListOfClasses.put(
-                    newClassName, Set.of(new ClassFileAttributes(classFileVersion, hash, "SHA-256")));
+                    newClassName, new HashSet<>(Set.of(new ClassFileAttributes(classFileVersion, hash, "SHA-256"))));
         } else {
             candidates.add(new ClassFileAttributes(classFileVersion, hash, "SHA-256"));
+            exhaustiveListOfClasses.put(newClassName, candidates);
         }
         return classfileBuffer;
     }
