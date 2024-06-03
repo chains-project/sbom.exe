@@ -108,10 +108,12 @@ public class PomTransformer {
         Xpp3Dom argLine = surefireConfiguration.getChild("argLine");
         if (argLine == null) {
             argLine = new Xpp3Dom("argLine");
-            argLine.setValue("-javaagent:" + AGENT_JAR + "=" + options.toString());
+            argLine.setValue(
+                    "--add-opens java.desktop/java.awt=ALL-UNNAMED -javaagent:" + AGENT_JAR + "=" + options.toString());
             surefireConfiguration.addChild(argLine);
         } else {
-            argLine.setValue("-javaagent:" + AGENT_JAR + "=" + options.toString() + " " + argLine.getValue());
+            argLine.setValue("--add-opens java.desktop/java.awt=ALL-UNNAMED -javaagent:" + AGENT_JAR + "="
+                    + options.toString() + " " + argLine.getValue());
         }
     }
 
