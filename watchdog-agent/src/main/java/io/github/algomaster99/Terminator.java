@@ -54,17 +54,15 @@ public class Terminator {
             }
             return lookupReadableName(className, classfileBuffer, nameThatIsDisplayedInBomi);
         }
-        for (String expectedClassName : fingerprints.keySet()) {
-            if (expectedClassName.equals(className)) {
-                Set<ClassFileAttributes> candidates = fingerprints.get(expectedClassName);
-                for (ClassFileAttributes candidate : candidates) {
-                    String hash = HashComputer.computeHash(classfileBuffer);
-                    if (hash.equals(candidate.hash())) {
-                        return classfileBuffer;
-                    }
+        Set<ClassFileAttributes> candidates = fingerprints.get(className);
+        if (candidates != null) {
+            for (ClassFileAttributes candidate : candidates) {
+                String hash = HashComputer.computeHash(classfileBuffer);
+                if (hash.equals(candidate.hash())) {
+                    return classfileBuffer;
                 }
-                return modified(className, classfileBuffer);
             }
+            return modified(className, classfileBuffer);
         }
         return notAllowlisted(className, classfileBuffer);
     }
