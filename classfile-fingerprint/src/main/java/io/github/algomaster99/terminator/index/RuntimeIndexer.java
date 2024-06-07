@@ -93,6 +93,7 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
         InvocationRequest request = new DefaultInvocationRequest();
         File pomFile = pathToTempProject.resolve("pom.xml").toFile();
         request.setPomFile(pomFile);
+        request.addArg("-fae");
         request.setGoals(List.of("clean", "package"));
         request.setBatchMode(true);
         request.setQuiet(true);
