@@ -17,8 +17,12 @@ import org.jsoup.Jsoup;
 public class JarDownloader {
 
     private static final Map<String, String> repositoryUrls = Map.of(
-            "mavenCentral", "https://repo1.maven.org/maven2/",
-            "jboss", "https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/");
+            "mavenCentral",
+            "https://repo1.maven.org/maven2/",
+            "jboss",
+            "https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/",
+            "localhost",
+            "http://0.0.0.0:8081/");
 
     private JarDownloader() {}
 
@@ -71,6 +75,9 @@ public class JarDownloader {
     public static File getJarFile(String groupId, String artifactId, String version)
             throws IOException, InterruptedException {
         for (String repositoryUrl : repositoryUrls.values()) {
+            if (groupId.contains("com.turn") && repositoryUrl.contains("maven")) {
+                continue;
+            }
             String url = getArtifactUrl(groupId, artifactId, version, repositoryUrl);
             String indexPageContent = getIndexPageOfRepository(url);
             if (indexPageContent != null) {
