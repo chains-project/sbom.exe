@@ -96,7 +96,6 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
         request.addArg("-fae");
         request.setGoals(List.of("clean", "package"));
         request.setBatchMode(true);
-        request.setQuiet(true);
         Invoker invoker = new DefaultInvoker();
 
         System.out.println("Ignore the test output below.");
