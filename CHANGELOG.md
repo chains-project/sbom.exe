@@ -1,3 +1,149 @@
+
+# 0.14.0
+## Changelog
+
+## 🚀 Features
+- ffdc1bb feat: rewrite fields and source attributes in constant pool (#231)
+- 3cf72f1 feat: make exit forceful (#222)
+
+## 🐛 Fixes
+- 1da96f5 fix: let other tests run if some fail before (#256)
+- e2e51c4 fix: record multiple attributes of runtime classes (#253)
+- af76f9d fix: shade asm classes (#248)
+- 5377a5f fix: minor fixes related to #228 and #239 (#244)
+- 5adaaf8 fix: based the name on fqn (#241)
+- 96a2031 fix: make changes that reduce false positive in PDFBox (#239)
+- 3b7cebf fix: create empty bomi for modules whose tests do not exist (#238)
+- 6b2a6f5 fix: appropriately name proxy and GCA
+- cf11ecd fix: work on lookups of `Proxy` and `GCA` (#236)
+- ec2c97f fix: include submodules that are transitive dependencies (#235)
+- d1c9b38 fix: sort bytecode array to tackle non-determinism (#221)
+- 90b8f22 fix: resolve SSL's non-determinism (#220)
+
+## 🔄️ Changes
+- eebdaff style: see all test output
+- 7b94da9 perf: use hashmap lookup instead of for-loop (#255)
+- 948cce8 refactor: add experiments as submodule
+- 133ec0d refactor: do not rewrite field names (#245)
+- 89a813f style: remove debugging statements
+- d85bc4e refactor: remove unused method
+
+## 🧪 Tests
+- 3aff01e test: add test for graphhopper's module graph (#246)
+
+## 🧰 Tasks
+- 0d03448 chore: releasing version 0.14.0
+- 4df3365 chore: releasing version 0.14.0
+- f73d4a0 chore: Update experiments commit hash
+- c7770b1 chore: releasing version 0.14.0
+- 8513818 chore(deps): update dependency org.slf4j:slf4j-nop to v2.0.14
+- 4131914 chore: trigger Automatic Dependency Submission
+- c50e95b chore(deps): update dependency org.apache.maven.plugins:maven-javadoc-plugin to v3.8.0
+- 87797b1 chore(deps): update dependency org.apache.maven.plugins:maven-surefire-plugin to v3.3.1
+- 19ac69a chore(deps): update dependency org.jsoup:jsoup to v1.18.1
+- 4661981 chore(deps): update dependency org.assertj:assertj-core to v3.26.3
+- 77ee152 chore(deps): update dependency com.fasterxml.jackson.core:jackson-databind to v2.17.2
+- df256ea chore(deps): update junit5 monorepo to v5.10.3
+- 7c68ba9 chore(deps): update dependency org.apache.maven.plugins:maven-dependency-plugin to v3.7.1
+- 67992d3 chore(deps): update dependency io.github.classgraph:classgraph to v4.8.174
+- 2addf23 chore(deps): update dependency org.apache.maven:maven-model to v3.9.8
+- 7e2ae5b chore(deps): update dependency org.apache.maven.plugins:maven-surefire-plugin to v3.3.0
+- dd9ec24 chore(deps): update dependency org.apache.maven.plugins:maven-dependency-plugin to v3.7.0
+- 533f411 chore(deps): update dependency io.github.classgraph:classgraph to v4.8.173
+- 494a148 chore(deps): update dependency org.apache.maven.plugins:maven-javadoc-plugin to v3.7.0
+- a03a09d chore(deps): update dependency org.apache.maven.plugins:maven-plugin-plugin to v3.13.1
+- a18b05c chore(deps): update dependency org.apache.maven.plugins:maven-shade-plugin to v3.6.0
+- 5ab79b9 chore(deps): update dependency org.assertj:assertj-core to v3.26.0
+- 926ffa7 chore(deps): update dependency org.apache.maven:maven-model to v3.9.7
+- ab712c3 chore: Remove Java 17 classes
+- dfc6d07 chore(deps): update dependency org.apache.maven.shared:maven-invoker to v3.3.0
+- 8530fdf chore: use CycloneDX 1.5 only (#229)
+- b82d743 chore: add logging statements (#228)
+- e8551e1 chore: correctly delete .git file
+- 67a0875 chore(deps): update dependency info.picocli:picocli to v4.7.6
+- 44e8730 chore(deps): update dependency org.apache.maven.plugins:maven-plugin-plugin to v3.13.0
+- 7350d28 chore(deps): update dependency com.fasterxml.jackson.core:jackson-databind to v2.17.1
+- e5f32b4 chore(deps): update dependency org.apache.maven.plugins:maven-install-plugin to v3.1.2
+- fe3810d chore(deps): update dependency org.apache.maven.plugins:maven-deploy-plugin to v3.1.2
+- 7ff9c73 chore(deps): update dependency org.apache.maven.plugins:maven-shade-plugin to v3.5.3
+- e524d7e chore(deps): update dependency io.github.classgraph:classgraph to v4.8.172
+- a143372 chore(deps): update dependency io.github.classgraph:classgraph to v4.8.171
+- a82b7eb chore(deps): update actions-js/push action to v1.5
+- 6cf4c6e chore(deps): update dependency org.slf4j:log4j-over-slf4j to v2.0.13
+- 01e15bb chore: setting SNAPSHOT version 0.13.1-SNAPSHOT
+
+## 📝 Documentation
+- 84d72d3 docs: update diagram
+- daefbcc docs: update diagram
+- 08d6680 docs: update diagram
+- 8808ab5 docs: update diagram
+- 40101a5 docs: update diagram
+- e061022 docs: update diagram
+- dcb74bd docs: update diagram
+- 416f91d docs: update diagram
+- 8aa46a6 docs: update diagram
+- 2b97ee3 docs: update diagram
+- aff31b7 docs: update diagram
+- 35e8d2f docs: update diagram
+- b7d9713 docs: update diagram
+- 45f81cd docs: update diagram
+- 520f8ce docs: update diagram
+- 1d0a76c docs: update diagram
+- 6fdd217 docs: update diagram
+- 7d102ab docs: update diagram
+- c8dafe3 docs: update diagram
+- b7bf4c4 docs: update diagram
+- 2544c02 docs: update diagram
+- 733046b docs: update diagram
+- d61aae2 docs: update diagram
+- bcd675a docs: update diagram
+- 5939fe6 docs: update diagram
+- 782d69f docs: update diagram
+- d1954b3 docs: update diagram
+- 67c2839 docs: update diagram
+- eb194a2 docs: update diagram
+- 94d8f11 docs: update diagram
+- a20c74c docs: update diagram
+- 2313e83 docs: update diagram
+- 37bc0aa docs: update diagram
+- 7d3745a docs: update diagram
+- a64f219 docs: update diagram
+- 64c41ef docs: update diagram
+- 97c0b72 docs: update diagram
+- 6d8522d docs: update diagram
+- bbf3437 docs: update diagram
+- 70482b1 docs: update diagram
+- 3e89f1e docs: update diagram
+- dea4fa1 docs: update diagram
+- 43dbe0f docs: update diagram
+- c79d721 docs: update diagram
+- 4bab10e docs: update diagram
+- 21062eb docs: update diagram
+- 2b55f03 docs: update diagram
+- 62edfc5 docs: update diagram
+- f05eb79 docs: update diagram
+- 3bd4b66 docs: update diagram
+- c366cdf docs: update diagram
+- e4cbe1d docs: update diagram
+- 6f0fad9 docs: update diagram
+- dfc74ff docs: update diagram
+- 3aff539 docs: update diagram
+- 2aa27e9 docs: update diagram
+
+---
+- ef85b7f Revert "chore: releasing version 0.14.0"
+- 7196b58 Revert "chore: releasing version 0.14.0"
+- d8ef458 Update experiments commit hash
+- 959bd25 experiments: add PDFBox
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ()
+- GitHub ()
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+- renovate[bot] ([@renovate[bot]](https://github.com/apps/renovate))
+- repo-visualizer ()
 # 0.13.0
 ## Changelog
 
