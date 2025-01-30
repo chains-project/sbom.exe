@@ -52,7 +52,7 @@ jobs:
       - name: Set release version
         run: mvn --no-transfer-progress --batch-mode versions:set -DnewVersion=$NEXT_VERSION -DprocessAllModules -DgenerateBackupPoms=false
       - name: Commit & Push changes
-        uses: stefanzweifel/git-auto-commit-action@v5.0.0
+        uses: stefanzweifel/git-auto-commit-action@v5.1.0
         with:
           commit_message: 'chore: releasing version ${{ env.NEXT_VERSION }}'
 
@@ -94,7 +94,7 @@ jobs:
       # Time to update some files with the new version
       # Commit and push changes
       - name: Commit & Push changes
-        uses: stefanzweifel/git-auto-commit-action@v5.0.0
+        uses: stefanzweifel/git-auto-commit-action@v5.1.0
         with:
           commit_message: 'chore: setting SNAPSHOT version ${{ env.NEXT_RELEASE_VERSION }}'
 
