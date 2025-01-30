@@ -97,8 +97,7 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
         request.setGoals(List.of("clean", "package"));
         request.setBatchMode(true);
         Invoker invoker = new DefaultInvoker();
-        // M2_HOME is not supported anymore
-        // https://stackoverflow.com/questions/26609922/maven-home-mvn-home-or-m2-home
+        // I can't get MAVEN_HOME locally
         if (System.getenv("MAVEN_HOME") != null) {
             invoker.setMavenHome(new File(System.getenv("MAVEN_HOME")));
         }
