@@ -1,4 +1,18 @@
 
+# 0.14.1
+## Changelog
+
+## 🧰 Tasks
+- b3d849d chore: releasing version 0.14.1
+- 9a023ea chore: give permission to correct job
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ()
+- algomaster99 ([@algomaster99](https://github.com/algomaster99))
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+
 # 0.14.0
 ## Changelog
 
