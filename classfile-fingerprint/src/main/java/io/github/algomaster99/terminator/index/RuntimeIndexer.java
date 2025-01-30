@@ -97,6 +97,10 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
         request.setGoals(List.of("clean", "package"));
         request.setBatchMode(true);
         Invoker invoker = new DefaultInvoker();
+        // I can't get MAVEN_HOME locally
+        if (System.getenv("MAVEN_HOME") != null) {
+            invoker.setMavenHome(new File(System.getenv("MAVEN_HOME")));
+        }
 
         System.out.println("Ignore the test output below.");
 
