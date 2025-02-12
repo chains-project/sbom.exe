@@ -10,6 +10,11 @@ jobs:
     runs-on:
         ubuntu-latest
     steps:
+      - name: Create the cache directory if it doesn't exist
+        id: mkdir-cache
+        if: steps.restore-cache.outputs.cache-hit != 'true'
+        run: mkdir -p tool/cache
+
       - name: Dirty Waters Analysis
         uses: chains-project/dirty-waters-action@v1.4
         with:
