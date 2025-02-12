@@ -10,6 +10,17 @@ jobs:
     runs-on:
         ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Setup JDK17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Build project
+        # We need to build the agent first, because the tests depend on it
+        run: mvn clean install -DskipTests
       - name: Create the cache directory if it doesn't exist
         id: mkdir-cache
         if: steps.restore-cache.outputs.cache-hit != 'true'
