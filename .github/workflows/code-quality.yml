@@ -6,6 +6,18 @@ on:
     branches: [ main ]
 
 jobs:
+  dirty-waters:
+    runs-on:
+        ubuntu-latest
+    steps:
+      - name: Dirty Waters Analysis
+        uses: chains-project/dirty-waters-action@v1.4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          package_manager: maven
+          project_repo: ${{ github.repository }}
+          latest_commit_sha: ${{ github.sha }}
+
   spotless:
     runs-on: ubuntu-latest
     steps:
