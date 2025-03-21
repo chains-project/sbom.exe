@@ -32,6 +32,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           package_manager: maven
+          gradual_report: false
+          ignore_cache: "true" # just for this run
 
   spotless:
     runs-on: ubuntu-latest
