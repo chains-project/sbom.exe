@@ -13,6 +13,8 @@ on:
 
 jobs:
   dirty-waters:
+    permissions:
+      pull-requests: write # to be able to comment on PRs
     runs-on:
         ubuntu-latest
     steps:
