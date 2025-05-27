@@ -52,7 +52,8 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
 
     @CommandLine.Option(
             names = {"--related-modules"},
-            description = "The modules that are related to the executable jar module but are not dependencies or submodules to executable jar module",
+            description =
+                    "The modules that are related to the executable jar module but are not dependencies or submodules to executable jar module",
             required = false)
     private Set<String> relatedModules = new HashSet<>();
 
