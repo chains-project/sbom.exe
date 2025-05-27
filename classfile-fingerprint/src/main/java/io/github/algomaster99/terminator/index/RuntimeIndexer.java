@@ -50,6 +50,12 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
             required = true)
     private String executableJarModule;
 
+    @CommandLine.Option(
+            names = {"--related-modules"},
+            description = "The modules that are related to the executable jar module but are not dependencies or submodules to executable jar module",
+            required = false)
+    private Set<String> relatedModules = new HashSet<>();
+
     @Override
     public Integer call() throws Exception {
         System.out.println("--------------------");
@@ -63,6 +69,15 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
         Set<MavenModule> requiredModules = executableJar.getSubmodulesThatAreDependencies();
         // we want to instrument the executable jar module as well
         requiredModules.add(executableJar);
+        if (relatedModules != null && !relatedModules.isEmpty()) {
+            for (String relatedModule : relatedModules) {
+                MavenModule module = rootProject.findSubmodule(relatedModule);
+                if (module == null) {
+                    throw new RuntimeException("The module " + relatedModule + " is not found in the project");
+                }
+                requiredModules.add(module);
+            }
+        }
         if (cleanup) {
             recursiveDeleteOnShutdownHook(pathToTempProject.getParent());
         }
