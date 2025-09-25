@@ -18,7 +18,7 @@ jobs:
         with:
           submodules: true
       - name: Setup JDK21 for building project
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: 21
@@ -27,7 +27,7 @@ jobs:
         run: mvn clean install -DskipTests
 
       - name: Setup JDK${{ matrix.java-version }} for running tests
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
