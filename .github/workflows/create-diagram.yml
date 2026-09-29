@@ -14,11 +14,11 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@master
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Repo Visualizer
-        uses: githubocto/repo-visualizer@0.9.1
+        uses: githubocto/repo-visualizer@a999615bdab757559bf94bda1fe6eef232765f85 # 0.9.1
         with:
           excluded_paths: ".github"
           commit_message: "docs: update diagram"

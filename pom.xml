@@ -140,14 +140,14 @@
                 <include>src/test/java/**/*.java</include>
                 <include>src/main/java17/**/*.java</include>
               </includes>
-              <palantirJavaFormat></palantirJavaFormat>
-              <formatAnnotations></formatAnnotations>
+              <palantirJavaFormat/>
+              <formatAnnotations/>
             </java>
             <pom>
               <includes>
                 <include>pom.xml</include>
               </includes>
-              <sortPom></sortPom>
+              <sortPom/>
             </pom>
           </configuration>
         </plugin>
