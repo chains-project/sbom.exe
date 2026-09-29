@@ -50,8 +50,10 @@ class JdkIndexerTest {
         assertThat(actual).isEqualTo(expected);
 
         Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(actualIndex);
-        referenceProvenance.values().forEach(classFileAttributes -> assertThat(classFileAttributes.size())
-                .isEqualTo(1));
+        referenceProvenance
+                .values()
+                .forEach(classFileAttributes ->
+                        assertThat(classFileAttributes.size()).isEqualTo(1));
     }
 
     @EnabledIfSystemProperty(named = "java.vendor.version", matches = "Temurin-17\\.0\\.10\\+7")
@@ -71,8 +73,10 @@ class JdkIndexerTest {
         assertThat(actual).isEqualTo(expected);
 
         Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(actualIndex);
-        referenceProvenance.values().forEach(classFileAttributes -> assertThat(classFileAttributes.size())
-                .isEqualTo(1));
+        referenceProvenance
+                .values()
+                .forEach(classFileAttributes ->
+                        assertThat(classFileAttributes.size()).isEqualTo(1));
     }
 
     @Test

@@ -60,7 +60,7 @@
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-api</artifactId>
-        <version>6.1.3</version>
+        <version>5.14.2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.shared</groupId>
@@ -140,14 +140,14 @@
                 <include>src/test/java/**/*.java</include>
                 <include>src/main/java17/**/*.java</include>
               </includes>
-              <palantirJavaFormat></palantirJavaFormat>
-              <formatAnnotations></formatAnnotations>
+              <palantirJavaFormat/>
+              <formatAnnotations/>
             </java>
             <pom>
               <includes>
                 <include>pom.xml</include>
               </includes>
-              <sortPom></sortPom>
+              <sortPom/>
             </pom>
           </configuration>
         </plugin>
