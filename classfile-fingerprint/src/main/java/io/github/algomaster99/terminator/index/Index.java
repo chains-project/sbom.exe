@@ -16,6 +16,13 @@ public class Index implements Callable<Integer> {
     }
 
     public static void main(String[] args) {
-        new CommandLine(new Index()).execute(args);
+        System.exit(execute(args));
+    }
+
+    /**
+     * Runs the command and returns its exit code, which is non-zero if the command failed.
+     */
+    static int execute(String... args) {
+        return new CommandLine(new Index()).execute(args);
     }
 }
