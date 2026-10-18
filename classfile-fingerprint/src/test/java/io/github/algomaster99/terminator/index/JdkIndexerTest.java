@@ -22,11 +22,11 @@ class JdkIndexerTest {
 
         // act
         String[] argsFirst = {"jdk", "-o", indexFile.toString()};
-        Index.main(argsFirst);
+        assertThat(Index.execute(argsFirst)).isZero();
         String contentFirst = Files.readString(indexFile);
 
         String[] argsSecond = {"jdk", "-i", indexFile.toString()};
-        Index.main(argsSecond);
+        assertThat(Index.execute(argsSecond)).isZero();
         String contentSecond = Files.readString(indexFile);
 
         // assert
@@ -42,7 +42,7 @@ class JdkIndexerTest {
 
         // act
         String[] args = {"jdk", "-o", actualIndex.toString()};
-        Index.main(args);
+        assertThat(Index.execute(args)).isZero();
 
         // assert
         List<String> actual = Files.readAllLines(actualIndex);
@@ -65,7 +65,7 @@ class JdkIndexerTest {
 
         // act
         String[] args = {"jdk", "-o", actualIndex.toString()};
-        Index.main(args);
+        assertThat(Index.execute(args)).isZero();
 
         // assert
         List<String> actual = Files.readAllLines(actualIndex);
@@ -86,7 +86,7 @@ class JdkIndexerTest {
 
         // act
         String[] args = {"jdk", "-o", indexFile.toString(), "--algorithm", "MD5"};
-        Index.main(args);
+        assertThat(Index.execute(args)).isZero();
 
         // assert
         Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(indexFile);

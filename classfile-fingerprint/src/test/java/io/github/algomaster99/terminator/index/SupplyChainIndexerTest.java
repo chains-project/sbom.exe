@@ -22,11 +22,11 @@ class SupplyChainIndexerTest {
 
         // act
         String[] argsFirst = {"supply-chain", "-s", sbom.toString(), "-o", indexFile.toString()};
-        Index.main(argsFirst);
+        assertThat(Index.execute(argsFirst)).isZero();
         String contentFirst = Files.readString(indexFile);
 
         String[] argsSecond = {"supply-chain", "-s", sbom.toString(), "-i", indexFile.toString()};
-        Index.main(argsSecond);
+        assertThat(Index.execute(argsSecond)).isZero();
         String contentSecond = Files.readString(indexFile);
 
         // assert
@@ -41,7 +41,7 @@ class SupplyChainIndexerTest {
 
         // act
         String[] args = {"supply-chain", "-s", sbom.toString(), "-o", indexFile.toString(), "--algorithm", "MD5"};
-        Index.main(args);
+        assertThat(Index.execute(args)).isZero();
 
         // assert
         Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(indexFile);
@@ -58,7 +58,7 @@ class SupplyChainIndexerTest {
 
         // act
         String[] args = {"supply-chain", "-s", sbom.toString(), "-o", indexFile.toString()};
-        Index.main(args);
+        assertThat(Index.execute(args)).isZero();
 
         // assert
         Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(indexFile);

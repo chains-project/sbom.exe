@@ -19,21 +19,21 @@ public class RuntimeIndexerTest {
 
         // act
         String[] jdk_argsFirst = {"jdk", "-o", indexFile.toString()};
-        Index.main(jdk_argsFirst);
+        assertThat(Index.execute(jdk_argsFirst)).isZero();
         List<String> jdkIndex = Files.readAllLines(indexFile);
 
         String[] runtime_argsFirst = {
             "runtime", "-p", project.toString(), "-i", indexFile.toString(), "-mj", "basic-math", "--cleanup"
         };
-        Index.main(runtime_argsFirst);
+        assertThat(Index.execute(runtime_argsFirst)).isZero();
         List<String> first = Files.readAllLines(indexFile);
 
         String[] jdk_argsSecond = {"jdk", "-o", indexFile.toString()};
-        Index.main(jdk_argsSecond);
+        assertThat(Index.execute(jdk_argsSecond)).isZero();
         String[] runtime_argsSecond = {
             "runtime", "-p", project.toString(), "-i", indexFile.toString(), "-mj", "basic-math", "--cleanup"
         };
-        Index.main(runtime_argsSecond);
+        assertThat(Index.execute(runtime_argsSecond)).isZero();
         List<String> second = Files.readAllLines(indexFile);
 
         // assert
