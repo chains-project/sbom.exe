@@ -3,6 +3,7 @@ package io.github.algomaster99;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileUtilities;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ProxyRegenerator;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
@@ -20,6 +21,7 @@ public class Terminator {
     public static void premain(String agentArgs, Instrumentation inst) {
         options = new Options(agentArgs);
         fingerprints = options.getSbom();
+        ProxyRegenerator.openGenerator(inst);
 
         inst.addTransformer(new ClassFileTransformer() {
             @Override
@@ -30,16 +32,19 @@ public class Terminator {
                     ProtectionDomain protectionDomain,
                     byte[] classfileBuffer) {
 
-                return isLoadedClassAllowlisted(className, classfileBuffer);
+                return isLoadedClassAllowlisted(loader, className, classfileBuffer);
             }
         });
     }
 
-    private static byte[] isLoadedClassAllowlisted(String className, byte[] classfileBuffer) {
-        if (ClassFileUtilities.getSimpleNameFromQualifiedName(className).startsWith("$Proxy")) {
-            String nameThatIsDisplayedInBomi = "Proxy_" + ClassFileUtilities.getInterfacesOfProxyClass(classfileBuffer);
-            proxyOriginalNamesToReadableNames.put(className, nameThatIsDisplayedInBomi);
-            return lookupReadableName(className, classfileBuffer, nameThatIsDisplayedInBomi);
+    private static byte[] isLoadedClassAllowlisted(ClassLoader loader, String className, byte[] classfileBuffer) {
+        // Proxy classes are not in the BOMI because their bytecode depends on the JDK. A class that only claims to be
+        // a proxy is not regenerated identically, so it falls through to the lookup below.
+        if (ClassFileUtilities.isProxyClass(classfileBuffer)
+                && ProxyRegenerator.isGeneratedByJdk(loader, classfileBuffer)) {
+            proxyOriginalNamesToReadableNames.put(
+                    className, "Proxy_" + ClassFileUtilities.getInterfacesOfProxyClass(classfileBuffer));
+            return classfileBuffer;
         }
         if (ClassFileUtilities.getSimpleNameFromQualifiedName(className).startsWith("GeneratedConstructorAccessor")) {
             String classForWhichTheConstructorIs =
