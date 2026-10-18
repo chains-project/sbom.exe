@@ -14,6 +14,8 @@ public class ClassFileUtilities {
     // cafebabe
     private static final byte[] CLASSFILE_HEADER = new byte[] {(byte) 0xca, (byte) 0xfe, (byte) 0xba, (byte) 0xbe};
 
+    private static final String PROXY_SUPERCLASS = "java/lang/reflect/Proxy";
+
     private ClassFileUtilities() {}
 
     public static String getVersion(byte[] bytes) {
@@ -29,6 +31,15 @@ public class ClassFileUtilities {
         // 2 bytes of major version
         int majorVersion = Integer.parseInt(toHexString(new byte[] {bytes[6], bytes[7]}), 16);
         return String.format("%s.%s", majorVersion, minorVersion);
+    }
+
+    /**
+     * Returns whether the class extends {@link java.lang.reflect.Proxy}, like every class that the JDK generates for
+     * {@link java.lang.reflect.Proxy#newProxyInstance}. Unlike the package name of a proxy class, which changed from
+     * {@code com.sun.proxy} to {@code jdk.proxyN} in JDK 17, the superclass is part of the specification.
+     */
+    public static boolean isProxyClass(byte[] bytes) {
+        return PROXY_SUPERCLASS.equals(new ClassReader(bytes).getSuperName());
     }
 
     /**

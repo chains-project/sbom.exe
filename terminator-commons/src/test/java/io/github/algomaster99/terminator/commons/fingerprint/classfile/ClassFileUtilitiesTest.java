@@ -9,6 +9,19 @@ import org.junit.jupiter.api.Test;
 
 public class ClassFileUtilitiesTest {
     @Test
+    void isProxyClass() throws IOException {
+        // arrange
+        byte[] proxy = Files.readAllBytes(Path.of("src/test/resources/classfile/$Proxy0Index.class"));
+        byte[] generatedConstructorAccessor =
+                Files.readAllBytes(Path.of("src/test/resources/classfile/GCAIndex_35.class"));
+
+        // act + assert
+        assertThat(ClassFileUtilities.isProxyClass(proxy)).isTrue();
+        assertThat(ClassFileUtilities.isProxyClass(generatedConstructorAccessor))
+                .isFalse();
+    }
+
+    @Test
     void getInterfacesOfProxyClass() throws IOException {
         // arrange
         Path pathToProxyClass = Path.of("src/test/resources/classfile/$Proxy0Index.class");

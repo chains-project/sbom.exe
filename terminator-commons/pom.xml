@@ -99,6 +99,11 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <!-- Only for tests: ProxyRegenerator calls the proxy generator that is internal to java.base. The agents
+               open the package at startup with ProxyRegenerator.openGenerator instead. -->
+          <argLine>--add-opens java.base/java.lang.reflect=ALL-UNNAMED</argLine>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>com.diffplug.spotless</groupId>

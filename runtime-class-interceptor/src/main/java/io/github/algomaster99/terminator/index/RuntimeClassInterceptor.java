@@ -4,6 +4,7 @@ import io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileUtilities;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.ProxyRegenerator;
 import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptorOptions;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
@@ -22,6 +23,7 @@ public class RuntimeClassInterceptor {
 
     public static void premain(String agentArgs, Instrumentation inst) {
         RuntimeClassInterceptorOptions options = new RuntimeClassInterceptorOptions(agentArgs);
+        ProxyRegenerator.openGenerator(inst);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             ParsingHelper.serialiseFingerprints(exhaustiveListOfClasses, options.getOutput());
         }));
@@ -35,24 +37,24 @@ public class RuntimeClassInterceptor {
                             ProtectionDomain protectionDomain,
                             byte[] classfileBuffer)
                             throws IllegalClassFormatException {
-                        return recordClass(className, classfileBuffer);
+                        return recordClass(loader, className, classfileBuffer);
                     }
                 },
                 false);
     }
 
-    private static byte[] recordClass(String className, byte[] classfileBuffer) {
+    private static byte[] recordClass(ClassLoader loader, String className, byte[] classfileBuffer) {
+        // The watchdog checks proxy classes by regenerating them, so they are not recorded.
+        if (ClassFileUtilities.isProxyClass(classfileBuffer)
+                && ProxyRegenerator.isGeneratedByJdk(loader, classfileBuffer)) {
+            proxies.put(className, "Proxy_" + ClassFileUtilities.getInterfacesOfProxyClass(classfileBuffer));
+            return classfileBuffer;
+        }
         Set<ClassFileAttributes> candidates = exhaustiveListOfClasses.get(className);
         String classFileVersion = ClassFileUtilities.getVersion(classfileBuffer);
         String hash = HashComputer.computeHash(classfileBuffer);
         String newClassName = className;
-        if (ClassFileUtilities.getSimpleNameFromQualifiedName(className).startsWith("$Proxy")) {
-            String nameThatNeedsToBeDisplayedInBomi =
-                    "Proxy_" + ClassFileUtilities.getInterfacesOfProxyClass(classfileBuffer);
-            proxies.put(className, nameThatNeedsToBeDisplayedInBomi);
-            newClassName = nameThatNeedsToBeDisplayedInBomi;
-        } else if (ClassFileUtilities.getSimpleNameFromQualifiedName(className)
-                .startsWith("GeneratedConstructorAccessor")) {
+        if (ClassFileUtilities.getSimpleNameFromQualifiedName(className).startsWith("GeneratedConstructorAccessor")) {
             String classForWhichTheConstructorIs =
                     ClassFileUtilities.getClassForWhichGeneratedAccessorIsFor(classfileBuffer);
             String isProxy = proxies.get(classForWhichTheConstructorIs);
