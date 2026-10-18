@@ -139,7 +139,7 @@ class ProxyRegeneratorTest {
                 Class<?> classBeingRedefined,
                 ProtectionDomain protectionDomain,
                 byte[] classfileBuffer) {
-            if (className != null && className.contains("$Proxy")) {
+            if (className != null && ClassFileUtilities.isProxyClass(classfileBuffer)) {
                 try {
                     Files.write(outputDirectory.resolve(className.replace('/', '.') + ".class"), classfileBuffer);
                 } catch (IOException e) {
