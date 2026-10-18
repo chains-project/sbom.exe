@@ -36,10 +36,11 @@ class ProxyRegeneratorTest {
 
     @Test
     void proxyGeneratedByTheJdkIsRegeneratedIdentically(@TempDir Path workingDirectory) throws Exception {
-        // arrange
+        // arrange: the actual bytes of the proxy, as the JDK defined it in another JVM
         byte[] proxy = proxyOfGreeterGeneratedInAnotherJvm(workingDirectory);
 
-        // act
+        // act: regenerate the expected bytes with the proxy generator of this JVM, and compare their canonical
+        // checksum with the checksum of the actual bytes
         boolean isGeneratedByJdk = ProxyRegenerator.isGeneratedByJdk(Greeter.class.getClassLoader(), proxy);
 
         // assert
@@ -101,6 +102,8 @@ class ProxyRegeneratorTest {
         Process process = new ProcessBuilder(
                         Path.of(System.getProperty("java.home"), "bin", "java").toString(),
                         "-javaagent:" + agent + "=" + workingDirectory,
+                        // The class path of the tests includes target/test-classes, which contains SaveProxies,
+                        // the agent that saves the proxies the JDK defines, and CreateProxyOfGreeter.
                         "-cp",
                         System.getProperty("java.class.path"),
                         CreateProxyOfGreeter.class.getName())
