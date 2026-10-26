@@ -78,7 +78,7 @@ public class Terminator {
         Set<ClassFileAttributes> attributes = fingerprints.get(correspondingClassName);
         if (attributes != null) {
             for (ClassFileAttributes attribute : attributes) {
-                String hash = HashComputer.computeHash(classfileBuffer);
+                String hash = HashComputer.computeHash(classfileBuffer, proxyOriginalNamesToReadableNames);
                 if (hash.equals(attribute.hash())) {
                     return classfileBuffer;
                 }
