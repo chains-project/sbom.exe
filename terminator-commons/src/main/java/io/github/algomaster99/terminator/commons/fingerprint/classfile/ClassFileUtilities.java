@@ -44,27 +44,22 @@ public class ClassFileUtilities {
     }
 
     /**
-     * Returns the interfaces that the class implements, in the order they are declared.
+     * Returns the interfaces that the proxy class implements, in the order they are declared.
      */
-    public static List<String> getInterfaces(byte[] bytes) {
+    public static List<String> getInterfacesOfProxyClass(byte[] bytes) {
         return List.of(new ClassReader(bytes).getInterfaces());
     }
 
     /**
-     * Returns the interfaces that the proxy class implements.
+     * Returns the name that a proxy class has in the keys of the BOMI.
      */
-    public static String getInterfacesOfProxyClass(byte[] bytes) {
-        ClassReader reader = new ClassReader(bytes);
-        String[] interfaces = reader.getInterfaces();
-
-        StringBuilder sb = new StringBuilder();
-
+    public static String getReadableNameOfProxyClass(byte[] bytes) {
         // sort the interfaces to make the name deterministic
-        for (String i : Arrays.stream(interfaces).sorted().collect(Collectors.toList())) {
-            sb.append(i.replace("/", "_"));
-        }
-
-        return sb.toString();
+        return "Proxy_"
+                + getInterfacesOfProxyClass(bytes).stream()
+                        .sorted()
+                        .map(i -> i.replace("/", "_"))
+                        .collect(Collectors.joining());
     }
 
     /**

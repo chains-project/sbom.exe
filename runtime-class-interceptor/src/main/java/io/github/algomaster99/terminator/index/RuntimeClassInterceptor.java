@@ -47,7 +47,7 @@ public class RuntimeClassInterceptor {
         // The watchdog checks proxy classes by regenerating them, so they are not recorded.
         if (ClassFileUtilities.isProxyClass(classfileBuffer)
                 && ProxyRegenerator.isGeneratedByJdk(loader, classfileBuffer)) {
-            proxies.put(className, "Proxy_" + ClassFileUtilities.getInterfacesOfProxyClass(classfileBuffer));
+            proxies.put(className, ClassFileUtilities.getReadableNameOfProxyClass(classfileBuffer));
             return classfileBuffer;
         }
         Set<ClassFileAttributes> candidates = exhaustiveListOfClasses.get(className);
