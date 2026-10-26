@@ -6,8 +6,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 public class ClassFileUtilities {
@@ -100,6 +102,31 @@ public class ClassFileUtilities {
         // we exit violently because agent consumes exception
         Runtime.getRuntime().halt(1);
         throw new RuntimeException("This is a weird Generated Constructor Accessor: " + rootNode.name);
+    }
+
+    /**
+     * Returns the descriptor of the constructor that the Generated Constructor Accessor invokes, like {@code (II)V}.
+     * The accessor also constructs an {@link java.lang.reflect.InvocationTargetException} in its exception handler, so
+     * only the {@code <init>} call on the target class is considered.
+     */
+    public static String getConstructorDescriptorFromAccessor(byte[] bytes, String targetInternalName) {
+        ClassReader reader = new ClassReader(bytes);
+        ClassNode rootNode = new ClassNode();
+        reader.accept(rootNode, 0);
+
+        for (MethodNode method : rootNode.methods) {
+            if (method.name.equals("newInstance")) {
+                for (AbstractInsnNode insnNode : method.instructions) {
+                    if (insnNode.getOpcode() == Opcodes.INVOKESPECIAL) {
+                        MethodInsnNode methodInsn = (MethodInsnNode) insnNode;
+                        if (methodInsn.name.equals("<init>") && methodInsn.owner.equals(targetInternalName)) {
+                            return methodInsn.desc;
+                        }
+                    }
+                }
+            }
+        }
+        throw new IllegalArgumentException("No constructor call to " + targetInternalName + " in accessor");
     }
 
     public static String getSimpleNameFromQualifiedName(String qualifiedName) {

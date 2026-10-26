@@ -1,5 +1,6 @@
 package io.github.algomaster99;
 
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.AccessorRegenerator;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileUtilities;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
@@ -24,6 +25,7 @@ public class Terminator {
         fingerprints = options.getSbom();
         ProxyRegenerator.openGenerator(inst);
         SpeciesRegenerator.openGenerator(inst);
+        AccessorRegenerator.openGenerator(inst);
 
         inst.addTransformer(new ClassFileTransformer() {
             @Override
@@ -62,7 +64,16 @@ public class Terminator {
                     new StringBuilder("[VERIFIED]: ").append(className).append(" (regenerated species)"));
             return classfileBuffer;
         }
+        // The JDK generates these accessors only up to JDK 17; since JDK 18 (JEP 416) reflection uses method handles
+        // and no accessor classes are generated, so this branch never runs there.
         if (ClassFileUtilities.getSimpleNameFromQualifiedName(className).startsWith("GeneratedConstructorAccessor")) {
+            // An accessor is determined by the constructor it wraps and the JDK, so it is checked by regenerating it.
+            // Accessors that cannot be regenerated fall through to the readable-name lookup in the BOMI below.
+            if (AccessorRegenerator.isGeneratedByJdk(loader, classfileBuffer)) {
+                System.err.println(
+                        new StringBuilder("[VERIFIED]: ").append(className).append(" (regenerated accessor)"));
+                return classfileBuffer;
+            }
             String classForWhichTheConstructorIs =
                     ClassFileUtilities.getClassForWhichGeneratedAccessorIsFor(classfileBuffer);
             String isProxy = proxyOriginalNamesToReadableNames.get(classForWhichTheConstructorIs);
