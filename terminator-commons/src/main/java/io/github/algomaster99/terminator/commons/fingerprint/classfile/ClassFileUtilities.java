@@ -17,6 +17,10 @@ public class ClassFileUtilities {
 
     private static final String PROXY_SUPERCLASS = "java/lang/reflect/Proxy";
 
+    private static final String SPECIES_SUPERCLASS = "java/lang/invoke/BoundMethodHandle";
+
+    private static final String SPECIES_PREFIX = SPECIES_SUPERCLASS + "$Species_";
+
     private ClassFileUtilities() {}
 
     public static String getVersion(byte[] bytes) {
@@ -41,6 +45,18 @@ public class ClassFileUtilities {
      */
     public static boolean isProxyClass(byte[] bytes) {
         return PROXY_SUPERCLASS.equals(new ClassReader(bytes).getSuperName());
+    }
+
+    /**
+     * Returns whether the class is a {@code java.lang.invoke.BoundMethodHandle$Species_*} class, the storage carrier
+     * that the JDK generates for a bound method handle. Such a class extends {@code BoundMethodHandle} and its name
+     * encodes the shape of the captured arguments (for example {@code Species_LLLII}). Shapes that are not baked into
+     * {@code java.base} are spun at runtime, so they are not in the BOMI.
+     */
+    public static boolean isSpeciesClass(byte[] bytes) {
+        ClassReader reader = new ClassReader(bytes);
+        return SPECIES_SUPERCLASS.equals(reader.getSuperName())
+                && reader.getClassName().startsWith(SPECIES_PREFIX);
     }
 
     /**

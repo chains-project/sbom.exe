@@ -4,6 +4,7 @@ import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFile
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileUtilities;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ProxyRegenerator;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.SpeciesRegenerator;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
@@ -22,6 +23,7 @@ public class Terminator {
         options = new Options(agentArgs);
         fingerprints = options.getSbom();
         ProxyRegenerator.openGenerator(inst);
+        SpeciesRegenerator.openGenerator(inst);
 
         inst.addTransformer(new ClassFileTransformer() {
             @Override
@@ -46,6 +48,18 @@ public class Terminator {
                     className, ClassFileUtilities.getReadableNameOfProxyClass(classfileBuffer));
             System.err.println("[VERIFIED]: " + className + " (regenerated from "
                     + String.join(", ", ClassFileUtilities.getInterfacesOfProxyClass(classfileBuffer)) + ")");
+            return classfileBuffer;
+        }
+        // Only a fixed set of species shapes is baked into the JDK and recorded in the BOMI; the rest are spun at
+        // runtime and are absent from it. A species is determined by its name, so it is checked by regenerating it.
+        // A species that the specializer does not regenerate identically, like the hand-written root Species_L, falls
+        // through to the lookup below, where the baked shapes are recorded.
+        if (ClassFileUtilities.isSpeciesClass(classfileBuffer)
+                && SpeciesRegenerator.isGeneratedByJdk(classfileBuffer)) {
+            // Build the message without string concatenation: `+` compiles to an invokedynamic that spins a species
+            // of its own, which would re-enter this transformer while a species is being defined.
+            System.err.println(
+                    new StringBuilder("[VERIFIED]: ").append(className).append(" (regenerated species)"));
             return classfileBuffer;
         }
         if (ClassFileUtilities.getSimpleNameFromQualifiedName(className).startsWith("GeneratedConstructorAccessor")) {
