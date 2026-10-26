@@ -38,10 +38,42 @@ class HashComputerTest {
 
     private static final Path FOO = CLASSFILE.resolve("fooToBar").resolve("Foo.class");
 
+    // Accessors of the constructor of the same proxy, which was named jdk/proxy2/$Proxy1 in one run and
+    // jdk/proxy2/$Proxy7 in another.
+    private static final Path ACCESSOR_OF_PROXY_1 =
+            CLASSFILE.resolve("gca-of-proxy").resolve("GCAOfProxy1.class");
+
+    private static final Path ACCESSOR_OF_PROXY_7 =
+            CLASSFILE.resolve("gca-of-proxy").resolve("GCAOfProxy7.class");
+
+    private static final String PLUGIN_PROXY = "Proxy[org/apache/logging/log4j/core/config/plugins/Plugin]";
+
     @Test
     void proxiesThatOnlyDifferInFieldNumberingHaveTheSameHash() throws IOException {
         assertThat(HashComputer.computeHash(Files.readAllBytes(PROXY_9)))
                 .isEqualTo(HashComputer.computeHash(Files.readAllBytes(PROXY_13)));
+    }
+
+    @Test
+    void accessorsOfTheSameProxyHaveTheSameHashWhenTheProxyIsRenamed() throws IOException {
+        // arrange
+        byte[] accessorOfProxy1 = Files.readAllBytes(ACCESSOR_OF_PROXY_1);
+        byte[] accessorOfProxy7 = Files.readAllBytes(ACCESSOR_OF_PROXY_7);
+
+        // act + assert
+        assertThat(HashComputer.computeHash(accessorOfProxy1)).isNotEqualTo(HashComputer.computeHash(accessorOfProxy7));
+        assertThat(HashComputer.computeHash(accessorOfProxy1, Map.of("jdk/proxy2/$Proxy1", PLUGIN_PROXY)))
+                .isEqualTo(HashComputer.computeHash(accessorOfProxy7, Map.of("jdk/proxy2/$Proxy7", PLUGIN_PROXY)));
+    }
+
+    @Test
+    void accessorsOfDifferentProxiesHaveDifferentHashes() throws IOException {
+        // arrange
+        byte[] accessor = Files.readAllBytes(ACCESSOR_OF_PROXY_7);
+
+        // act + assert
+        assertThat(HashComputer.computeHash(accessor, Map.of("jdk/proxy2/$Proxy7", "Proxy[a/B;c/D]")))
+                .isNotEqualTo(HashComputer.computeHash(accessor, Map.of("jdk/proxy2/$Proxy7", PLUGIN_PROXY)));
     }
 
     @Test

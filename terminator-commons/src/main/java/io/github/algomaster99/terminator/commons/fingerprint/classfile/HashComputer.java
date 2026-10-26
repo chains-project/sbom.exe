@@ -52,10 +52,22 @@ public class HashComputer {
      * because the JDK numbers them non-deterministically.
      */
     public static String computeHash(byte[] bytes) {
+        return computeHash(bytes, Map.of());
+    }
+
+    /**
+     * Computes the checksum like {@link #computeHash(byte[])}, but first renames the given classes wherever the
+     * classfile refers to them. The accessor that the JDK generates for the constructor of a proxy class refers to the
+     * proxy by its numbered name, which depends on how many proxies were created before, so the proxy has to be renamed
+     * to its name in the BOMI.
+     */
+    public static String computeHash(byte[] bytes, Map<String, String> classNames) {
         ClassReader reader = new ClassReader(bytes);
+        Map<String, String> mapping = new HashMap<>(classNames);
+        mapping.put(reader.getClassName(), CANONICAL_CLASS_NAME);
         ClassNode classNode = new ClassNode();
         reader.accept(
-                new ClassRemapper(classNode, new SimpleRemapper(reader.getClassName(), CANONICAL_CLASS_NAME)),
+                new ClassRemapper(classNode, new SimpleRemapper(mapping)),
                 ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
 
         boolean isProxy = PROXY_SUPERCLASS.equals(classNode.superName);
