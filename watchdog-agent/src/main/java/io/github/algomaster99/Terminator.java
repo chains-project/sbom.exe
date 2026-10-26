@@ -50,8 +50,10 @@ public class Terminator {
                     + String.join(", ", ClassFileUtilities.getInterfacesOfProxyClass(classfileBuffer)) + ")");
             return classfileBuffer;
         }
-        // Species classes are not in the BOMI either: only a fixed set of shapes is baked into the JDK, the rest are
-        // spun at runtime. A species is determined by its name, so it is checked by regenerating it.
+        // Only a fixed set of species shapes is baked into the JDK and recorded in the BOMI; the rest are spun at
+        // runtime and are absent from it. A species is determined by its name, so it is checked by regenerating it.
+        // A species that the specializer does not regenerate identically, like the hand-written root Species_L, falls
+        // through to the lookup below, where the baked shapes are recorded.
         if (ClassFileUtilities.isSpeciesClass(classfileBuffer)
                 && SpeciesRegenerator.isGeneratedByJdk(classfileBuffer)) {
             // Build the message without string concatenation: `+` compiles to an invokedynamic that spins a species
