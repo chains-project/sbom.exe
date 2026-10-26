@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 public class ClassFileUtilitiesTest {
@@ -19,6 +20,18 @@ public class ClassFileUtilitiesTest {
         assertThat(ClassFileUtilities.isProxyClass(proxy)).isTrue();
         assertThat(ClassFileUtilities.isProxyClass(generatedConstructorAccessor))
                 .isFalse();
+    }
+
+    @Test
+    void getInterfaces() throws IOException {
+        // arrange
+        byte[] proxy = Files.readAllBytes(Path.of("src/test/resources/classfile/$Proxy0Index.class"));
+
+        // act
+        List<String> interfaces = ClassFileUtilities.getInterfaces(proxy);
+
+        // assert
+        assertThat(interfaces).containsExactly("java/lang/annotation/Retention");
     }
 
     @Test

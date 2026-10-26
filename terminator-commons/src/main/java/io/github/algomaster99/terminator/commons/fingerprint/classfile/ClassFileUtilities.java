@@ -3,6 +3,7 @@ package io.github.algomaster99.terminator.commons.fingerprint.classfile;
 import static io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer.toHexString;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -40,6 +41,13 @@ public class ClassFileUtilities {
      */
     public static boolean isProxyClass(byte[] bytes) {
         return PROXY_SUPERCLASS.equals(new ClassReader(bytes).getSuperName());
+    }
+
+    /**
+     * Returns the interfaces that the class implements, in the order they are declared.
+     */
+    public static List<String> getInterfaces(byte[] bytes) {
+        return List.of(new ClassReader(bytes).getInterfaces());
     }
 
     /**

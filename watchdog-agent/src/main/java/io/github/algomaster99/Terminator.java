@@ -44,6 +44,8 @@ public class Terminator {
                 && ProxyRegenerator.isGeneratedByJdk(loader, classfileBuffer)) {
             proxyOriginalNamesToReadableNames.put(
                     className, "Proxy_" + ClassFileUtilities.getInterfacesOfProxyClass(classfileBuffer));
+            System.err.println("[VERIFIED]: " + className + " (regenerated from "
+                    + String.join(", ", ClassFileUtilities.getInterfaces(classfileBuffer)) + ")");
             return classfileBuffer;
         }
         if (ClassFileUtilities.getSimpleNameFromQualifiedName(className).startsWith("GeneratedConstructorAccessor")) {
