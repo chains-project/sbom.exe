@@ -51,15 +51,13 @@ public class ClassFileUtilities {
     }
 
     /**
-     * Returns the name that a proxy class has in the keys of the BOMI.
+     * Returns the name that a proxy class has in the keys of the BOMI, for example
+     * {@code Proxy[Greeter;java/lang/Runnable]}. Class names cannot contain {@code [} or {@code ;}, so the name differs
+     * from the name of any class and from the name of a proxy of other interfaces.
      */
     public static String getReadableNameOfProxyClass(byte[] bytes) {
         // sort the interfaces to make the name deterministic
-        return "Proxy_"
-                + getInterfacesOfProxyClass(bytes).stream()
-                        .sorted()
-                        .map(i -> i.replace("/", "_"))
-                        .collect(Collectors.joining());
+        return getInterfacesOfProxyClass(bytes).stream().sorted().collect(Collectors.joining(";", "Proxy[", "]"));
     }
 
     /**
