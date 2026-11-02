@@ -1,5 +1,7 @@
 package io.github.algomaster99;
 
+import io.github.algomaster99.terminator.commons.fingerprint.JdkDigest;
+import io.github.algomaster99.terminator.commons.fingerprint.JdkImage;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileUtilities;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
@@ -7,7 +9,10 @@ import io.github.algomaster99.terminator.commons.fingerprint.classfile.ProxyRege
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.SpeciesRegenerator;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
+import java.nio.file.Path;
 import java.security.ProtectionDomain;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,27 +24,60 @@ public class Terminator {
 
     private static final Map<String, String> proxyOriginalNamesToReadableNames = new ConcurrentHashMap<>();
 
+    // Set once the running JDK matches a digest in the BOMI.
+    private static boolean jdkAllowlisted;
+
     public static void premain(String agentArgs, Instrumentation inst) {
         options = new Options(agentArgs);
         fingerprints = options.getSbom();
+        // Many JDK classes, most of java.base, are loaded before the transformer is added and never reach it. The
+        // digest covers them only if they came from the JDK's files: classes that --patch-module or
+        // -Xbootclasspath/a loaded before this point are missed.
+        verifyJdk();
         ProxyRegenerator.openGenerator(inst);
         SpeciesRegenerator.openGenerator(inst);
 
         inst.addTransformer(new ClassFileTransformer() {
             @Override
             public byte[] transform(
+                    Module module,
                     ClassLoader loader,
                     String className,
                     Class<?> classBeingRedefined,
                     ProtectionDomain protectionDomain,
                     byte[] classfileBuffer) {
 
-                return isLoadedClassAllowlisted(loader, className, classfileBuffer);
+                return isLoadedClassAllowlisted(module, loader, className, classfileBuffer);
             }
         });
     }
 
-    private static byte[] isLoadedClassAllowlisted(ClassLoader loader, String className, byte[] classfileBuffer) {
+    /**
+     * Checks the running JDK against the JDK digests in the BOMI. A BOMI without digests keeps the hash of each JDK
+     * class instead, so there is nothing to check here.
+     */
+    private static void verifyJdk() {
+        Set<ClassFileAttributes> allowedJdks = fingerprints.get(JdkDigest.BOMI_KEY);
+        if (allowedJdks == null) {
+            return;
+        }
+        Path javaHome = Path.of(System.getProperty("java.home"));
+        Map<String, String> digestByAlgorithm = new HashMap<>();
+        for (ClassFileAttributes allowedJdk : allowedJdks) {
+            String digest = digestByAlgorithm.computeIfAbsent(
+                    allowedJdk.algorithm(), algorithm -> JdkDigest.compute(javaHome, algorithm));
+            if (digest.equals(allowedJdk.hash())) {
+                JdkImage.preload();
+                jdkAllowlisted = true;
+                System.err.println("[ALLOWLISTED]: JDK " + allowedJdk.classfileVersion() + " at " + javaHome);
+                return;
+            }
+        }
+        notAllowlisted("JDK " + JdkDigest.version(javaHome) + " at " + javaHome, null);
+    }
+
+    private static byte[] isLoadedClassAllowlisted(
+            Module module, ClassLoader loader, String className, byte[] classfileBuffer) {
         // Proxy classes are not in the BOMI because their bytecode depends on the JDK. A class that only claims to be
         // a proxy is not regenerated identically, so it falls through to the lookup below.
         if (ClassFileUtilities.isProxyClass(classfileBuffer)
@@ -74,6 +112,14 @@ public class Terminator {
                 nameThatIsDisplayedInBomi = "GCA_" + classForWhichTheConstructorIs;
             }
             return lookupReadableName(className, classfileBuffer, nameThatIsDisplayedInBomi);
+        }
+        // A class of a JDK module must be the one in the module image, which verifyJdk checked against the BOMI. This
+        // catches classes patched into a JDK module. Classes absent from the image fall through to the lookup below.
+        if (jdkAllowlisted) {
+            byte[] inImage = JdkImage.read(module, className);
+            if (inImage != null) {
+                return Arrays.equals(inImage, classfileBuffer) ? classfileBuffer : modified(className, classfileBuffer);
+            }
         }
         Set<ClassFileAttributes> candidates = fingerprints.get(className);
         if (candidates != null) {
