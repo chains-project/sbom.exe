@@ -31,8 +31,11 @@ public final class JdkDigest {
     /** The BOMI key of the allowlisted JDKs. Internal class names cannot contain a dot, so no class has this name. */
     public static final String BOMI_KEY = "jdk.digest";
 
+    // The JVM runs nothing in these: conf/ holds configuration that users edit, legal/ and man/ hold docs, include/
+    // holds C headers, and jmods/ holds the inputs of jlink.
     private static final Set<String> SKIPPED_DIRECTORIES = Set.of("conf", "legal", "man", "include", "jmods");
 
+    // The sources of the JDK, for IDEs and debuggers. The JVM never runs them.
     private static final Set<String> SKIPPED_FILES = Set.of("lib/src.zip");
 
     private JdkDigest() {}
