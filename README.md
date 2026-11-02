@@ -28,7 +28,12 @@ All the commands take in the following parameters:
 |:-------------------:|:------:|-------------------------------------------------------------------------------------------|
 | `output` or `input` | `File` | Path to index file. `output` will create a <br/>new file. `input` will merge the indices. |
 
-1. `jdk`: Generate fingerprints for JDK classes. |
+1. `jdk`: Record a digest of a JDK. Run it once per JDK that the application may run on. |
+    - **Optional Parameters**
+
+      |   Parameter   |  Type  | Description                                                   |
+      |:-------------:|:------:|---------------------------------------------------------------|
+      | `java-home`   | `File` | The JDK to digest. Defaults to the JDK that runs the indexer. |
 
 2. `supply-chain`: Generate fingerprints for all the dependencies captured in
    the SBOM.

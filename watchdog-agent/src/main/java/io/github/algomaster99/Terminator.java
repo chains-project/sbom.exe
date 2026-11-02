@@ -1,25 +1,18 @@
 package io.github.algomaster99;
 
 import io.github.algomaster99.terminator.commons.fingerprint.JdkDigest;
+import io.github.algomaster99.terminator.commons.fingerprint.JdkImage;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileUtilities;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ProxyRegenerator;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.SpeciesRegenerator;
-import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
-import java.lang.module.ModuleFinder;
-import java.lang.module.ModuleReference;
-import java.net.URI;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.ProtectionDomain;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,13 +24,15 @@ public class Terminator {
 
     private static final Map<String, String> proxyOriginalNamesToReadableNames = new ConcurrentHashMap<>();
 
-    // Set only once the running JDK matches a digest in the BOMI.
-    private static FileSystem jdkImage;
-    private static Set<String> jdkModules = Set.of();
+    // Set once the running JDK matches a digest in the BOMI.
+    private static boolean jdkAllowlisted;
 
     public static void premain(String agentArgs, Instrumentation inst) {
         options = new Options(agentArgs);
         fingerprints = options.getSbom();
+        // Many JDK classes, most of java.base, are loaded before the transformer is added and never reach it. The
+        // digest covers them only if they came from the JDK's files: classes that --patch-module or
+        // -Xbootclasspath/a loaded before this point are missed.
         verifyJdk();
         ProxyRegenerator.openGenerator(inst);
         SpeciesRegenerator.openGenerator(inst);
@@ -72,28 +67,13 @@ public class Terminator {
             String digest = digestByAlgorithm.computeIfAbsent(
                     allowedJdk.algorithm(), algorithm -> JdkDigest.compute(javaHome, algorithm));
             if (digest.equals(allowedJdk.hash())) {
-                jdkImage = FileSystems.getFileSystem(URI.create("jrt:/"));
-                Set<String> modules = new HashSet<>();
-                for (ModuleReference module : ModuleFinder.ofSystem().findAll()) {
-                    modules.add(module.descriptor().name());
-                }
-                jdkModules = modules;
-                // Load the classes that read the image now, not while the transformer checks a class.
-                readFromJdkImage("java.base", "java/lang/Object");
-                System.err.println("[VERIFIED]: JDK " + allowedJdk.classfileVersion() + " at " + javaHome);
+                JdkImage.preload();
+                jdkAllowlisted = true;
+                System.err.println("[ALLOWLISTED]: JDK " + allowedJdk.classfileVersion() + " at " + javaHome);
                 return;
             }
         }
         notAllowlisted("JDK " + JdkDigest.version(javaHome) + " at " + javaHome, null);
-    }
-
-    private static byte[] readFromJdkImage(String moduleName, String className) {
-        // No string concatenation, for the same reason as in the species branch below.
-        try {
-            return Files.readAllBytes(jdkImage.getPath("/modules", moduleName, className.concat(".class")));
-        } catch (IOException e) {
-            return null;
-        }
     }
 
     private static byte[] isLoadedClassAllowlisted(
@@ -135,8 +115,8 @@ public class Terminator {
         }
         // A class of a JDK module must be the one in the module image, which verifyJdk checked against the BOMI. This
         // catches classes patched into a JDK module. Classes absent from the image fall through to the lookup below.
-        if (module != null && module.isNamed() && jdkModules.contains(module.getName())) {
-            byte[] inImage = readFromJdkImage(module.getName(), className);
+        if (jdkAllowlisted) {
+            byte[] inImage = JdkImage.read(module, className);
             if (inImage != null) {
                 return Arrays.equals(inImage, classfileBuffer) ? classfileBuffer : modified(className, classfileBuffer);
             }

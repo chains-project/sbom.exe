@@ -8,11 +8,9 @@ import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFile
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.api.io.TempDir;
 
 class JdkIndexerTest {
@@ -34,54 +32,8 @@ class JdkIndexerTest {
         assertThat(contentFirst).isEqualTo(contentSecond);
     }
 
-    @EnabledIfSystemProperty(named = "java.vendor.version", matches = "Temurin-21\\.0\\.2\\+13")
     @Test
-    void jdk21_0_2_indexShouldBeReproducible_temurin(@TempDir Path tempDir) throws IOException {
-        // arrange
-        Path actualIndex = tempDir.resolve("jdk.jsonl");
-        Path expectedIndex = Path.of("src", "test", "resources", "jdk-index", "21.0.2-tem.jsonl");
-
-        // act
-        String[] args = {"jdk", "-o", actualIndex.toString()};
-        assertThat(Index.execute(args)).isZero();
-
-        // assert
-        List<String> actual = Files.readAllLines(actualIndex);
-        List<String> expected = Files.readAllLines(expectedIndex);
-        assertThat(actual).isEqualTo(expected);
-
-        Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(actualIndex);
-        referenceProvenance
-                .values()
-                .forEach(classFileAttributes ->
-                        assertThat(classFileAttributes.size()).isEqualTo(1));
-    }
-
-    @EnabledIfSystemProperty(named = "java.vendor.version", matches = "Temurin-17\\.0\\.10\\+7")
-    @Test
-    void jdk17_0_10_indexShouldBeReproducibleAcrossMultiple_implementations(@TempDir Path tempDir) throws IOException {
-        // arrange
-        Path actualIndex = tempDir.resolve("jdk.jsonl");
-        Path expectedIndex = Path.of("src", "test", "resources", "jdk-index", "17.0.10-tem.jsonl");
-
-        // act
-        String[] args = {"jdk", "-o", actualIndex.toString()};
-        assertThat(Index.execute(args)).isZero();
-
-        // assert
-        List<String> actual = Files.readAllLines(actualIndex);
-        List<String> expected = Files.readAllLines(expectedIndex);
-        assertThat(actual).isEqualTo(expected);
-
-        Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(actualIndex);
-        referenceProvenance
-                .values()
-                .forEach(classFileAttributes ->
-                        assertThat(classFileAttributes.size()).isEqualTo(1));
-    }
-
-    @Test
-    void digestRecordsOneEntryPerJdk(@TempDir Path tempDir) throws IOException {
+    void eachJdkAddsOneDigest(@TempDir Path tempDir) throws IOException {
         // arrange
         Path indexFile = tempDir.resolve("jdk.jsonl");
         Path otherJdk = tempDir.resolve("other-jdk");
@@ -90,32 +42,20 @@ class JdkIndexerTest {
         Path runningJdk = Path.of(System.getProperty("java.home"));
 
         // act
-        assertThat(Index.execute(new String[] {"jdk", "--digest", "-o", indexFile.toString()}))
+        assertThat(Index.execute(new String[] {"jdk", "-o", indexFile.toString()}))
                 .isZero();
-        assertThat(Index.execute(
-                        new String[] {"jdk", "--digest", "--java-home", otherJdk.toString(), "-i", indexFile.toString()
-                        }))
+        assertThat(Index.execute(new String[] {"jdk", "--java-home", otherJdk.toString(), "-i", indexFile.toString()}))
                 .isZero();
 
         // assert
+        // All JDKs share one key, like the versions of a class: its value holds one digest per JDK.
         Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(indexFile);
-        assertThat(referenceProvenance).containsOnlyKeys(JdkDigest.BOMI_KEY);
+        assertThat(referenceProvenance).hasSize(1).containsOnlyKeys(JdkDigest.BOMI_KEY);
         assertThat(referenceProvenance.get(JdkDigest.BOMI_KEY))
+                .hasSize(2)
                 .extracting(ClassFileAttributes::hash)
                 .containsExactlyInAnyOrder(
                         JdkDigest.compute(runningJdk, "SHA-256"), JdkDigest.compute(otherJdk, "SHA-256"));
-    }
-
-    @Test
-    void javaHomeRequiresDigest(@TempDir Path tempDir) {
-        String[] args = {
-            "jdk",
-            "--java-home",
-            tempDir.toString(),
-            "-o",
-            tempDir.resolve("jdk.jsonl").toString()
-        };
-        assertThat(Index.execute(args)).isNotZero();
     }
 
     @Test

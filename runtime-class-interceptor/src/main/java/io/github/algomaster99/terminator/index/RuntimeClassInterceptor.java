@@ -1,5 +1,6 @@
 package io.github.algomaster99.terminator.index;
 
+import io.github.algomaster99.terminator.commons.fingerprint.JdkImage;
 import io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileUtilities;
@@ -24,6 +25,7 @@ public class RuntimeClassInterceptor {
     public static void premain(String agentArgs, Instrumentation inst) {
         RuntimeClassInterceptorOptions options = new RuntimeClassInterceptorOptions(agentArgs);
         ProxyRegenerator.openGenerator(inst);
+        JdkImage.preload();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             ParsingHelper.serialiseFingerprints(exhaustiveListOfClasses, options.getOutput());
         }));
@@ -31,19 +33,24 @@ public class RuntimeClassInterceptor {
                 new ClassFileTransformer() {
                     @Override
                     public byte[] transform(
+                            Module module,
                             ClassLoader loader,
                             String className,
                             Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain,
                             byte[] classfileBuffer)
                             throws IllegalClassFormatException {
-                        return recordClass(loader, className, classfileBuffer);
+                        return recordClass(module, loader, className, classfileBuffer);
                     }
                 },
                 false);
     }
 
-    private static byte[] recordClass(ClassLoader loader, String className, byte[] classfileBuffer) {
+    private static byte[] recordClass(Module module, ClassLoader loader, String className, byte[] classfileBuffer) {
+        // The watchdog checks the classes in the JDK's module image against the image, so they are not recorded.
+        if (JdkImage.read(module, className) != null) {
+            return classfileBuffer;
+        }
         // The watchdog checks proxy classes by regenerating them, so they are not recorded.
         if (ClassFileUtilities.isProxyClass(classfileBuffer)
                 && ProxyRegenerator.isGeneratedByJdk(loader, classfileBuffer)) {

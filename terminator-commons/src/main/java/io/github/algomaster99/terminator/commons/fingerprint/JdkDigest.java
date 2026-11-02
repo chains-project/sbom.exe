@@ -11,21 +11,29 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * Computes a digest of a whole JDK, so that the BOMI allowlists a JDK build instead of each of its classes.
  *
- * <p>The digest covers the files that hold code the JVM runs: the module image {@code lib/modules}, the native
- * libraries, and the CDS archives. It leaves out files that users edit or distributions replace, like {@code conf/},
- * and files that do not hold code, like {@code legal/}. The digest is the hash of a manifest that lists, sorted by
- * path, each file's path relative to the JDK and the hash of its content.
+ * <p>The digest covers every file of the JDK except the configuration in {@code conf/}, which users edit and
+ * distributions replace, and the files that the JDK never runs: documentation, headers, the inputs of jlink, and the
+ * sources ({@code legal/}, {@code man/}, {@code include/}, {@code jmods/}, {@code lib/src.zip}). It thus covers the
+ * module image, the native libraries, the CDS archives, and the executables, like {@code lib/jspawnhelper}, which
+ * the JVM runs to start processes. Listing what to leave out instead of what to keep covers new kinds of files by
+ * default. The digest is the hash of a manifest that lists, sorted by path, each file's path relative to the JDK and
+ * the hash of its content.
  */
 public final class JdkDigest {
 
     /** The BOMI key of the allowlisted JDKs. Internal class names cannot contain a dot, so no class has this name. */
     public static final String BOMI_KEY = "jdk.digest";
+
+    private static final Set<String> SKIPPED_DIRECTORIES = Set.of("conf", "legal", "man", "include", "jmods");
+
+    private static final Set<String> SKIPPED_FILES = Set.of("lib/src.zip");
 
     private JdkDigest() {}
 
@@ -38,7 +46,7 @@ public final class JdkDigest {
      */
     public static String compute(Path javaHome, String algorithm) {
         StringBuilder manifest = new StringBuilder();
-        for (Path file : filesWithCode(javaHome)) {
+        for (Path file : filesToDigest(javaHome)) {
             manifest.append(relativePath(javaHome, file))
                     .append('\0')
                     .append(hashFile(file, algorithm))
@@ -66,10 +74,10 @@ public final class JdkDigest {
         return version == null ? "unknown" : version.replace("\"", "");
     }
 
-    private static List<Path> filesWithCode(Path javaHome) {
+    private static List<Path> filesToDigest(Path javaHome) {
         try (Stream<Path> files = Files.walk(javaHome)) {
             return files.filter(Files::isRegularFile)
-                    .filter(file -> holdsCode(relativePath(javaHome, file)))
+                    .filter(file -> !isSkipped(relativePath(javaHome, file)))
                     .sorted((a, b) -> relativePath(javaHome, a).compareTo(relativePath(javaHome, b)))
                     .collect(Collectors.toList());
         } catch (IOException e) {
@@ -77,12 +85,10 @@ public final class JdkDigest {
         }
     }
 
-    private static boolean holdsCode(String relativePath) {
-        return relativePath.equals("lib/modules")
-                || relativePath.endsWith(".so")
-                || relativePath.endsWith(".dylib")
-                || relativePath.endsWith(".dll")
-                || relativePath.endsWith(".jsa");
+    private static boolean isSkipped(String relativePath) {
+        int slash = relativePath.indexOf('/');
+        return (slash > 0 && SKIPPED_DIRECTORIES.contains(relativePath.substring(0, slash)))
+                || SKIPPED_FILES.contains(relativePath);
     }
 
     private static String relativePath(Path javaHome, Path file) {
