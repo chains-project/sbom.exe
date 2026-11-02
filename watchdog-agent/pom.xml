@@ -81,18 +81,6 @@
             </goals>
             <phase>package</phase>
           </execution>
-          <!--          Create watchdog-agent in target/classes so it could be accessed in test -->
-          <execution>
-            <id>shade-for-test</id>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <outputDirectory>${project.build.directory}/classes</outputDirectory>
-              <finalName>${project.artifactId}</finalName>
-            </configuration>
-          </execution>
         </executions>
       </plugin>
       <plugin>
