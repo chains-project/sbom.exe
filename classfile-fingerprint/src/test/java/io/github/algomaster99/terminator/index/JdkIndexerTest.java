@@ -2,6 +2,7 @@ package io.github.algomaster99.terminator.index;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.github.algomaster99.terminator.commons.fingerprint.JdkDigest;
 import io.github.algomaster99.terminator.commons.fingerprint.ParsingHelper;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import java.io.IOException;
@@ -77,6 +78,44 @@ class JdkIndexerTest {
                 .values()
                 .forEach(classFileAttributes ->
                         assertThat(classFileAttributes.size()).isEqualTo(1));
+    }
+
+    @Test
+    void digestRecordsOneEntryPerJdk(@TempDir Path tempDir) throws IOException {
+        // arrange
+        Path indexFile = tempDir.resolve("jdk.jsonl");
+        Path otherJdk = tempDir.resolve("other-jdk");
+        Files.createDirectories(otherJdk.resolve("lib"));
+        Files.writeString(otherJdk.resolve("lib/modules"), "modules of another JDK");
+        Path runningJdk = Path.of(System.getProperty("java.home"));
+
+        // act
+        assertThat(Index.execute(new String[] {"jdk", "--digest", "-o", indexFile.toString()}))
+                .isZero();
+        assertThat(Index.execute(
+                        new String[] {"jdk", "--digest", "--java-home", otherJdk.toString(), "-i", indexFile.toString()
+                        }))
+                .isZero();
+
+        // assert
+        Map<String, Set<ClassFileAttributes>> referenceProvenance = ParsingHelper.deserializeFingerprints(indexFile);
+        assertThat(referenceProvenance).containsOnlyKeys(JdkDigest.BOMI_KEY);
+        assertThat(referenceProvenance.get(JdkDigest.BOMI_KEY))
+                .extracting(ClassFileAttributes::hash)
+                .containsExactlyInAnyOrder(
+                        JdkDigest.compute(runningJdk, "SHA-256"), JdkDigest.compute(otherJdk, "SHA-256"));
+    }
+
+    @Test
+    void javaHomeRequiresDigest(@TempDir Path tempDir) {
+        String[] args = {
+            "jdk",
+            "--java-home",
+            tempDir.toString(),
+            "-o",
+            tempDir.resolve("jdk.jsonl").toString()
+        };
+        assertThat(Index.execute(args)).isNotZero();
     }
 
     @Test
