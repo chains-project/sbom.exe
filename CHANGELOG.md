@@ -1,4 +1,20 @@
 
+# 0.15.0
+## Changelog
+
+## 🧰 Tasks
+- 67030c5 chore: releasing version 0.15.0
+
+---
+- a9e04f7 Revert "chore: releasing version 0.15.0"
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- algomaster99 ([@algomaster99](https://github.com/algomaster99))
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+
 # 0.14.1
 ## Changelog
 
