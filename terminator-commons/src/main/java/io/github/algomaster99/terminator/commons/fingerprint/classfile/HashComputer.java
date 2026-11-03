@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ConstantDynamic;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.SimpleRemapper;
@@ -247,7 +246,7 @@ public class HashComputer {
                 return opcode + " " + methodInsn.owner + "." + methodInsn.name + methodInsn.desc + " " + methodInsn.itf;
             case AbstractInsnNode.INVOKE_DYNAMIC_INSN:
                 InvokeDynamicInsnNode indy = (InvokeDynamicInsnNode) insn;
-                return opcode + " " + indy.name + indy.desc + " " + indy.bsm + " " + constants(indy.bsmArgs);
+                return opcode + " " + indy.name + indy.desc + " " + indy.bsm + " " + Arrays.toString(indy.bsmArgs);
             case AbstractInsnNode.JUMP_INSN:
                 return opcode + " " + labels.get(((JumpInsnNode) insn).label);
             case AbstractInsnNode.LDC_INSN:
@@ -285,24 +284,7 @@ public class HashComputer {
         if (value instanceof Double) {
             return Long.toHexString(Double.doubleToRawLongBits((Double) value));
         }
-        if (value instanceof ConstantDynamic) {
-            ConstantDynamic condy = (ConstantDynamic) value;
-            Object[] arguments = new Object[condy.getBootstrapMethodArgumentCount()];
-            for (int i = 0; i < arguments.length; i++) {
-                arguments[i] = condy.getBootstrapMethodArgument(i);
-            }
-            return condy.getName() + " : " + condy.getDescriptor() + " " + condy.getBootstrapMethod() + " "
-                    + constants(arguments);
-        }
         return String.valueOf(value);
-    }
-
-    private static String constants(Object[] values) {
-        List<String> rendered = new ArrayList<>();
-        for (Object value : values) {
-            rendered.add(constant(value));
-        }
-        return rendered.toString();
     }
 
     private static List<Integer> positions(List<LabelNode> targets, Map<LabelNode, Integer> labels) {
