@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ConstantDynamic;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.SimpleRemapper;
@@ -101,7 +102,7 @@ public class HashComputer {
                     .append(' ')
                     .append(field.desc)
                     .append(" = ")
-                    .append(field.value)
+                    .append(constant(field.value))
                     .append('\n');
         }
 
@@ -246,12 +247,12 @@ public class HashComputer {
                 return opcode + " " + methodInsn.owner + "." + methodInsn.name + methodInsn.desc + " " + methodInsn.itf;
             case AbstractInsnNode.INVOKE_DYNAMIC_INSN:
                 InvokeDynamicInsnNode indy = (InvokeDynamicInsnNode) insn;
-                return opcode + " " + indy.name + indy.desc + " " + indy.bsm + " " + Arrays.toString(indy.bsmArgs);
+                return opcode + " " + indy.name + indy.desc + " " + indy.bsm + " " + constants(indy.bsmArgs);
             case AbstractInsnNode.JUMP_INSN:
                 return opcode + " " + labels.get(((JumpInsnNode) insn).label);
             case AbstractInsnNode.LDC_INSN:
                 Object constant = ((LdcInsnNode) insn).cst;
-                return opcode + " " + constant.getClass().getSimpleName() + " " + constant;
+                return opcode + " " + constant.getClass().getSimpleName() + " " + constant(constant);
             case AbstractInsnNode.IINC_INSN:
                 IincInsnNode iinc = (IincInsnNode) insn;
                 return opcode + " " + iinc.var + " " + iinc.incr;
@@ -269,6 +270,39 @@ public class HashComputer {
             default:
                 return opcode;
         }
+    }
+
+    /**
+     * Renders a constant so that the hash does not depend on the JDK that computes it. {@code Float.toString} and
+     * {@code Double.toString} print some values differently since JDK 19 (JDK-4511638), for example
+     * {@code (float) Integer.MAX_VALUE} as {@code 2.14748365E9} before and {@code 2.1474836E9} after, so floating-point
+     * constants are rendered as their raw bits instead. Other constants render like their {@code toString}.
+     */
+    private static String constant(Object value) {
+        if (value instanceof Float) {
+            return Integer.toHexString(Float.floatToRawIntBits((Float) value));
+        }
+        if (value instanceof Double) {
+            return Long.toHexString(Double.doubleToRawLongBits((Double) value));
+        }
+        if (value instanceof ConstantDynamic) {
+            ConstantDynamic condy = (ConstantDynamic) value;
+            Object[] arguments = new Object[condy.getBootstrapMethodArgumentCount()];
+            for (int i = 0; i < arguments.length; i++) {
+                arguments[i] = condy.getBootstrapMethodArgument(i);
+            }
+            return condy.getName() + " : " + condy.getDescriptor() + " " + condy.getBootstrapMethod() + " "
+                    + constants(arguments);
+        }
+        return String.valueOf(value);
+    }
+
+    private static String constants(Object[] values) {
+        List<String> rendered = new ArrayList<>();
+        for (Object value : values) {
+            rendered.add(constant(value));
+        }
+        return rendered.toString();
     }
 
     private static List<Integer> positions(List<LabelNode> targets, Map<LabelNode, Integer> labels) {
