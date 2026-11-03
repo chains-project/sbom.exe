@@ -14,6 +14,7 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -135,6 +136,34 @@ class HashComputerTest {
 
         // assert
         assertThat(HashComputer.computeHash(tampered)).isNotEqualTo(HashComputer.computeHash(original));
+    }
+
+    /**
+     * Both constants are printed differently by {@code Float.toString} and {@code Double.toString} before JDK 19 than
+     * after (JDK-4511638). The hash is pinned so that the test fails on one of the JDKs in the CI matrix if the hash
+     * depends on how the JDK prints them.
+     */
+    @Test
+    void floatingPointConstantsHashTheSameOnEveryJdk() {
+        // arrange
+        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        writer.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, "Constants", null, "java/lang/Object", null);
+        writer.visitField(Opcodes.ACC_STATIC | Opcodes.ACC_FINAL, "MAX_INT_AS_FLOAT", "F", null, (float)
+                        Integer.MAX_VALUE)
+                .visitEnd();
+        MethodVisitor method = writer.visitMethod(Opcodes.ACC_STATIC, "twoE23", "()D", null, null);
+        method.visitCode();
+        method.visitLdcInsn(2e23);
+        method.visitInsn(Opcodes.DRETURN);
+        method.visitMaxs(0, 0);
+        method.visitEnd();
+        writer.visitEnd();
+
+        // act
+        String hash = HashComputer.computeHash(writer.toByteArray());
+
+        // assert
+        assertThat(hash).isEqualTo("3993aba46918523b771627e6c583fa6b4ba35cc77791fa68e1178c54c44ffe86");
     }
 
     /**

@@ -101,7 +101,7 @@ public class HashComputer {
                     .append(' ')
                     .append(field.desc)
                     .append(" = ")
-                    .append(field.value)
+                    .append(constant(field.value))
                     .append('\n');
         }
 
@@ -251,7 +251,7 @@ public class HashComputer {
                 return opcode + " " + labels.get(((JumpInsnNode) insn).label);
             case AbstractInsnNode.LDC_INSN:
                 Object constant = ((LdcInsnNode) insn).cst;
-                return opcode + " " + constant.getClass().getSimpleName() + " " + constant;
+                return opcode + " " + constant.getClass().getSimpleName() + " " + constant(constant);
             case AbstractInsnNode.IINC_INSN:
                 IincInsnNode iinc = (IincInsnNode) insn;
                 return opcode + " " + iinc.var + " " + iinc.incr;
@@ -269,6 +269,22 @@ public class HashComputer {
             default:
                 return opcode;
         }
+    }
+
+    /**
+     * Renders a constant so that the hash does not depend on the JDK that computes it. {@code Float.toString} and
+     * {@code Double.toString} print some values differently since JDK 19 (JDK-4511638), for example
+     * {@code (float) Integer.MAX_VALUE} as {@code 2.14748365E9} before and {@code 2.1474836E9} after, so floating-point
+     * constants are rendered as their raw bits instead. Other constants render like their {@code toString}.
+     */
+    private static String constant(Object value) {
+        if (value instanceof Float) {
+            return Integer.toHexString(Float.floatToRawIntBits((Float) value));
+        }
+        if (value instanceof Double) {
+            return Long.toHexString(Double.doubleToRawLongBits((Double) value));
+        }
+        return String.valueOf(value);
     }
 
     private static List<Integer> positions(List<LabelNode> targets, Map<LabelNode, Integer> labels) {
