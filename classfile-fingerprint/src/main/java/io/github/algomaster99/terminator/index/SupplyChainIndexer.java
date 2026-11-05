@@ -2,10 +2,10 @@ package io.github.algomaster99.terminator.index;
 
 import static io.github.algomaster99.terminator.commons.jar.JarScanner.goInsideJarAndUpdateFingerprints;
 
-import io.github.algomaster99.terminator.commons.cyclonedx.Component;
 import io.github.algomaster99.terminator.commons.cyclonedx.CycloneDX;
 import io.github.algomaster99.terminator.commons.cyclonedx.CycloneDXWrapper;
-import io.github.algomaster99.terminator.commons.cyclonedx.Metadata;
+import io.github.algomaster99.terminator.commons.cyclonedx.CycloneDXWrapper.BomComponent;
+import io.github.algomaster99.terminator.commons.cyclonedx.CycloneDXWrapper.BomMetadata;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileAttributes;
 import io.github.algomaster99.terminator.commons.jar.JarDownloader;
 import java.io.File;
@@ -49,11 +49,11 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
 
     private void processRootComponent(
             CycloneDXWrapper sbom, Map<String, Set<ClassFileAttributes>> referenceProvenance) {
-        Metadata metadata = sbom.getMetadata();
+        BomMetadata metadata = sbom.getMetadata();
         if (metadata == null) {
             return;
         }
-        Component rootComponent = metadata.getComponent();
+        BomComponent rootComponent = metadata.getComponent();
         if (rootComponent == null) {
             System.out.println("Root component is not present.");
             return;
@@ -76,7 +76,7 @@ public class SupplyChainIndexer extends BaseIndexer implements Callable<Integer>
 
     private void processAllComponents(
             CycloneDXWrapper sbom, Map<String, Set<ClassFileAttributes>> referenceProvenance) {
-        for (Component component : sbom.getComponents()) {
+        for (BomComponent component : sbom.getComponents()) {
             try {
                 File jarFile =
                         JarDownloader.getJarFile(component.getGroup(), component.getName(), component.getVersion());
