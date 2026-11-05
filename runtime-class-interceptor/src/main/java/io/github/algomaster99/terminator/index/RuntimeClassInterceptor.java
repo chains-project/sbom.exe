@@ -14,13 +14,17 @@ import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class RuntimeClassInterceptor {
     private static final Map<String, Set<ClassFileAttributes>> exhaustiveListOfClasses = new ConcurrentHashMap<>();
@@ -31,8 +35,20 @@ public class RuntimeClassInterceptor {
     // Root of the project under test, or null to record classes from everywhere.
     private static Path project;
 
-    // Whether a code source location holds production classes of the project, cached per location.
-    private static final Map<URL, Boolean> projectLocations = new ConcurrentHashMap<>();
+    // What a code source location holds, cached per location.
+    private static final Map<URL, Origin> origins = new ConcurrentHashMap<>();
+
+    private enum Origin {
+        PRODUCTION_CODE,
+        TEST_CODE,
+        OUTSIDE_PROJECT
+    }
+
+    private static final StackWalker WALKER = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
+
+    // Created up front: loading its class inside the transformer would re-enter it.
+    private static final Function<Stream<StackWalker.StackFrame>, Boolean> NEAREST_PROJECT_FRAME_IS_TEST =
+            new NearestProjectFrameIsTest();
 
     public static void premain(String agentArgs, Instrumentation inst) {
         RuntimeClassInterceptorOptions options = new RuntimeClassInterceptorOptions(agentArgs);
@@ -86,8 +102,8 @@ public class RuntimeClassInterceptor {
         if (!isLoadedFromProject(protectionDomain)) {
             return classfileBuffer;
         }
-        // Test doubles share the protection domain of the mocked class but exist only in tests, under random names.
-        if (isTestDouble(className)) {
+        // Classes that tests generate, like mocks, share the protection domain of the class they extend.
+        if (isGeneratedForTest(className, protectionDomain)) {
             return classfileBuffer;
         }
         Set<ClassFileAttributes> candidates = exhaustiveListOfClasses.get(className);
@@ -116,47 +132,91 @@ public class RuntimeClassInterceptor {
         return classfileBuffer;
     }
 
-    // Names that Mockito and Byte Buddy give to the classes they generate, e.g. `TrueTypeFont$MockitoMock$4p5VBsG8`.
-    static boolean isTestDouble(String className) {
-        return className != null && (className.contains("$MockitoMock$") || className.contains("$ByteBuddy$"));
+    private static boolean isGeneratedForTest(String className, ProtectionDomain protectionDomain) {
+        // JDK-generated classes (no protection domain) and classes with a class file on disk are kept.
+        if (project == null || protectionDomain == null || hasClassFile(locationOf(protectionDomain), className)) {
+            return false;
+        }
+        // The nearest frame from the project tells who asked for the class: a test or production code.
+        return WALKER.walk(NEAREST_PROJECT_FRAME_IS_TEST);
+    }
+
+    // Classes in a directory are compiled if their class file is there. Other locations, like jars, are assumed to hold
+    // the class file, so their classes are kept.
+    static boolean hasClassFile(URL location, String className) {
+        if (location == null) {
+            return false;
+        }
+        Path path;
+        try {
+            path = Path.of(location.toURI());
+        } catch (URISyntaxException | RuntimeException e) {
+            return true;
+        }
+        return !Files.isDirectory(path) || Files.isRegularFile(path.resolve(className + ".class"));
+    }
+
+    // A class, not a lambda: spinning a lambda's class would re-enter the transformer.
+    private static final class NearestProjectFrameIsTest implements Function<Stream<StackWalker.StackFrame>, Boolean> {
+        @Override
+        public Boolean apply(Stream<StackWalker.StackFrame> frames) {
+            Iterator<StackWalker.StackFrame> iterator = frames.iterator();
+            while (iterator.hasNext()) {
+                URL location = locationOf(iterator.next().getDeclaringClass().getProtectionDomain());
+                // Frames without a location, like the JDK's, are not from the project.
+                Origin origin = location == null ? Origin.OUTSIDE_PROJECT : originOf(location);
+                if (origin != Origin.OUTSIDE_PROJECT) {
+                    return origin == Origin.TEST_CODE;
+                }
+            }
+            return false;
+        }
     }
 
     private static boolean isLoadedFromProject(ProtectionDomain protectionDomain) {
         if (project == null) {
             return true;
         }
-        CodeSource codeSource = protectionDomain == null ? null : protectionDomain.getCodeSource();
-        URL location = codeSource == null ? null : codeSource.getLocation();
+        URL location = locationOf(protectionDomain);
         // Classes without a location are generated at runtime, so where they come from is unknown.
         if (location == null) {
             return true;
         }
-        // No lambdas or computeIfAbsent: spinning their classes would re-enter the transformer.
-        Boolean isFromProject = projectLocations.get(location);
-        if (isFromProject == null) {
-            isFromProject = isProductionCodeOfProject(location);
-            projectLocations.put(location, isFromProject);
-        }
-        return isFromProject;
+        return originOf(location) == Origin.PRODUCTION_CODE;
     }
 
-    private static boolean isProductionCodeOfProject(URL location) {
+    private static URL locationOf(ProtectionDomain protectionDomain) {
+        CodeSource codeSource = protectionDomain == null ? null : protectionDomain.getCodeSource();
+        return codeSource == null ? null : codeSource.getLocation();
+    }
+
+    private static Origin originOf(URL location) {
+        // No lambdas or computeIfAbsent: spinning their classes would re-enter the transformer.
+        Origin origin = origins.get(location);
+        if (origin == null) {
+            origin = findOrigin(location);
+            origins.put(location, origin);
+        }
+        return origin;
+    }
+
+    private static Origin findOrigin(URL location) {
         Path path;
         try {
             path = Path.of(location.toURI()).toRealPath();
         } catch (URISyntaxException | IOException | RuntimeException e) {
             // Locations that are not files on disk are kept, as before.
-            return true;
+            return Origin.PRODUCTION_CODE;
         }
         if (!path.startsWith(project)) {
-            return false;
+            return Origin.OUTSIDE_PROJECT;
         }
         for (Path name : project.relativize(path)) {
             if ("test-classes".equals(name.toString())) {
-                return false;
+                return Origin.TEST_CODE;
             }
         }
-        return true;
+        return Origin.PRODUCTION_CODE;
     }
 
     private static Path toRealPath(Path path) {
