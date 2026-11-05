@@ -76,3 +76,4 @@ It takes in the following parameters:
 |   Parameter    |   Type    | Description                                                                             |
 |:--------------:|:---------:|-----------------------------------------------------------------------------------------|
 | `skipShutdown` | `boolean` | If `true`, the JVM will not shutdown if a prohibited class is loaded. Default: `false`. |
+|   `verbose`    | `boolean` | If `true`, also log the JDK and runtime-generated classes that were verified. Default: `false`. |

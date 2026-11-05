@@ -11,6 +11,7 @@ public class Options {
 
     private Map<String, Set<ClassFileAttributes>> sbom;
     private boolean skipShutdown = false;
+    private boolean verbose = false;
 
     public Options(String agentArgs) {
         String[] args = agentArgs.split(",");
@@ -29,6 +30,9 @@ public class Options {
                 case "skipShutdown":
                     skipShutdown = Boolean.parseBoolean(value);
                     break;
+                case "verbose":
+                    verbose = Boolean.parseBoolean(value);
+                    break;
                 default:
                     throw new IllegalArgumentException("Unknown argument: " + key);
             }
@@ -41,5 +45,9 @@ public class Options {
 
     public boolean shouldSkipShutdown() {
         return skipShutdown;
+    }
+
+    public boolean isVerbose() {
+        return verbose;
     }
 }
