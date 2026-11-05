@@ -69,7 +69,9 @@ public class Terminator {
             if (digest.equals(allowedJdk.hash())) {
                 JdkImage.preload();
                 jdkAllowlisted = true;
-                System.err.println("[ALLOWLISTED]: JDK " + allowedJdk.classfileVersion() + " at " + javaHome);
+                if (options.isVerbose()) {
+                    System.err.println("[ALLOWLISTED]: JDK " + allowedJdk.classfileVersion() + " at " + javaHome);
+                }
                 return;
             }
         }
@@ -84,8 +86,10 @@ public class Terminator {
                 && ProxyRegenerator.isGeneratedByJdk(loader, classfileBuffer)) {
             proxyOriginalNamesToReadableNames.put(
                     className, ClassFileUtilities.getReadableNameOfProxyClass(classfileBuffer));
-            System.err.println("[VERIFIED]: " + className + " (regenerated from "
-                    + String.join(", ", ClassFileUtilities.getInterfacesOfProxyClass(classfileBuffer)) + ")");
+            if (options.isVerbose()) {
+                System.err.println("[VERIFIED]: " + className + " (regenerated from "
+                        + String.join(", ", ClassFileUtilities.getInterfacesOfProxyClass(classfileBuffer)) + ")");
+            }
             return classfileBuffer;
         }
         // Only a fixed set of species shapes is baked into the JDK and recorded in the BOMI; the rest are spun at
@@ -96,8 +100,10 @@ public class Terminator {
                 && SpeciesRegenerator.isGeneratedByJdk(classfileBuffer)) {
             // Build the message without string concatenation: `+` compiles to an invokedynamic that spins a species
             // of its own, which would re-enter this transformer while a species is being defined.
-            System.err.println(
-                    new StringBuilder("[VERIFIED]: ").append(className).append(" (regenerated species)"));
+            if (options.isVerbose()) {
+                System.err.println(
+                        new StringBuilder("[VERIFIED]: ").append(className).append(" (regenerated species)"));
+            }
             return classfileBuffer;
         }
         if (ClassFileUtilities.getSimpleNameFromQualifiedName(className).startsWith("GeneratedConstructorAccessor")) {
