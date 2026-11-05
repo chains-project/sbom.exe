@@ -1,4 +1,22 @@
 
+# 0.16.0
+## Changelog
+
+## 🐛 Fixes
+- d72ebc1 fix: escape ampersand in CycloneDX 1.6 schema description (#413)
+
+## 🧰 Tasks
+- 8b20f49 chore: releasing version 0.16.0
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- Claude Opus 5.5 ()
+- GitHub ()
+- algomaster99 ([@algomaster99](https://github.com/algomaster99))
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+
 # 0.15.0
 ## Changelog
 
