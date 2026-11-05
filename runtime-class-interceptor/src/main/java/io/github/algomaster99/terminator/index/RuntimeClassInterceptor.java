@@ -79,6 +79,10 @@ public class RuntimeClassInterceptor {
         if (!isLoadedFromProject(protectionDomain)) {
             return classfileBuffer;
         }
+        // Test doubles share the protection domain of the mocked class but exist only in tests, under random names.
+        if (isTestDouble(className)) {
+            return classfileBuffer;
+        }
         Set<ClassFileAttributes> candidates = exhaustiveListOfClasses.get(className);
         String classFileVersion = ClassFileUtilities.getVersion(classfileBuffer);
         String hash = HashComputer.computeHash(classfileBuffer);
@@ -103,6 +107,11 @@ public class RuntimeClassInterceptor {
             exhaustiveListOfClasses.put(newClassName, candidates);
         }
         return classfileBuffer;
+    }
+
+    // Names that Mockito and Byte Buddy give to the classes they generate, e.g. `TrueTypeFont$MockitoMock$4p5VBsG8`.
+    static boolean isTestDouble(String className) {
+        return className != null && (className.contains("$MockitoMock$") || className.contains("$ByteBuddy$"));
     }
 
     private static boolean isLoadedFromProject(ProtectionDomain protectionDomain) {
