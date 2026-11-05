@@ -41,4 +41,25 @@ public class RuntimeIndexerTest {
         assertThat(first).size().isGreaterThan(jdkIndex.size());
         assertThat(first).isEqualTo(second);
     }
+
+    @Test
+    void runtimeIndexShouldOnlyContainProductionClassesOfTheProject(@TempDir Path tempDir) throws IOException {
+        // arrange
+        Path indexFile = tempDir.resolve("r.json");
+        Path project = Path.of("src", "test", "resources", "runtime-index", "basic-math");
+
+        // act
+        assertThat(Index.execute(new String[] {"jdk", "-o", indexFile.toString()}))
+                .isZero();
+        assertThat(Index.execute(new String[] {
+                    "runtime", "-p", project.toString(), "-i", indexFile.toString(), "-mj", "basic-math", "--cleanup"
+                }))
+                .isZero();
+        List<String> index = Files.readAllLines(indexFile);
+
+        // assert
+        assertThat(index).anyMatch(line -> line.startsWith("{\"foo/BasicMath\""));
+        assertThat(index).noneMatch(line -> line.startsWith("{\"foo/BasicMathTest\""));
+        assertThat(index).noneMatch(line -> line.startsWith("{\"org/junit/"));
+    }
 }

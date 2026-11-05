@@ -85,6 +85,7 @@ public class RuntimeIndexer extends BaseIndexer implements Callable<Integer> {
         List<Path> candidateIndexForMerge = new ArrayList<>();
         for (MavenModule module : requiredModules) {
             RuntimeClassInterceptorOptions options = new RuntimeClassInterceptorOptions();
+            options.setProject(pathToTempProject);
 
             if (indexFile.output != null) {
                 String suffix = module.getSelf().getArtifactId();

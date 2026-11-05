@@ -7,9 +7,14 @@ import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFile
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ProxyRegenerator;
 import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptorOptions;
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.HashSet;
 import java.util.Map;
@@ -22,8 +27,15 @@ public class RuntimeClassInterceptor {
     // This is a map of proxy class names to their names with interfaces
     private static final Map<String, String> proxies = new ConcurrentHashMap<>();
 
+    // Root of the project under test, or null to record classes from everywhere.
+    private static Path project;
+
+    // Whether a code source location holds production classes of the project, cached per location.
+    private static final Map<URL, Boolean> projectLocations = new ConcurrentHashMap<>();
+
     public static void premain(String agentArgs, Instrumentation inst) {
         RuntimeClassInterceptorOptions options = new RuntimeClassInterceptorOptions(agentArgs);
+        project = toRealPath(options.getProject());
         ProxyRegenerator.openGenerator(inst);
         JdkImage.preload();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -40,13 +52,18 @@ public class RuntimeClassInterceptor {
                             ProtectionDomain protectionDomain,
                             byte[] classfileBuffer)
                             throws IllegalClassFormatException {
-                        return recordClass(module, loader, className, classfileBuffer);
+                        return recordClass(module, loader, className, protectionDomain, classfileBuffer);
                     }
                 },
                 false);
     }
 
-    private static byte[] recordClass(Module module, ClassLoader loader, String className, byte[] classfileBuffer) {
+    private static byte[] recordClass(
+            Module module,
+            ClassLoader loader,
+            String className,
+            ProtectionDomain protectionDomain,
+            byte[] classfileBuffer) {
         // The watchdog checks the classes in the JDK's module image against the image, so they are not recorded.
         if (JdkImage.read(module, className) != null) {
             return classfileBuffer;
@@ -55,6 +72,11 @@ public class RuntimeClassInterceptor {
         if (ClassFileUtilities.isProxyClass(classfileBuffer)
                 && ProxyRegenerator.isGeneratedByJdk(loader, classfileBuffer)) {
             proxies.put(className, ClassFileUtilities.getReadableNameOfProxyClass(classfileBuffer));
+            return classfileBuffer;
+        }
+        // Test classes and classes from jars outside the project, like test frameworks, Surefire and this agent, are
+        // not recorded. Dependencies are indexed from the SBOM instead.
+        if (!isLoadedFromProject(protectionDomain)) {
             return classfileBuffer;
         }
         Set<ClassFileAttributes> candidates = exhaustiveListOfClasses.get(className);
@@ -81,5 +103,54 @@ public class RuntimeClassInterceptor {
             exhaustiveListOfClasses.put(newClassName, candidates);
         }
         return classfileBuffer;
+    }
+
+    private static boolean isLoadedFromProject(ProtectionDomain protectionDomain) {
+        if (project == null) {
+            return true;
+        }
+        CodeSource codeSource = protectionDomain == null ? null : protectionDomain.getCodeSource();
+        URL location = codeSource == null ? null : codeSource.getLocation();
+        // Classes without a location are generated at runtime, so where they come from is unknown.
+        if (location == null) {
+            return true;
+        }
+        // No lambdas or computeIfAbsent: spinning their classes would re-enter the transformer.
+        Boolean isFromProject = projectLocations.get(location);
+        if (isFromProject == null) {
+            isFromProject = isProductionCodeOfProject(location);
+            projectLocations.put(location, isFromProject);
+        }
+        return isFromProject;
+    }
+
+    private static boolean isProductionCodeOfProject(URL location) {
+        Path path;
+        try {
+            path = Path.of(location.toURI()).toRealPath();
+        } catch (URISyntaxException | IOException | RuntimeException e) {
+            // Locations that are not files on disk are kept, as before.
+            return true;
+        }
+        if (!path.startsWith(project)) {
+            return false;
+        }
+        for (Path name : project.relativize(path)) {
+            if ("test-classes".equals(name.toString())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static Path toRealPath(Path path) {
+        if (path == null) {
+            return null;
+        }
+        try {
+            return path.toRealPath();
+        } catch (IOException e) {
+            return path.toAbsolutePath().normalize();
+        }
     }
 }
