@@ -7,6 +7,11 @@ public class RuntimeClassInterceptorOptions {
     private Path output;
 
     /**
+     * Root of the project under test. Only classes loaded from it, or generated at runtime, are recorded.
+     */
+    private Path project;
+
+    /**
      * Default constructor useful for using setters to set the values
      */
     public RuntimeClassInterceptorOptions() {}
@@ -28,6 +33,9 @@ public class RuntimeClassInterceptorOptions {
                 case "output":
                     output = Path.of(value).toAbsolutePath();
                     break;
+                case "project":
+                    project = Path.of(value).toAbsolutePath();
+                    break;
                 default:
                     throw new IllegalArgumentException("Unknown argument: " + key);
             }
@@ -43,17 +51,30 @@ public class RuntimeClassInterceptorOptions {
         return this;
     }
 
+    public Path getProject() {
+        return project;
+    }
+
+    public RuntimeClassInterceptorOptions setProject(Path project) {
+        this.project = project.toAbsolutePath();
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder agentsArgsBuilder = new StringBuilder();
         Field[] fields = this.getClass().getDeclaredFields();
-        for (int i = 0; i < fields.length; i++) {
-            Field field = fields[i];
+        for (Field field : fields) {
             try {
-                agentsArgsBuilder.append(field.getName()).append("=").append(field.get(this));
-                if (i < fields.length - 1) {
+                Object value = field.get(this);
+                // Unset options are left out because the agent would parse "null" as a value.
+                if (value == null) {
+                    continue;
+                }
+                if (agentsArgsBuilder.length() > 0) {
                     agentsArgsBuilder.append(",");
                 }
+                agentsArgsBuilder.append(field.getName()).append("=").append(value);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
