@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -31,11 +33,17 @@ class RuntimeClassInterceptorTest {
     }
 
     @Test
-    void classesInJarsAreAssumedToHaveClassFiles(@TempDir Path directory) throws IOException {
-        Path jar = Files.createFile(directory.resolve("fontbox.jar"));
+    void classFilesAreLookedUpInJars(@TempDir Path directory) throws IOException {
+        Path jar = directory.resolve("fontbox.jar");
+        try (JarOutputStream out = new JarOutputStream(Files.newOutputStream(jar))) {
+            out.putNextEntry(new JarEntry("org/apache/fontbox/ttf/TrueTypeFont.class"));
+            out.closeEntry();
+        }
 
+        assertThat(RuntimeClassInterceptor.hasClassFile(jar.toUri().toURL(), "org/apache/fontbox/ttf/TrueTypeFont"))
+                .isTrue();
         assertThat(RuntimeClassInterceptor.hasClassFile(
                         jar.toUri().toURL(), "org/apache/fontbox/ttf/TrueTypeFont$MockitoMock$4p5VBsG8"))
-                .isTrue();
+                .isFalse();
     }
 }

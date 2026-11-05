@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
 public class RuntimeClassInterceptor {
@@ -43,6 +44,9 @@ public class RuntimeClassInterceptor {
         TEST_CODE,
         OUTSIDE_PROJECT
     }
+
+    // Jars of the project, kept open to look up class files.
+    private static final Map<Path, JarFile> jars = new ConcurrentHashMap<>();
 
     private static final StackWalker WALKER = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
 
@@ -141,8 +145,7 @@ public class RuntimeClassInterceptor {
         return WALKER.walk(NEAREST_PROJECT_FRAME_IS_TEST);
     }
 
-    // Classes in a directory are compiled if their class file is there. Other locations, like jars, are assumed to hold
-    // the class file, so their classes are kept.
+    // Whether the class file is in the directory or jar of the code source. Classes from other locations are kept.
     static boolean hasClassFile(URL location, String className) {
         if (location == null) {
             return false;
@@ -153,7 +156,30 @@ public class RuntimeClassInterceptor {
         } catch (URISyntaxException | RuntimeException e) {
             return true;
         }
-        return !Files.isDirectory(path) || Files.isRegularFile(path.resolve(className + ".class"));
+        String classFile = className + ".class";
+        if (Files.isDirectory(path)) {
+            return Files.isRegularFile(path.resolve(classFile));
+        }
+        // Modules of a multi-module project see each other as jars in their `target` directories.
+        try {
+            return openJar(path).getEntry(classFile) != null;
+        } catch (IOException e) {
+            return true;
+        }
+    }
+
+    // No lambdas or computeIfAbsent: spinning their classes would re-enter the transformer.
+    private static JarFile openJar(Path path) throws IOException {
+        JarFile jar = jars.get(path);
+        if (jar == null) {
+            jar = new JarFile(path.toFile());
+            JarFile opened = jars.putIfAbsent(path, jar);
+            if (opened != null) {
+                jar.close();
+                jar = opened;
+            }
+        }
+        return jar;
     }
 
     // A class, not a lambda: spinning a lambda's class would re-enter the transformer.
