@@ -6,6 +6,7 @@ import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFile
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ClassFileUtilities;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.HashComputer;
 import io.github.algomaster99.terminator.commons.fingerprint.classfile.ProxyRegenerator;
+import io.github.algomaster99.terminator.commons.fingerprint.classfile.SpeciesRegenerator;
 import io.github.algomaster99.terminator.commons.options.RuntimeClassInterceptorOptions;
 import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
@@ -37,6 +38,7 @@ public class RuntimeClassInterceptor {
         RuntimeClassInterceptorOptions options = new RuntimeClassInterceptorOptions(agentArgs);
         project = toRealPath(options.getProject());
         ProxyRegenerator.openGenerator(inst);
+        SpeciesRegenerator.openGenerator(inst);
         JdkImage.preload();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             ParsingHelper.serialiseFingerprints(exhaustiveListOfClasses, options.getOutput());
@@ -72,6 +74,11 @@ public class RuntimeClassInterceptor {
         if (ClassFileUtilities.isProxyClass(classfileBuffer)
                 && ProxyRegenerator.isGeneratedByJdk(loader, classfileBuffer)) {
             proxies.put(className, ClassFileUtilities.getReadableNameOfProxyClass(classfileBuffer));
+            return classfileBuffer;
+        }
+        // The watchdog checks species classes that the JDK spins by regenerating them, so they are not recorded.
+        if (ClassFileUtilities.isSpeciesClass(classfileBuffer)
+                && SpeciesRegenerator.isGeneratedByJdk(classfileBuffer)) {
             return classfileBuffer;
         }
         // Test classes and classes from jars outside the project, like test frameworks, Surefire and this agent, are
