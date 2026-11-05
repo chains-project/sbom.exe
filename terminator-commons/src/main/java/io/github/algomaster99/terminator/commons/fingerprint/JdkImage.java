@@ -51,11 +51,19 @@ public final class JdkImage {
         if (module == null || !module.isNamed() || !MODULES.contains(module.getName())) {
             return null;
         }
+        // A read on an interrupted thread fails with ClosedByInterruptException, which would make a JDK class look
+        // generated. A thread can load classes while interrupted, e.g. when an interrupted worker exits. So the flag is
+        // cleared for the read and restored afterwards.
+        boolean interrupted = Thread.interrupted();
         // No string concatenation: it compiles to an invokedynamic, which can spin classes while a transformer runs.
         try {
             return Files.readAllBytes(IMAGE.getPath("/modules", module.getName(), className.concat(".class")));
         } catch (IOException e) {
             return null;
+        } finally {
+            if (interrupted) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 }
