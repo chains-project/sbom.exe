@@ -73,7 +73,7 @@
       "items": {"$ref": "#/definitions/dependency"},
       "uniqueItems": true,
       "title": "Dependencies",
-      "description": "Provides the ability to document dependency relationships including provided & implemented components."
+      "description": "Provides the ability to document dependency relationships including provided &amp; implemented components."
     },
     "compositions": {
       "type": "array",
