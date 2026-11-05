@@ -161,6 +161,7 @@
       ]
     },
     "metadata": {
+      "javaInterfaces" : ["io.github.algomaster99.terminator.commons.cyclonedx.CycloneDXWrapper.BomMetadata"],
       "type": "object",
       "title": "BOM Metadata Object",
       "additionalProperties": false,
@@ -389,6 +390,7 @@
       }
     },
     "component": {
+      "javaInterfaces" : ["io.github.algomaster99.terminator.commons.cyclonedx.CycloneDXWrapper.BomComponent"],
       "type": "object",
       "title": "Component Object",
       "required": [

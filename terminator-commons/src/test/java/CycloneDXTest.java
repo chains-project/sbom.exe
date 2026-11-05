@@ -32,4 +32,16 @@ public class CycloneDXTest {
 
         assertThat(cycloneDXBom.getComponents().size()).isEqualTo(48);
     }
+
+    @Test
+    void getPojo__CycloneDX_1_6__shouldGenerateJavaAPIsToParseSBOM() throws IOException {
+        Path bom = Paths.get(
+                "src/test/resources/cyclonedx/terminator-commons-0.15.1-SNAPSHOT.cyclonedx-maven-plugin-2.9.3.bom.json");
+        String bomString = Files.readString(bom);
+
+        CycloneDXWrapper cycloneDXBom = CycloneDX.getPojo(bomString);
+
+        assertThat(cycloneDXBom.getMetadata().getComponent().getName()).isEqualTo("terminator-commons");
+        assertThat(cycloneDXBom.getComponents().size()).isEqualTo(19);
+    }
 }

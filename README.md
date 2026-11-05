@@ -43,7 +43,7 @@ All the commands take in the following parameters:
       |:---------:|:------:|------------------------|
       |  `sbom`   | `File` | Path to the sbom file. |
 
-      > `sbom` could be CycloneDX 1.4 or 1.5 JSON document.
+      > `sbom` could be CycloneDX 1.5 or 1.6 JSON document.
 
 3. `runtime`: Generate fingerprints for all the classes loaded at runtime.
     - **Required Parameters**
