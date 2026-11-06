@@ -48,6 +48,8 @@ public class RuntimeClassInterceptor {
     // Jars of the project, kept open to look up class files.
     private static final Map<Path, JarFile> jars = new ConcurrentHashMap<>();
 
+    // `RETAIN_CLASS_REFERENCE` is needed as otherwise, only strings are kept not the class object
+    // Class object has ProtectionDomain which is needed
     private static final StackWalker WALKER = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
 
     // Created up front: loading its class inside the transformer would re-enter it.
@@ -137,7 +139,8 @@ public class RuntimeClassInterceptor {
     }
 
     private static boolean isGeneratedForTest(String className, ProtectionDomain protectionDomain) {
-        // JDK-generated classes (no protection domain) and classes with a class file on disk are kept.
+        // Classes the JDK spins without a protection domain, like `GeneratedConstructorAccessor`, are recorded.
+        // Classes with a class file in the project, like `TrueTypeFont`, are recorded too.
         if (project == null || protectionDomain == null || hasClassFile(locationOf(protectionDomain), className)) {
             return false;
         }
@@ -145,26 +148,22 @@ public class RuntimeClassInterceptor {
         return WALKER.walk(NEAREST_PROJECT_FRAME_IS_TEST);
     }
 
-    // Whether the class file is in the directory or jar of the code source. Classes from other locations are kept.
     static boolean hasClassFile(URL location, String className) {
         if (location == null) {
             return false;
         }
-        Path path;
-        try {
-            path = Path.of(location.toURI());
-        } catch (URISyntaxException | RuntimeException e) {
-            return true;
-        }
         String classFile = className + ".class";
-        if (Files.isDirectory(path)) {
-            return Files.isRegularFile(path.resolve(classFile));
-        }
-        // Modules of a multi-module project see each other as jars in their `target` directories.
         try {
+            Path path = Path.of(location.toURI());
+            // A classes directory, like `target/classes`. `TrueTypeFont` has its class file there, but a mock of it,
+            // `TrueTypeFont$MockitoMock$4p5VBsG8`, shares the location without one.
+            if (Files.isDirectory(path)) {
+                return Files.isRegularFile(path.resolve(classFile));
+            }
+            // Modules of a multi-module project see each other as jars in their `target` directories.
             return openJar(path).getEntry(classFile) != null;
-        } catch (IOException e) {
-            return true;
+        } catch (URISyntaxException | IOException e) {
+            throw new IllegalArgumentException(location.toString(), e);
         }
     }
 
@@ -190,6 +189,7 @@ public class RuntimeClassInterceptor {
             while (iterator.hasNext()) {
                 URL location = locationOf(iterator.next().getDeclaringClass().getProtectionDomain());
                 // Frames without a location, like the JDK's, are not from the project.
+                // so the stack walk is continued.
                 Origin origin = location == null ? Origin.OUTSIDE_PROJECT : originOf(location);
                 if (origin != Origin.OUTSIDE_PROJECT) {
                     return origin == Origin.TEST_CODE;
