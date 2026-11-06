@@ -41,8 +41,7 @@ class HashComputerTest {
 
     private static final Path FOO = CLASSFILE.resolve("fooToBar").resolve("Foo.class");
 
-    private static final Path LAMBDAS =
-            CLASSFILE.resolve("lambda-renumbering").resolve("Lambdas.class");
+    private static final Path LAMBDAS = CLASSFILE.resolve("lambda-renumbering").resolve("Lambdas.class");
 
     // Accessors of the constructor of the same proxy, which was named jdk/proxy2/$Proxy1 in one run and
     // jdk/proxy2/$Proxy7 in another.
