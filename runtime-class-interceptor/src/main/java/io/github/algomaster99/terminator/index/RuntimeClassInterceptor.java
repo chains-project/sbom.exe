@@ -40,8 +40,11 @@ public class RuntimeClassInterceptor {
     private static final Map<URL, Origin> origins = new ConcurrentHashMap<>();
 
     private enum Origin {
+        // `target/classes` or a module jar: its compiled classes and those generated at its request are recorded.
         PRODUCTION_CODE,
+        // `target/test-classes`: its classes and those generated at its request, like mocks, are not recorded.
         TEST_CODE,
+        // Jars outside the project, like in `~/.m2`: their classes are not recorded; the walk skips their frames.
         OUTSIDE_PROJECT
     }
 
