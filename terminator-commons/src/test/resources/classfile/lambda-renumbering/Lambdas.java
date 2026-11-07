@@ -1,9 +1,11 @@
 import java.util.function.Supplier;
 
-// Two methods, each with two lambdas. javac numbers the backing methods
-// lambda$first$0, lambda$first$1, lambda$second$0, lambda$second$1 on recent
-// JDKs but lambda$first$0..3 across the class on older ones. Used to check that
-// HashComputer renumbers them to a canonical, build-JDK-independent form.
+// Two methods, each with two lambdas. javac 24+ numbers the backing methods
+// per enclosing method (lambda$first$0, lambda$first$1, lambda$second$0,
+// lambda$second$1) while javac 23 and older number them across the class
+// (lambda$second$2, lambda$second$3). jdk23/ and jdk24/ hold the output of
+// `javac --release 17 Lambdas.java` from each, used to check that HashComputer
+// gives both the same hash.
 public class Lambdas {
     Runnable first() {
         Runnable a = () -> System.out.println("1");

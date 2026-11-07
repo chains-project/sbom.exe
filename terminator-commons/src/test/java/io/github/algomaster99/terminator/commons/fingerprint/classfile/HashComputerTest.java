@@ -14,7 +14,6 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Handle;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -23,7 +22,6 @@ import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 
@@ -41,7 +39,14 @@ class HashComputerTest {
 
     private static final Path FOO = CLASSFILE.resolve("fooToBar").resolve("Foo.class");
 
-    private static final Path LAMBDAS = CLASSFILE.resolve("lambda-renumbering").resolve("Lambdas.class");
+    // The same Lambdas.java compiled with --release 17 by javac 23, which numbers the lambda methods across the class
+    // (lambda$second$2, lambda$second$3), and by javac 24, which numbers them per enclosing method (lambda$second$0,
+    // lambda$second$1).
+    private static final Path LAMBDAS_JDK_23 =
+            CLASSFILE.resolve("lambda-renumbering").resolve("jdk23").resolve("Lambdas.class");
+
+    private static final Path LAMBDAS_JDK_24 =
+            CLASSFILE.resolve("lambda-renumbering").resolve("jdk24").resolve("Lambdas.class");
 
     // Accessors of the constructor of the same proxy, which was named jdk/proxy2/$Proxy1 in one run and
     // jdk/proxy2/$Proxy7 in another.
@@ -95,16 +100,14 @@ class HashComputerTest {
     }
 
     @Test
-    void lambdaMethodsThatOnlyDifferInNumberingHaveTheSameHash() throws IOException {
+    void lambdaMethodsNumberedDifferentlyByTheCompilingJdkHaveTheSameHash() throws IOException {
         // arrange
-        byte[] original = Files.readAllBytes(LAMBDAS);
+        byte[] compiledByJdk23 = Files.readAllBytes(LAMBDAS_JDK_23);
+        byte[] compiledByJdk24 = Files.readAllBytes(LAMBDAS_JDK_24);
 
-        // act: mimic a JDK that numbers the synthetic lambda methods differently across the class
-        byte[] renumbered = transform(original, classNode -> renumberLambdas(classNode, 10));
-
-        // assert
-        assertThat(renumbered).isNotEqualTo(original);
-        assertThat(HashComputer.computeHash(renumbered)).isEqualTo(HashComputer.computeHash(original));
+        // act & assert
+        assertThat(compiledByJdk24).isNotEqualTo(compiledByJdk23);
+        assertThat(HashComputer.computeHash(compiledByJdk24)).isEqualTo(HashComputer.computeHash(compiledByJdk23));
     }
 
     @Test
@@ -226,43 +229,6 @@ class HashComputerTest {
         prefix.forEach(clinit::add);
         blocks.forEach(block -> block.forEach(clinit::add));
         current.forEach(clinit::add);
-    }
-
-    /**
-     * Mimics a JDK that numbers the synthetic lambda methods differently: shifts every {@code lambda$m$N} by a
-     * constant, which keeps their order within each enclosing method but changes the absolute numbers, and rewrites
-     * the bootstrap handle of the {@code invokedynamic} that refers to each one.
-     */
-    private static void renumberLambdas(ClassNode classNode, int offset) {
-        Map<String, String> newNames = new HashMap<>();
-        for (MethodNode method : classNode.methods) {
-            if ((method.access & Opcodes.ACC_SYNTHETIC) != 0 && method.name.startsWith("lambda$")) {
-                int dollar = method.name.lastIndexOf('$');
-                int number = Integer.parseInt(method.name.substring(dollar + 1));
-                newNames.put(method.name, method.name.substring(0, dollar + 1) + (number + offset));
-            }
-        }
-        for (MethodNode method : classNode.methods) {
-            method.name = newNames.getOrDefault(method.name, method.name);
-            for (AbstractInsnNode insn : method.instructions) {
-                if (insn instanceof InvokeDynamicInsnNode) {
-                    Object[] bsmArgs = ((InvokeDynamicInsnNode) insn).bsmArgs;
-                    for (int i = 0; i < bsmArgs.length; i++) {
-                        if (bsmArgs[i] instanceof Handle) {
-                            Handle handle = (Handle) bsmArgs[i];
-                            if (newNames.containsKey(handle.getName())) {
-                                bsmArgs[i] = new Handle(
-                                        handle.getTag(),
-                                        handle.getOwner(),
-                                        newNames.get(handle.getName()),
-                                        handle.getDesc(),
-                                        handle.isInterface());
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private static void replaceFirst(
