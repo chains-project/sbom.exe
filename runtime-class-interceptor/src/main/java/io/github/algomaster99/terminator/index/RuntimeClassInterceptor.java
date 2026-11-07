@@ -91,6 +91,9 @@ public class RuntimeClassInterceptor {
             String className,
             ProtectionDomain protectionDomain,
             byte[] classfileBuffer) {
+        if (className == null) {
+            className = ClassFileUtilities.getClassNameFromBuffer(classfileBuffer);
+        }
         // The watchdog checks the classes in the JDK's module image against the image, so they are not recorded.
         if (JdkImage.read(module, className) != null) {
             return classfileBuffer;
