@@ -1,4 +1,22 @@
 
+# 0.17.0
+## Changelog
+
+## 🚀 Features
+- 4f5c6ec feat: canonicalize synthetic lambda method names (#420)
+
+## 🧰 Tasks
+- d53958e chore: releasing version 0.17.0
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- Claude Opus 4.8 ()
+- GitHub ()
+- algomaster99 ([@algomaster99](https://github.com/algomaster99))
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+
 # 0.16.0
 ## Changelog
 
