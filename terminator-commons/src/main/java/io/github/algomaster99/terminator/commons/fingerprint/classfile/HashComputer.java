@@ -10,7 +10,6 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Opcodes;
@@ -184,33 +183,23 @@ public class HashComputer {
     }
 
     /**
-     * Renames the synthetic methods that back lambda expressions so the hash does not depend on the JDK that compiled
-     * the class. javac names them {@code lambda$<enclosingMethod>$<N>}, but the numbering of {@code <N>} changed across
-     * JDKs: it used to be a single counter spanning the whole class and is now reset per enclosing method (so the same
-     * source yields {@code lambda$m$5,6,7} on one JDK and {@code lambda$m$0,1,2} on another). The order within an
-     * enclosing method is stable, so within each {@code lambda$<enclosingMethod>} group the methods are renumbered from
-     * zero by their original number. The name occurs both on the method and in the bootstrap handle of the
-     * {@code invokedynamic} that builds the lambda, so both are rewritten. Lambdas nested in other lambdas, whose prefix
-     * embeds the enclosing lambda's original number, are not fully normalized.
+     * Renumbers the synthetic {@code lambda$<method>$<N>} methods from zero within each enclosing method, in declaration
+     * order, so the hash does not depend on the compiling JDK: javac 23 and older count {@code N} across the class,
+     * javac 24 and newer per enclosing method, but both declare the methods in the same order. References to the
+     * renamed methods are rewritten too. Nested lambdas, whose names embed the outer lambda's number, are not fully
+     * normalized.
      */
     private static void renameLambdaMethods(ClassNode classNode) {
-        Map<String, List<MethodNode>> groups = new TreeMap<>();
-        for (MethodNode method : classNode.methods) {
-            if (isLambdaMethod(method)) {
-                String prefix = method.name.substring(0, method.name.lastIndexOf('$'));
-                groups.computeIfAbsent(prefix, k -> new ArrayList<>()).add(method);
-            }
-        }
-        if (groups.isEmpty()) {
-            return;
-        }
+        Map<String, Integer> counts = new HashMap<>();
         Map<String, String> newNames = new HashMap<>();
-        for (Map.Entry<String, List<MethodNode>> group : groups.entrySet()) {
-            List<MethodNode> methods = group.getValue();
-            methods.sort(Comparator.comparingInt(m -> lambdaNumber(m.name)));
-            for (int i = 0; i < methods.size(); i++) {
-                newNames.put(methods.get(i).name, group.getKey() + "$" + i);
+        for (MethodNode method : classNode.methods) {
+            if ((method.access & Opcodes.ACC_SYNTHETIC) != 0 && method.name.startsWith("lambda$")) {
+                String prefix = method.name.substring(0, method.name.lastIndexOf('$') + 1);
+                newNames.put(method.name, prefix + (counts.merge(prefix, 1, Integer::sum) - 1));
             }
+        }
+        if (newNames.isEmpty()) {
+            return;
         }
         for (MethodNode method : classNode.methods) {
             method.name = newNames.getOrDefault(method.name, method.name);
@@ -238,26 +227,6 @@ public class HashComputer {
                 }
             }
         }
-    }
-
-    private static boolean isLambdaMethod(MethodNode method) {
-        if ((method.access & Opcodes.ACC_SYNTHETIC) == 0 || !method.name.startsWith("lambda$")) {
-            return false;
-        }
-        String suffix = method.name.substring(method.name.lastIndexOf('$') + 1);
-        if (suffix.isEmpty()) {
-            return false;
-        }
-        for (int i = 0; i < suffix.length(); i++) {
-            if (!Character.isDigit(suffix.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static int lambdaNumber(String name) {
-        return Integer.parseInt(name.substring(name.lastIndexOf('$') + 1));
     }
 
     /**
