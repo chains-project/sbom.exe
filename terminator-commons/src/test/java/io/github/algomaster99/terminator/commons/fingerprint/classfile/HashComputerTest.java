@@ -39,6 +39,15 @@ class HashComputerTest {
 
     private static final Path FOO = CLASSFILE.resolve("fooToBar").resolve("Foo.class");
 
+    // The same Lambdas.java compiled with --release 17 by javac 23, which numbers the lambda methods across the class
+    // (lambda$second$2, lambda$second$3), and by javac 24, which numbers them per enclosing method (lambda$second$0,
+    // lambda$second$1).
+    private static final Path LAMBDAS_JDK_23 =
+            CLASSFILE.resolve("lambda-renumbering").resolve("jdk23").resolve("Lambdas.class");
+
+    private static final Path LAMBDAS_JDK_24 =
+            CLASSFILE.resolve("lambda-renumbering").resolve("jdk24").resolve("Lambdas.class");
+
     // Accessors of the constructor of the same proxy, which was named jdk/proxy2/$Proxy1 in one run and
     // jdk/proxy2/$Proxy7 in another.
     private static final Path ACCESSOR_OF_PROXY_1 =
@@ -88,6 +97,17 @@ class HashComputerTest {
         // assert
         assertThat(permuted).isNotEqualTo(original);
         assertThat(HashComputer.computeHash(permuted)).isEqualTo(HashComputer.computeHash(original));
+    }
+
+    @Test
+    void lambdaMethodsNumberedDifferentlyByTheCompilingJdkHaveTheSameHash() throws IOException {
+        // arrange
+        byte[] compiledByJdk23 = Files.readAllBytes(LAMBDAS_JDK_23);
+        byte[] compiledByJdk24 = Files.readAllBytes(LAMBDAS_JDK_24);
+
+        // act & assert
+        assertThat(compiledByJdk24).isNotEqualTo(compiledByJdk23);
+        assertThat(HashComputer.computeHash(compiledByJdk24)).isEqualTo(HashComputer.computeHash(compiledByJdk23));
     }
 
     @Test

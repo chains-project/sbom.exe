@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.SimpleRemapper;
@@ -74,6 +75,7 @@ public class HashComputer {
         if (isProxy) {
             renameFieldsAfterTheirInitializer(classNode);
         }
+        renameLambdaMethods(classNode);
         return toHexString(sha256(canonicalView(classNode, isProxy)));
     }
 
@@ -175,6 +177,56 @@ public class HashComputer {
                 if (insn instanceof FieldInsnNode && ((FieldInsnNode) insn).owner.equals(classNode.name)) {
                     FieldInsnNode fieldInsn = (FieldInsnNode) insn;
                     fieldInsn.name = newNames.getOrDefault(fieldInsn.name, fieldInsn.name);
+                }
+            }
+        }
+    }
+
+    /**
+     * Renumbers the synthetic {@code lambda$<method>$<N>} methods from zero within each enclosing method, in declaration
+     * order, so the hash does not depend on the compiling JDK: javac 23 and older count {@code N} across the class,
+     * javac 24 and newer per enclosing method, but both declare the methods in the same order. References to the
+     * renamed methods are rewritten too. Nested lambdas, whose names embed the outer lambda's number, are not fully
+     * normalized.
+     */
+    private static void renameLambdaMethods(ClassNode classNode) {
+        Map<String, Integer> counts = new HashMap<>();
+        Map<String, String> newNames = new HashMap<>();
+        // Assumes javac declares the lambda methods in the same order on every JDK (observed for javac 8 to 25).
+        for (MethodNode method : classNode.methods) {
+            if ((method.access & Opcodes.ACC_SYNTHETIC) != 0 && method.name.startsWith("lambda$")) {
+                String prefix = method.name.substring(0, method.name.lastIndexOf('$') + 1);
+                int number = counts.getOrDefault(prefix, 0);
+                counts.put(prefix, number + 1);
+                newNames.put(method.name, prefix + number);
+            }
+        }
+        if (newNames.isEmpty()) {
+            return;
+        }
+        for (MethodNode method : classNode.methods) {
+            method.name = newNames.getOrDefault(method.name, method.name);
+            for (AbstractInsnNode insn : method.instructions) {
+                if (insn instanceof InvokeDynamicInsnNode) {
+                    Object[] bsmArgs = ((InvokeDynamicInsnNode) insn).bsmArgs;
+                    for (int i = 0; i < bsmArgs.length; i++) {
+                        if (bsmArgs[i] instanceof Handle) {
+                            Handle handle = (Handle) bsmArgs[i];
+                            if (handle.getOwner().equals(classNode.name) && newNames.containsKey(handle.getName())) {
+                                bsmArgs[i] = new Handle(
+                                        handle.getTag(),
+                                        handle.getOwner(),
+                                        newNames.get(handle.getName()),
+                                        handle.getDesc(),
+                                        handle.isInterface());
+                            }
+                        }
+                    }
+                } else if (insn instanceof MethodInsnNode) {
+                    MethodInsnNode methodInsn = (MethodInsnNode) insn;
+                    if (methodInsn.owner.equals(classNode.name) && newNames.containsKey(methodInsn.name)) {
+                        methodInsn.name = newNames.get(methodInsn.name);
+                    }
                 }
             }
         }
