@@ -105,4 +105,13 @@ public class ClassFileUtilities {
     public static String getSimpleNameFromQualifiedName(String qualifiedName) {
         return qualifiedName.substring(qualifiedName.lastIndexOf("/") + 1);
     }
+
+    /**
+     * Recovers the binary name (internal, '/'-separated form) of a class from its bytecode. Used when a class is
+     * defined through {@code ClassLoader.defineClass(null, ...)} — e.g. an XSLTC translet — so its name is not passed
+     * to the ClassFileLoadHook and arrives as {@code null}.
+     */
+    public static String getClassNameFromBuffer(byte[] bytes) {
+        return new ClassReader(bytes).getClassName();
+    }
 }

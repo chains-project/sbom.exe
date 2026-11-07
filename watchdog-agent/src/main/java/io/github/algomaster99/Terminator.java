@@ -80,6 +80,9 @@ public class Terminator {
 
     private static byte[] isLoadedClassAllowlisted(
             Module module, ClassLoader loader, String className, byte[] classfileBuffer) {
+        if (className == null) {
+            className = ClassFileUtilities.getClassNameFromBuffer(classfileBuffer);
+        }
         // Proxy classes are not in the BOMI because their bytecode depends on the JDK. A class that only claims to be
         // a proxy is not regenerated identically, so it falls through to the lookup below.
         if (ClassFileUtilities.isProxyClass(classfileBuffer)
