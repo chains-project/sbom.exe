@@ -195,7 +195,9 @@ public class HashComputer {
         for (MethodNode method : classNode.methods) {
             if ((method.access & Opcodes.ACC_SYNTHETIC) != 0 && method.name.startsWith("lambda$")) {
                 String prefix = method.name.substring(0, method.name.lastIndexOf('$') + 1);
-                newNames.put(method.name, prefix + (counts.merge(prefix, 1, Integer::sum) - 1));
+                int number = counts.getOrDefault(prefix, 0);
+                counts.put(prefix, number + 1);
+                newNames.put(method.name, prefix + number);
             }
         }
         if (newNames.isEmpty()) {
