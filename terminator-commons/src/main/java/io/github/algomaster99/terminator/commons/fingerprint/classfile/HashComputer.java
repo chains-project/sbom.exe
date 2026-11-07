@@ -192,6 +192,7 @@ public class HashComputer {
     private static void renameLambdaMethods(ClassNode classNode) {
         Map<String, Integer> counts = new HashMap<>();
         Map<String, String> newNames = new HashMap<>();
+        // Assumes javac declares the lambda methods in the same order on every JDK (observed for javac 8 to 25).
         for (MethodNode method : classNode.methods) {
             if ((method.access & Opcodes.ACC_SYNTHETIC) != 0 && method.name.startsWith("lambda$")) {
                 String prefix = method.name.substring(0, method.name.lastIndexOf('$') + 1);
