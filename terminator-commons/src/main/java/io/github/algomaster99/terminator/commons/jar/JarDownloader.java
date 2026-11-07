@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,11 @@ public class JarDownloader {
         SSLParameters sslParameters = new SSLParameters();
         sslParameters.setProtocols(new String[] {"TLSv1.2"});
         sslParameters.setNeedClientAuth(false);
-        HttpClient client = HttpClient.newBuilder().sslParameters(sslParameters).build();
+        // Repositories may redirect, e.g. JBoss redirects its old Nexus 2 paths to Nexus 3.
+        HttpClient client = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .sslParameters(sslParameters)
+                .build();
 
         HttpRequest request =
                 HttpRequest.newBuilder().uri(URI.create(artifactUrl)).build();
@@ -76,13 +81,20 @@ public class JarDownloader {
             if (indexPageContent != null) {
                 String jarUrl = getUrlOfRequestedJar(indexPageContent, url);
                 if (jarUrl != null) {
-                    HttpClient client = HttpClient.newHttpClient();
+                    HttpClient client = HttpClient.newBuilder()
+                            .followRedirects(HttpClient.Redirect.NORMAL)
+                            .build();
                     HttpRequest request =
                             HttpRequest.newBuilder().uri(URI.create(jarUrl)).build();
 
                     Path tempFile = File.createTempFile(String.format("%s-%s-%s", groupId, artifactId, version), ".jar")
                             .toPath();
                     HttpResponse<Path> result = client.send(request, HttpResponse.BodyHandlers.ofFile(tempFile));
+                    if (result.statusCode() != 200) {
+                        // Do not return an error page as if it were the jar.
+                        Files.deleteIfExists(tempFile);
+                        continue;
+                    }
                     return result.body().toFile();
                 }
             }
