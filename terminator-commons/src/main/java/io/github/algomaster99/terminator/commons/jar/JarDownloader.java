@@ -8,10 +8,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.net.ssl.SSLParameters;
 import org.jsoup.Jsoup;
 
@@ -48,16 +46,17 @@ public class JarDownloader {
         return repositoryUrl + groupId + "/" + artifactId + "/" + version + "/";
     }
 
-    private static String getUrlOfRequestedJar(String indexPageContent, String indexPageUrl) {
-        List<String> candidates = Jsoup.parse(indexPageContent).select("a").stream()
+    /**
+     * Returns the URL of the artifact's main jar, {@code <artifactId>-<version>.jar}. The listing also holds classifier
+     * jars (e.g. {@code -android}, {@code -grooid}), which can sort before the main jar and contain different classes.
+     */
+    private static String getUrlOfRequestedJar(
+            String indexPageContent, String indexPageUrl, String artifactId, String version) {
+        String mainJarName = artifactId + "-" + version + ".jar";
+        // Repositories such as JBoss list absolute URLs, so compare only the file name.
+        Optional<String> artifactJar = Jsoup.parse(indexPageContent).select("a").stream()
                 .map(e -> e.attr("href"))
-                .collect(Collectors.toList());
-
-        Optional<String> artifactJar = candidates.stream()
-                .filter(c -> c.endsWith(".jar"))
-                .filter(c -> !c.contains("sources"))
-                .filter(c -> !c.contains("javadoc"))
-                .filter(c -> !c.contains("tests"))
+                .filter(href -> href.substring(href.lastIndexOf('/') + 1).equals(mainJarName))
                 .findFirst();
 
         if (artifactJar.isPresent()) {
@@ -79,7 +78,7 @@ public class JarDownloader {
             String url = getArtifactUrl(groupId, artifactId, version, repositoryUrl);
             String indexPageContent = getIndexPageOfRepository(url);
             if (indexPageContent != null) {
-                String jarUrl = getUrlOfRequestedJar(indexPageContent, url);
+                String jarUrl = getUrlOfRequestedJar(indexPageContent, url, artifactId, version);
                 if (jarUrl != null) {
                     HttpClient client = HttpClient.newBuilder()
                             .followRedirects(HttpClient.Redirect.NORMAL)
