@@ -50,7 +50,7 @@ public class JarDownloader {
      * Returns the URL of the artifact's main jar, {@code <artifactId>-<version>.jar}. The listing also holds classifier
      * jars (e.g. {@code -android}, {@code -grooid}), which can sort before the main jar and contain different classes.
      */
-    static String getUrlOfRequestedJar(
+    private static String getUrlOfRequestedJar(
             String indexPageContent, String indexPageUrl, String artifactId, String version) {
         String mainJarName = artifactId + "-" + version + ".jar";
         // Repositories such as JBoss list absolute URLs, so compare only the file name.
