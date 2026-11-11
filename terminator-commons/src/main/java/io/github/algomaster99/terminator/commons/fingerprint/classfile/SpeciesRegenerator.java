@@ -2,7 +2,10 @@ package io.github.algomaster99.terminator.commons.fingerprint.classfile;
 
 import java.lang.instrument.Instrumentation;
 import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
@@ -24,11 +27,23 @@ public class SpeciesRegenerator {
     private static final String SPECIES_DATA = "java.lang.invoke.ClassSpecializer$SpeciesData";
     private static final String SPECIES_INFIX = "$Species_";
 
+    // The species generator of the running JDK. openGenerator resolves it before the transformer is registered.
+    private static Object specializer;
+    private static Object speciesFactory;
+    // (Object specializer, Object key) -> Object speciesData
+    private static MethodHandle newSpeciesData;
+    // (Object factory, String className, Object speciesData) -> byte[]
+    private static MethodHandle generateConcreteSpeciesCodeFile;
+
     private SpeciesRegenerator() {}
 
     /**
-     * Opens the package of the JDK's species generator, which is internal to {@code java.base}, to this class. Must be
-     * called before {@link #isGeneratedByJdk(byte[])}.
+     * Opens the package of the JDK's species generator to this class and resolves the generator. Call it before
+     * registering the transformer that calls {@link #isGeneratedByJdk(byte[])}.
+     *
+     * <p>A check must not spin method handles. They can need the species that the JDK is defining, which the JDK then
+     * defines twice. Reflection spins method handles on its first call since JDK 18. So the generator is resolved here
+     * into method handles, which a check calls with {@code invokeExact}.
      */
     public static void openGenerator(Instrumentation inst) {
         inst.redefineModule(
@@ -38,6 +53,11 @@ public class SpeciesRegenerator {
                 Map.of("java.lang.invoke", Set.of(SpeciesRegenerator.class.getModule())),
                 Set.of(),
                 Map.of());
+        try {
+            resolveGenerator();
+        } catch (ReflectiveOperationException | RuntimeException | LinkageError e) {
+            // isGeneratedByJdk tries again and returns false if it fails.
+        }
     }
 
     /**
@@ -53,35 +73,47 @@ public class SpeciesRegenerator {
     }
 
     static byte[] regenerate(byte[] classfile) throws ReflectiveOperationException {
-        ClassReader reader = new ClassReader(classfile);
-        String internalName = reader.getClassName(); // java/lang/invoke/BoundMethodHandle$Species_LLLII
+        String internalName =
+                new ClassReader(classfile).getClassName(); // java/lang/invoke/BoundMethodHandle$Species_LLLII
         String key = internalName.substring(internalName.indexOf(SPECIES_INFIX) + SPECIES_INFIX.length());
-        String className = internalName.replace('/', '.');
+        resolveGenerator();
+        try {
+            // newSpeciesData builds the metadata of the species without generating or loading its class, unlike
+            // findSpecies. So regenerating a species does not re-enter the transformer for that same species.
+            Object speciesData = (Object) newSpeciesData.invokeExact(specializer, (Object) key);
+            return (byte[]) generateConcreteSpeciesCodeFile.invokeExact(
+                    speciesFactory, internalName.replace('/', '.'), speciesData);
+        } catch (Throwable t) {
+            // Wrap every failure like Method.invoke does. Then the check fails closed.
+            throw new InvocationTargetException(t);
+        }
+    }
 
+    private static synchronized void resolveGenerator() throws ReflectiveOperationException {
+        if (generateConcreteSpeciesCodeFile != null) {
+            return;
+        }
         Class<?> boundMethodHandle = Class.forName("java.lang.invoke.BoundMethodHandle");
         Field specializerField = boundMethodHandle.getDeclaredField("SPECIALIZER");
         specializerField.setAccessible(true);
-        Object specializer = specializerField.get(null);
-
+        specializer = specializerField.get(null);
         Class<?> classSpecializer = Class.forName(CLASS_SPECIALIZER);
-        // newSpeciesData builds the metadata of the species without generating or loading its class, unlike
-        // findSpecies. So regenerating a species does not re-enter the transformer for that same species.
-        Method newSpeciesData = classSpecializer.getDeclaredMethod("newSpeciesData", Object.class);
-        newSpeciesData.setAccessible(true);
-        Object speciesData = newSpeciesData.invoke(specializer, key);
-
         Method factory = classSpecializer.getDeclaredMethod("factory");
         factory.setAccessible(true);
-        Object speciesFactory = factory.invoke(specializer);
-
+        speciesFactory = factory.invoke(specializer);
+        Method speciesDataOf = classSpecializer.getDeclaredMethod("newSpeciesData", Object.class);
+        speciesDataOf.setAccessible(true);
         // generateConcreteSpeciesCodeFile is declared on ClassSpecializer.Factory, the superclass of the concrete
         // factory that the specializer returns.
-        Class<?> speciesDataType = Class.forName(SPECIES_DATA);
         Method generate = speciesFactory
                 .getClass()
                 .getSuperclass()
-                .getDeclaredMethod("generateConcreteSpeciesCodeFile", String.class, speciesDataType);
+                .getDeclaredMethod("generateConcreteSpeciesCodeFile", String.class, Class.forName(SPECIES_DATA));
         generate.setAccessible(true);
-        return (byte[]) generate.invoke(speciesFactory, className, speciesData);
+        MethodHandles.Lookup lookup = MethodHandles.lookup();
+        newSpeciesData =
+                lookup.unreflect(speciesDataOf).asType(MethodType.methodType(Object.class, Object.class, Object.class));
+        generateConcreteSpeciesCodeFile = lookup.unreflect(generate)
+                .asType(MethodType.methodType(byte[].class, Object.class, String.class, Object.class));
     }
 }

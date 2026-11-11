@@ -39,6 +39,24 @@ public class HashComputer {
     // Not a valid Java identifier, so no compiled class can refer to a class with this name.
     private static final String CANONICAL_CLASS_NAME = "<this>";
 
+    // Classes instead of lambdas. The agents run this code while the JDK defines a class. Linking a lambda spins
+    // method handles, which can need that class.
+    private static final Comparator<FieldNode> FIELD_ORDER = new Comparator<>() {
+        @Override
+        public int compare(FieldNode a, FieldNode b) {
+            int byName = a.name.compareTo(b.name);
+            return byName != 0 ? byName : a.desc.compareTo(b.desc);
+        }
+    };
+
+    private static final Comparator<MethodNode> METHOD_ORDER = new Comparator<>() {
+        @Override
+        public int compare(MethodNode a, MethodNode b) {
+            int byName = a.name.compareTo(b.name);
+            return byName != 0 ? byName : a.desc.compareTo(b.desc);
+        }
+    };
+
     private HashComputer() {}
 
     /**
@@ -88,7 +106,7 @@ public class HashComputer {
                 .append('\n');
 
         List<FieldNode> fields = new ArrayList<>(classNode.fields);
-        fields.sort(Comparator.comparing((FieldNode f) -> f.name).thenComparing(f -> f.desc));
+        fields.sort(FIELD_ORDER);
         for (FieldNode field : fields) {
             sb.append("field ")
                     .append(field.access)
@@ -102,7 +120,7 @@ public class HashComputer {
         }
 
         List<MethodNode> methods = new ArrayList<>(classNode.methods);
-        methods.sort(Comparator.comparing((MethodNode m) -> m.name).thenComparing(m -> m.desc));
+        methods.sort(METHOD_ORDER);
         for (MethodNode method : methods) {
             List<String> exceptions = new ArrayList<>(method.exceptions);
             exceptions.sort(null);
@@ -115,7 +133,9 @@ public class HashComputer {
                     .append(String.join(",", exceptions))
                     .append('\n');
 
-            instructions(method).forEach(i -> sb.append("  ").append(i).append('\n'));
+            for (String instruction : instructions(method)) {
+                sb.append("  ").append(instruction).append('\n');
+            }
 
             Map<LabelNode, Integer> labels = labelPositions(method);
             for (TryCatchBlockNode tryCatch : method.tryCatchBlocks) {
