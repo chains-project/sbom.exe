@@ -1,4 +1,22 @@
 
+# 0.17.1
+## Changelog
+
+## 🐛 Fixes
+- 9ab2c94 fix: spin no method handles while checking a species (#425)
+
+## 🧰 Tasks
+- 9b39ce8 chore: releasing version 0.17.1
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- Claude Opus 5.5 ()
+- GitHub ()
+- algomaster99 ([@algomaster99](https://github.com/algomaster99))
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+
 # 0.17.0
 ## Changelog
 
