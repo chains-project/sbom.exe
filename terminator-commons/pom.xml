@@ -66,6 +66,13 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <compilerArgs>
+            <!-- The agents run this code while the JDK defines a class. Linking an invokedynamic spins method handles,
+                 which can need that class. So string concatenation compiles to StringBuilder calls. -->
+            <arg>-XDstringConcat=inline</arg>
+          </compilerArgs>
+        </configuration>
         <executions>
           <execution>
             <id>compile-java-11</id>
