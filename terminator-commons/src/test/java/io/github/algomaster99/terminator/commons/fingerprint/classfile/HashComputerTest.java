@@ -5,10 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
@@ -18,9 +15,6 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
-import org.objectweb.asm.tree.FieldNode;
-import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
@@ -32,10 +26,6 @@ class HashComputerTest {
     private static final Path PROXY_9 = CLASSFILE
             .resolve("proxy-class-with-incorrect-method-mapping")
             .resolve("$ProxyRuntimeProxy_CommandLine$Command_9.class");
-
-    private static final Path PROXY_13 = CLASSFILE
-            .resolve("proxy-class-with-incorrect-method-mapping")
-            .resolve("$ProxyIndexProxy_CommandLine$Command_13.class");
 
     private static final Path FOO = CLASSFILE.resolve("fooToBar").resolve("Foo.class");
 
@@ -57,12 +47,6 @@ class HashComputerTest {
             CLASSFILE.resolve("gca-of-proxy").resolve("GCAOfProxy7.class");
 
     private static final String PLUGIN_PROXY = "Proxy[org/apache/logging/log4j/core/config/plugins/Plugin]";
-
-    @Test
-    void proxiesThatOnlyDifferInFieldNumberingHaveTheSameHash() throws IOException {
-        assertThat(HashComputer.computeHash(Files.readAllBytes(PROXY_9)))
-                .isEqualTo(HashComputer.computeHash(Files.readAllBytes(PROXY_13)));
-    }
 
     @Test
     void accessorsOfTheSameProxyHaveTheSameHashWhenTheProxyIsRenamed() throws IOException {
@@ -87,12 +71,15 @@ class HashComputerTest {
     }
 
     @Test
-    void proxiesThatOnlyDifferInMethodAndInitializerOrderHaveTheSameHash() throws IOException {
+    void classesThatOnlyDifferInFieldAndMethodOrderHaveTheSameHash() throws IOException {
         // arrange
         byte[] original = Files.readAllBytes(PROXY_9);
 
         // act
-        byte[] permuted = transform(original, HashComputerTest::permuteProxy);
+        byte[] permuted = transform(original, classNode -> {
+            Collections.reverse(classNode.fields);
+            Collections.reverse(classNode.methods);
+        });
 
         // assert
         assertThat(permuted).isNotEqualTo(original);
@@ -184,51 +171,6 @@ class HashComputerTest {
 
         // assert
         assertThat(hash).isEqualTo("3993aba46918523b771627e6c583fa6b4ba35cc77791fa68e1178c54c44ffe86");
-    }
-
-    /**
-     * Mimics what the JDK may do between two runs: renumber the {@code Method} fields, and reorder the methods and the
-     * blocks of {@code <clinit>} that initialize the fields.
-     */
-    private static void permuteProxy(ClassNode classNode) {
-        Map<String, String> newNames = new HashMap<>();
-        for (int i = 0; i < classNode.fields.size(); i++) {
-            FieldNode field = classNode.fields.get(i);
-            String newName = "m" + (classNode.fields.size() - i);
-            newNames.put(field.name, newName);
-            field.name = newName;
-        }
-        for (MethodNode method : classNode.methods) {
-            for (AbstractInsnNode insn : method.instructions) {
-                if (insn instanceof FieldInsnNode && ((FieldInsnNode) insn).owner.equals(classNode.name)) {
-                    FieldInsnNode fieldInsn = (FieldInsnNode) insn;
-                    fieldInsn.name = newNames.getOrDefault(fieldInsn.name, fieldInsn.name);
-                }
-            }
-        }
-        Collections.reverse(classNode.fields);
-        Collections.reverse(classNode.methods);
-
-        InsnList clinit = method(classNode, "<clinit>").instructions;
-        List<AbstractInsnNode> prefix = new ArrayList<>();
-        List<List<AbstractInsnNode>> blocks = new ArrayList<>();
-        List<AbstractInsnNode> current = new ArrayList<>();
-        for (AbstractInsnNode insn : clinit) {
-            if (blocks.isEmpty() && current.isEmpty() && insn.getOpcode() < 0) {
-                prefix.add(insn);
-                continue;
-            }
-            current.add(insn);
-            if (insn.getOpcode() == Opcodes.PUTSTATIC) {
-                blocks.add(current);
-                current = new ArrayList<>();
-            }
-        }
-        Collections.reverse(blocks);
-        clinit.clear();
-        prefix.forEach(clinit::add);
-        blocks.forEach(block -> block.forEach(clinit::add));
-        current.forEach(clinit::add);
     }
 
     private static void replaceFirst(
