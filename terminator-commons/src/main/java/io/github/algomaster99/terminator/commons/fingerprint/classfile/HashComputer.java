@@ -39,8 +39,6 @@ public class HashComputer {
     // Not a valid Java identifier, so no compiled class can refer to a class with this name.
     private static final String CANONICAL_CLASS_NAME = "<this>";
 
-    private static final String PROXY_SUPERCLASS = "java/lang/reflect/Proxy";
-
     private HashComputer() {}
 
     /**
@@ -71,15 +69,11 @@ public class HashComputer {
                 new ClassRemapper(classNode, new SimpleRemapper(mapping)),
                 ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
 
-        boolean isProxy = PROXY_SUPERCLASS.equals(classNode.superName);
-        if (isProxy) {
-            renameFieldsAfterTheirInitializer(classNode);
-        }
         renameLambdaMethods(classNode);
-        return toHexString(sha256(canonicalView(classNode, isProxy)));
+        return toHexString(sha256(canonicalView(classNode)));
     }
 
-    private static String canonicalView(ClassNode classNode, boolean isProxy) {
+    private static String canonicalView(ClassNode classNode) {
         StringBuilder sb = new StringBuilder();
         String[] interfaces = classNode.interfaces.toArray(new String[0]);
         Arrays.sort(interfaces);
@@ -121,11 +115,7 @@ public class HashComputer {
                     .append(String.join(",", exceptions))
                     .append('\n');
 
-            List<String> instructions = instructions(method);
-            if (isProxy && method.name.equals("<clinit>")) {
-                instructions = sortInitializers(instructions, classNode.name);
-            }
-            instructions.forEach(i -> sb.append("  ").append(i).append('\n'));
+            instructions(method).forEach(i -> sb.append("  ").append(i).append('\n'));
 
             Map<LabelNode, Integer> labels = labelPositions(method);
             for (TryCatchBlockNode tryCatch : method.tryCatchBlocks) {
@@ -141,45 +131,6 @@ public class HashComputer {
             }
         }
         return sb.toString();
-    }
-
-    /**
-     * Renames every static field assigned in {@code <clinit>} after the instructions that compute its value. A proxy
-     * binds one {@code Method} object per field, so the new name identifies the proxied method instead of its position.
-     */
-    private static void renameFieldsAfterTheirInitializer(ClassNode classNode) {
-        MethodNode clinit = classNode.methods.stream()
-                .filter(m -> m.name.equals("<clinit>"))
-                .findFirst()
-                .orElse(null);
-        if (clinit == null) {
-            return;
-        }
-        Map<LabelNode, Integer> labels = labelPositions(clinit);
-        Map<String, String> newNames = new HashMap<>();
-        StringBuilder initializer = new StringBuilder();
-        for (AbstractInsnNode insn : clinit.instructions) {
-            if (insn.getOpcode() == Opcodes.PUTSTATIC && ((FieldInsnNode) insn).owner.equals(classNode.name)) {
-                String newName =
-                        "m" + toHexString(sha256(initializer.toString())).substring(0, 16);
-                newNames.putIfAbsent(((FieldInsnNode) insn).name, newName);
-                initializer.setLength(0);
-            } else if (insn.getOpcode() >= 0) {
-                initializer.append(instruction(insn, labels)).append('\n');
-            }
-        }
-
-        for (FieldNode field : classNode.fields) {
-            field.name = newNames.getOrDefault(field.name, field.name);
-        }
-        for (MethodNode method : classNode.methods) {
-            for (AbstractInsnNode insn : method.instructions) {
-                if (insn instanceof FieldInsnNode && ((FieldInsnNode) insn).owner.equals(classNode.name)) {
-                    FieldInsnNode fieldInsn = (FieldInsnNode) insn;
-                    fieldInsn.name = newNames.getOrDefault(fieldInsn.name, fieldInsn.name);
-                }
-            }
-        }
     }
 
     /**
@@ -230,27 +181,6 @@ public class HashComputer {
                 }
             }
         }
-    }
-
-    /**
-     * Sorts the blocks of a proxy's {@code <clinit>} that each end by assigning a static field of the class. The
-     * instructions after the last assignment, like the return and the exception handlers, keep their position.
-     */
-    private static List<String> sortInitializers(List<String> instructions, String className) {
-        String assignment = Printer.OPCODES[Opcodes.PUTSTATIC] + " " + className + ".";
-        List<String> blocks = new ArrayList<>();
-        StringBuilder block = new StringBuilder();
-        for (String instruction : instructions) {
-            block.append(instruction).append('\n');
-            if (instruction.startsWith(assignment)) {
-                blocks.add(block.toString());
-                block.setLength(0);
-            }
-        }
-        blocks.sort(null);
-        List<String> sorted = new ArrayList<>(blocks);
-        sorted.add(block.toString());
-        return sorted;
     }
 
     private static List<String> instructions(MethodNode method) {
