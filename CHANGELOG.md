@@ -1,4 +1,22 @@
 
+# 0.17.3
+## Changelog
+
+## 🐛 Fixes
+- a502a18 fix: do not record test classes loaded from test-jars (#427)
+
+## 🧰 Tasks
+- c3848c0 chore: releasing version 0.17.3
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- Claude Opus 5.5 ()
+- GitHub ()
+- algomaster99 ([@algomaster99](https://github.com/algomaster99))
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+
 # 0.17.2
 ## Changelog
 
