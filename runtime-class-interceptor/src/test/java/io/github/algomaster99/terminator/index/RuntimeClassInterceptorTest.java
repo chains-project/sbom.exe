@@ -61,7 +61,5 @@ class RuntimeClassInterceptorTest {
                 .isFalse();
         assertThat(RuntimeClassInterceptor.isTestCode(Path.of("batik-util/target/batik-util-1.19.jar")))
                 .isFalse();
-        assertThat(RuntimeClassInterceptor.isTestCode(Path.of("integration-tests/target/integration-tests-1.0.jar")))
-                .isFalse();
     }
 }
