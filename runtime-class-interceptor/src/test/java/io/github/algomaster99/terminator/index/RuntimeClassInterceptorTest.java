@@ -46,4 +46,20 @@ class RuntimeClassInterceptorTest {
                         jar.toUri().toURL(), "org/apache/fontbox/ttf/TrueTypeFont$MockitoMock$4p5VBsG8"))
                 .isFalse();
     }
+
+    @Test
+    void testClassesAndTestJarsAreTestCode() {
+        assertThat(RuntimeClassInterceptor.isTestCode(Path.of("batik-util/target/test-classes")))
+                .isTrue();
+        assertThat(RuntimeClassInterceptor.isTestCode(Path.of("batik-util/target/batik-util-1.19-tests.jar")))
+                .isTrue();
+    }
+
+    @Test
+    void classesAndJarsAreNotTestCode() {
+        assertThat(RuntimeClassInterceptor.isTestCode(Path.of("batik-util/target/classes")))
+                .isFalse();
+        assertThat(RuntimeClassInterceptor.isTestCode(Path.of("batik-util/target/batik-util-1.19.jar")))
+                .isFalse();
+    }
 }
