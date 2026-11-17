@@ -39,8 +39,14 @@ public class RuntimeClassInterceptor {
     // What a code source location holds, cached per location.
     private static final Map<URL, Origin> origins = new ConcurrentHashMap<>();
 
+    private static final Path LOCAL_REPOSITORY =
+            toRealPath(Path.of(System.getProperty("user.home"), ".m2", "repository"));
+
+    private static final URL AGENT = locationOf(RuntimeClassInterceptor.class.getProtectionDomain());
+
     private enum Origin {
-        // `target/classes` or a module jar: its compiled classes and those generated at its request are recorded.
+        // `target/classes`, a module jar or a downloaded jar. Its classes and those generated at its request are
+        // recorded.
         PRODUCTION_CODE,
         // `target/test-classes`: its classes and those generated at its request, like mocks, are not recorded.
         TEST_CODE,
@@ -241,7 +247,11 @@ public class RuntimeClassInterceptor {
             return Origin.PRODUCTION_CODE;
         }
         if (!path.startsWith(project)) {
-            return Origin.OUTSIDE_PROJECT;
+            // A jar outside the local Maven repository is downloaded at runtime. The SBOM does not list it.
+            boolean downloaded = "file".equals(location.getProtocol())
+                    && !path.startsWith(LOCAL_REPOSITORY)
+                    && !location.equals(AGENT);
+            return downloaded ? Origin.PRODUCTION_CODE : Origin.OUTSIDE_PROJECT;
         }
         for (Path name : project.relativize(path)) {
             if ("test-classes".equals(name.toString())) {
