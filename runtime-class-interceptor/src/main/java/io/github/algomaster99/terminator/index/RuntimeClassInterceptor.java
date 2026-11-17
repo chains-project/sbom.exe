@@ -253,12 +253,19 @@ public class RuntimeClassInterceptor {
                     && !location.equals(AGENT);
             return downloaded ? Origin.PRODUCTION_CODE : Origin.OUTSIDE_PROJECT;
         }
-        for (Path name : project.relativize(path)) {
+        return isTestCode(project.relativize(path)) ? Origin.TEST_CODE : Origin.PRODUCTION_CODE;
+    }
+
+    // Test classes are in `target/test-classes`. A module that depends on the test-jar of another module loads them
+    // from that module's `target/<artifactId>-<version>-tests.jar` instead, as the build runs the `package` phase.
+    static boolean isTestCode(Path pathInProject) {
+        for (Path name : pathInProject) {
             if ("test-classes".equals(name.toString())) {
-                return Origin.TEST_CODE;
+                return true;
             }
         }
-        return Origin.PRODUCTION_CODE;
+        Path fileName = pathInProject.getFileName();
+        return fileName != null && fileName.toString().endsWith("-tests.jar");
     }
 
     private static Path toRealPath(Path path) {
