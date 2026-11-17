@@ -1,4 +1,22 @@
 
+# 0.17.2
+## Changelog
+
+## 🐛 Fixes
+- 3ea5e8e fix: record classes from jars downloaded at runtime (#426)
+
+## 🧰 Tasks
+- c4affd4 chore: releasing version 0.17.2
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- Claude Opus 5.5 ()
+- GitHub ()
+- algomaster99 ([@algomaster99](https://github.com/algomaster99))
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+
 # 0.17.1
 ## Changelog
 
