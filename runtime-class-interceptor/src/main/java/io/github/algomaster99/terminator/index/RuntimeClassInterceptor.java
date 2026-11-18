@@ -151,12 +151,12 @@ public class RuntimeClassInterceptor {
     }
 
     private static boolean isGeneratedForTest(String className, ProtectionDomain protectionDomain) {
-        // Classes the JDK spins without a protection domain, like `GeneratedConstructorAccessor`, are recorded.
-        // Classes with a class file in the project, like `TrueTypeFont`, are recorded too.
-        if (project == null || protectionDomain == null || hasClassFile(locationOf(protectionDomain), className)) {
+        // Classes with a class file in the project, like `TrueTypeFont`, are recorded.
+        if (project == null || hasClassFile(locationOf(protectionDomain), className)) {
             return false;
         }
-        // The nearest frame from the project tells who asked for the class: a test or production code.
+        // The nearest frame from the project tells who asked for the class: a test or production code. This includes
+        // classes without a protection domain, like Mockito's `MockMethodDispatcher` in the bootstrap class loader.
         return WALKER.walk(NEAREST_PROJECT_FRAME_IS_TEST);
     }
 
