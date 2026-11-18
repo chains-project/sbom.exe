@@ -1,6 +1,7 @@
 package io.github.algomaster99.terminator.commons.fingerprint;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.module.ModuleFinder;
 import java.lang.module.ModuleReference;
 import java.net.URI;
@@ -51,19 +52,15 @@ public final class JdkImage {
         if (module == null || !module.isNamed() || !MODULES.contains(module.getName())) {
             return null;
         }
-        // A read on an interrupted thread fails with ClosedByInterruptException, which would make a JDK class look
-        // generated. A thread can load classes while interrupted, e.g. when an interrupted worker exits. So the flag is
-        // cleared for the read and restored afterwards.
-        boolean interrupted = Thread.interrupted();
+        // We use an input stream instead of Files.readAllBytes, because the image's input stream holds the bytes in
+        // memory. Files.readAllBytes reads through an interruptible channel, so an interrupt fails the read and makes a
+        // JDK class look generated.
         // No string concatenation: it compiles to an invokedynamic, which can spin classes while a transformer runs.
-        try {
-            return Files.readAllBytes(IMAGE.getPath("/modules", module.getName(), className.concat(".class")));
+        try (InputStream in =
+                Files.newInputStream(IMAGE.getPath("/modules", module.getName(), className.concat(".class")))) {
+            return in.readAllBytes();
         } catch (IOException e) {
             return null;
-        } finally {
-            if (interrupted) {
-                Thread.currentThread().interrupt();
-            }
         }
     }
 }
