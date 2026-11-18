@@ -1,4 +1,22 @@
 
+# 0.17.4
+## Changelog
+
+## 🐛 Fixes
+- 054896e fix: walk the stack for classes without a protection domain (#429)
+
+## 🧰 Tasks
+- face927 chore: releasing version 0.17.4
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- Claude Opus 5.5 ()
+- GitHub ()
+- algomaster99 ([@algomaster99](https://github.com/algomaster99))
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+
 # 0.17.3
 ## Changelog
 
