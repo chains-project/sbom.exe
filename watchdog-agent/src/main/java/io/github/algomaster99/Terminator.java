@@ -47,7 +47,7 @@ public class Terminator {
                     ProtectionDomain protectionDomain,
                     byte[] classfileBuffer) {
 
-                return isLoadedClassAllowlisted(module, loader, className, classfileBuffer);
+                return isLoadedClassAllowlisted(module, loader, className, protectionDomain, classfileBuffer);
             }
         });
     }
@@ -79,7 +79,11 @@ public class Terminator {
     }
 
     private static byte[] isLoadedClassAllowlisted(
-            Module module, ClassLoader loader, String className, byte[] classfileBuffer) {
+            Module module,
+            ClassLoader loader,
+            String className,
+            ProtectionDomain protectionDomain,
+            byte[] classfileBuffer) {
         if (className == null) {
             className = ClassFileUtilities.getClassNameFromBuffer(classfileBuffer);
         }
@@ -124,10 +128,14 @@ public class Terminator {
         }
         // A class of a JDK module must be the one in the module image, which verifyJdk checked against the BOMI. This
         // catches classes patched into a JDK module. Classes absent from the image fall through to the lookup below.
+        // A class from a JAR of the JDK, like lib/jrt-fs.jar, must likewise be the one in that JAR.
         if (jdkAllowlisted) {
-            byte[] inImage = JdkImage.read(module, className);
-            if (inImage != null) {
-                return Arrays.equals(inImage, classfileBuffer) ? classfileBuffer : modified(className, classfileBuffer);
+            byte[] inJdk = JdkImage.read(module, className);
+            if (inJdk == null) {
+                inJdk = JdkImage.readFromJar(protectionDomain, className);
+            }
+            if (inJdk != null) {
+                return Arrays.equals(inJdk, classfileBuffer) ? classfileBuffer : modified(className, classfileBuffer);
             }
         }
         Set<ClassFileAttributes> candidates = fingerprints.get(className);

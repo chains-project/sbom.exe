@@ -2,9 +2,16 @@ package io.github.algomaster99.terminator.commons.fingerprint;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
+import java.security.cert.Certificate;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.LongAdder;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 class JdkImageTest {
 
@@ -41,5 +48,23 @@ class JdkImageTest {
         }
         reader.join();
         assertThat(failedReads.sum()).isZero();
+    }
+
+    @Test
+    void readsClassOnlyFromJarInsideJdk(@TempDir Path dir) throws IOException {
+        Path javaHome = Path.of(System.getProperty("java.home"));
+        Path jrtFs = javaHome.resolve("lib/jrt-fs.jar");
+        Path copy = Files.copy(jrtFs, dir.resolve("jrt-fs.jar"));
+        String className = "jdk/internal/jrtfs/JrtPath";
+
+        assertThat(JdkImage.readFromJar(domainOf(jrtFs), className)).isNotEmpty();
+        assertThat(JdkImage.readFromJar(domainOf(copy), className)).isNull();
+        // A path that starts in java.home and climbs out of it with '..' is outside the JDK.
+        assertThat(JdkImage.readFromJar(domainOf(javaHome.resolve(javaHome.relativize(copy))), className))
+                .isNull();
+    }
+
+    private static ProtectionDomain domainOf(Path location) throws IOException {
+        return new ProtectionDomain(new CodeSource(location.toUri().toURL(), (Certificate[]) null), null);
     }
 }

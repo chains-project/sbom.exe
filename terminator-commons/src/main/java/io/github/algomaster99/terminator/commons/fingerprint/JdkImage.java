@@ -5,11 +5,18 @@ import java.io.InputStream;
 import java.lang.module.ModuleFinder;
 import java.lang.module.ModuleReference;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * Reads classes from the module image ({@code lib/modules}) of the running JDK, which {@link JdkDigest} covers.
@@ -17,6 +24,8 @@ import java.util.Set;
 public final class JdkImage {
 
     private static final FileSystem IMAGE = FileSystems.getFileSystem(URI.create("jrt:/"));
+
+    private static final Path JAVA_HOME = Path.of(System.getProperty("java.home"));
 
     private static final Set<String> MODULES = new HashSet<>();
 
@@ -60,6 +69,42 @@ public final class JdkImage {
                 Files.newInputStream(IMAGE.getPath("/modules", module.getName(), className.concat(".class")))) {
             return in.readAllBytes();
         } catch (IOException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the bytes that a JAR of the running JDK, like {@code lib/jrt-fs.jar}, holds for a class.
+     *
+     * <p>The JDK defines the classes of {@code lib/jrt-fs.jar} in an unnamed module when a program opens the jrt file
+     * system of a given {@code java.home}. {@link JdkDigest} covers the JAR, so these classes belong to the JDK.
+     *
+     * @param protectionDomain  the protection domain of the class, as passed to a {@code ClassFileTransformer}
+     * @param className  the internal name of the class
+     * @return  the bytes, or {@code null} if the class does not come from a JAR that the digest covers
+     */
+    public static byte[] readFromJar(ProtectionDomain protectionDomain, String className) {
+        CodeSource codeSource = protectionDomain == null ? null : protectionDomain.getCodeSource();
+        URL location = codeSource == null ? null : codeSource.getLocation();
+        if (location == null || !"file".equals(location.getProtocol())) {
+            return null;
+        }
+        try {
+            // normalize() removes '..', so a path cannot climb out of java.home.
+            Path jar = Path.of(location.toURI()).normalize();
+            if (!jar.startsWith(JAVA_HOME) || JdkDigest.isSkipped(JdkDigest.relativePath(JAVA_HOME, jar))) {
+                return null;
+            }
+            try (ZipFile zip = new ZipFile(jar.toFile())) {
+                ZipEntry entry = zip.getEntry(className.concat(".class"));
+                if (entry == null) {
+                    return null;
+                }
+                try (InputStream in = zip.getInputStream(entry)) {
+                    return in.readAllBytes();
+                }
+            }
+        } catch (IOException | URISyntaxException | RuntimeException e) {
             return null;
         }
     }
