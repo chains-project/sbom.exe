@@ -51,16 +51,16 @@ class JdkImageTest {
     }
 
     @Test
-    void readsClassOnlyFromJarInsideJdk(@TempDir Path dir) throws IOException {
+    void readsClassOnlyFromJrtFsOfJdk(@TempDir Path dir) throws IOException {
         Path javaHome = Path.of(System.getProperty("java.home"));
         Path jrtFs = javaHome.resolve("lib/jrt-fs.jar");
         Path copy = Files.copy(jrtFs, dir.resolve("jrt-fs.jar"));
         String className = "jdk/internal/jrtfs/JrtPath";
 
-        assertThat(JdkImage.readFromJar(domainOf(jrtFs), className)).isNotEmpty();
-        assertThat(JdkImage.readFromJar(domainOf(copy), className)).isNull();
-        // A path that starts in java.home and climbs out of it with '..' is outside the JDK.
-        assertThat(JdkImage.readFromJar(domainOf(javaHome.resolve(javaHome.relativize(copy))), className))
+        assertThat(JdkImage.readFromJrtFs(domainOf(jrtFs), className)).isNotEmpty();
+        assertThat(JdkImage.readFromJrtFs(domainOf(copy), className)).isNull();
+        // The digest does not check a JAR that is added to the JDK after startup.
+        assertThat(JdkImage.readFromJrtFs(domainOf(javaHome.resolve("lib/evil.jar")), className))
                 .isNull();
     }
 

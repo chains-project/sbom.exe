@@ -104,9 +104,8 @@ public class RuntimeClassInterceptor {
         if (JdkImage.read(module, className) != null) {
             return classfileBuffer;
         }
-        // The watchdog checks the classes from JARs of the JDK, like lib/jrt-fs.jar, against the JAR, so they are not
-        // recorded.
-        if (JdkImage.readFromJar(protectionDomain, className) != null) {
+        // The watchdog checks the classes from lib/jrt-fs.jar of the JDK against the JAR, so they are not recorded.
+        if (JdkImage.readFromJrtFs(protectionDomain, className) != null) {
             return classfileBuffer;
         }
         // The watchdog checks proxy classes by regenerating them, so they are not recorded.

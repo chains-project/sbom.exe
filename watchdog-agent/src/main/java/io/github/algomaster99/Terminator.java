@@ -128,11 +128,11 @@ public class Terminator {
         }
         // A class of a JDK module must be the one in the module image, which verifyJdk checked against the BOMI. This
         // catches classes patched into a JDK module. Classes absent from the image fall through to the lookup below.
-        // A class from a JAR of the JDK, like lib/jrt-fs.jar, must likewise be the one in that JAR.
+        // A class from lib/jrt-fs.jar of the JDK must likewise be the one in that JAR.
         if (jdkAllowlisted) {
             byte[] inJdk = JdkImage.read(module, className);
             if (inJdk == null) {
-                inJdk = JdkImage.readFromJar(protectionDomain, className);
+                inJdk = JdkImage.readFromJrtFs(protectionDomain, className);
             }
             if (inJdk != null) {
                 return Arrays.equals(inJdk, classfileBuffer) ? classfileBuffer : modified(className, classfileBuffer);

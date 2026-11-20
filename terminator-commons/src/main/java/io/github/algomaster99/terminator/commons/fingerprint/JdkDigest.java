@@ -88,13 +88,13 @@ public final class JdkDigest {
         }
     }
 
-    static boolean isSkipped(String relativePath) {
+    private static boolean isSkipped(String relativePath) {
         int slash = relativePath.indexOf('/');
         return (slash > 0 && SKIPPED_DIRECTORIES.contains(relativePath.substring(0, slash)))
                 || SKIPPED_FILES.contains(relativePath);
     }
 
-    static String relativePath(Path javaHome, Path file) {
+    private static String relativePath(Path javaHome, Path file) {
         return javaHome.relativize(file).toString().replace(File.separatorChar, '/');
     }
 

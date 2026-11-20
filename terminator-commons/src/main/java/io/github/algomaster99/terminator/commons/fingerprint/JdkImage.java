@@ -25,7 +25,7 @@ public final class JdkImage {
 
     private static final FileSystem IMAGE = FileSystems.getFileSystem(URI.create("jrt:/"));
 
-    private static final Path JAVA_HOME = Path.of(System.getProperty("java.home"));
+    private static final Path JRT_FS = Path.of(System.getProperty("java.home"), "lib", "jrt-fs.jar");
 
     private static final Set<String> MODULES = new HashSet<>();
 
@@ -74,25 +74,26 @@ public final class JdkImage {
     }
 
     /**
-     * Returns the bytes that a JAR of the running JDK, like {@code lib/jrt-fs.jar}, holds for a class.
+     * Returns the bytes that {@code lib/jrt-fs.jar} of the running JDK holds for a class.
      *
-     * <p>The JDK defines the classes of {@code lib/jrt-fs.jar} in an unnamed module when a program opens the jrt file
-     * system of a given {@code java.home}. {@link JdkDigest} covers the JAR, so these classes belong to the JDK.
+     * <p>The JDK defines the classes of this JAR in an unnamed module when a program opens the jrt file system of a
+     * given {@code java.home}. {@link JdkDigest} covers the JAR, so these classes belong to the JDK. It is the only JAR
+     * that the JDK ships outside {@code jmods}. Any other JAR in {@code java.home}, like one added after the digest
+     * check, is not trusted.
      *
      * @param protectionDomain  the protection domain of the class, as passed to a {@code ClassFileTransformer}
      * @param className  the internal name of the class
-     * @return  the bytes, or {@code null} if the class does not come from a JAR that the digest covers
+     * @return  the bytes, or {@code null} if the class does not come from {@code lib/jrt-fs.jar}
      */
-    public static byte[] readFromJar(ProtectionDomain protectionDomain, String className) {
+    public static byte[] readFromJrtFs(ProtectionDomain protectionDomain, String className) {
         CodeSource codeSource = protectionDomain == null ? null : protectionDomain.getCodeSource();
         URL location = codeSource == null ? null : codeSource.getLocation();
         if (location == null || !"file".equals(location.getProtocol())) {
             return null;
         }
         try {
-            // normalize() removes '..', so a path cannot climb out of java.home.
             Path jar = Path.of(location.toURI()).normalize();
-            if (!jar.startsWith(JAVA_HOME) || JdkDigest.isSkipped(JdkDigest.relativePath(JAVA_HOME, jar))) {
+            if (!jar.equals(JRT_FS)) {
                 return null;
             }
             try (ZipFile zip = new ZipFile(jar.toFile())) {
