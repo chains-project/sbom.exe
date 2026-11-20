@@ -2,9 +2,16 @@ package io.github.algomaster99.terminator.commons.fingerprint;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
+import java.security.cert.Certificate;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.LongAdder;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 class JdkImageTest {
 
@@ -41,5 +48,23 @@ class JdkImageTest {
         }
         reader.join();
         assertThat(failedReads.sum()).isZero();
+    }
+
+    @Test
+    void readsClassOnlyFromJrtFsOfJdk(@TempDir Path dir) throws IOException {
+        Path javaHome = Path.of(System.getProperty("java.home"));
+        Path jrtFs = javaHome.resolve("lib/jrt-fs.jar");
+        Path copy = Files.copy(jrtFs, dir.resolve("jrt-fs.jar"));
+        String className = "jdk/internal/jrtfs/JrtPath";
+
+        assertThat(JdkImage.readFromJrtFs(domainOf(jrtFs), className)).isNotEmpty();
+        assertThat(JdkImage.readFromJrtFs(domainOf(copy), className)).isNull();
+        // The digest does not check a JAR that is added to the JDK after startup.
+        assertThat(JdkImage.readFromJrtFs(domainOf(javaHome.resolve("lib/evil.jar")), className))
+                .isNull();
+    }
+
+    private static ProtectionDomain domainOf(Path location) throws IOException {
+        return new ProtectionDomain(new CodeSource(location.toUri().toURL(), (Certificate[]) null), null);
     }
 }
