@@ -1,4 +1,22 @@
 
+# 0.17.5
+## Changelog
+
+## 🐛 Fixes
+- f3b15c3 fix: treat classes from lib/jrt-fs.jar as JDK classes (#431)
+
+## 🧰 Tasks
+- fde3923 chore: releasing version 0.17.5
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Aman Sharma ([@algomaster99](https://github.com/algomaster99))
+- Claude Opus 5.5 ()
+- GitHub ()
+- algomaster99 ([@algomaster99](https://github.com/algomaster99))
+- github-actions[bot] ([@github-actions[bot]](https://github.com/apps/github-actions))
+
 # 0.17.4
 ## Changelog
 
