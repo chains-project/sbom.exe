@@ -4,7 +4,7 @@
 
   <groupId>io.github.algomaster99</groupId>
   <artifactId>terminator</artifactId>
-  <version>0.17.6</version>
+  <version>0.17.7-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Terminator</name>
