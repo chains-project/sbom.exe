@@ -120,9 +120,8 @@ public class RuntimeClassInterceptor {
             return classfileBuffer;
         }
         // Test classes and classes from jars outside the project, like test frameworks, Surefire and this agent, are
-        // not recorded. Dependencies are indexed from the SBOM instead.
-        // A dependency can also generate a class at runtime in its own protection domain. Its jar has no class file
-        // for it, so the SBOM does not list it. An example is Dropwizard's `SpecificBinder<UUID>`.
+        // not recorded if they have a class file. The SBOM indexes the class files of dependencies instead. A class
+        // that a dependency generates at runtime, like Dropwizard's `SpecificBinder<UUID>`, has no class file.
         if (!isLoadedFromProject(protectionDomain) && hasClassFile(locationOf(protectionDomain), className)) {
             return classfileBuffer;
         }
