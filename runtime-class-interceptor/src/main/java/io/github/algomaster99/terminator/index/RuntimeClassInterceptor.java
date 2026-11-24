@@ -131,7 +131,8 @@ public class RuntimeClassInterceptor {
         }
         Set<ClassFileAttributes> candidates = exhaustiveListOfClasses.get(className);
         String classFileVersion = ClassFileUtilities.getVersion(classfileBuffer);
-        String hash = HashComputer.computeHash(classfileBuffer);
+        // Like the watchdog, refer to proxies by their readable name because their numbered names vary.
+        String hash = HashComputer.computeHash(classfileBuffer, proxies);
         String newClassName = className;
         if (ClassFileUtilities.getSimpleNameFromQualifiedName(className).startsWith("GeneratedConstructorAccessor")) {
             String classForWhichTheConstructorIs =
@@ -142,8 +143,6 @@ public class RuntimeClassInterceptor {
             } else {
                 newClassName = "GCA_" + classForWhichTheConstructorIs;
             }
-            // Like the watchdog, refer to proxies by their name in the BOMI because their numbered names vary.
-            hash = HashComputer.computeHash(classfileBuffer, proxies);
         }
         if (candidates == null) {
             exhaustiveListOfClasses.put(

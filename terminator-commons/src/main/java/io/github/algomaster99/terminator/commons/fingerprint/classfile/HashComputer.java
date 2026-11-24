@@ -14,7 +14,7 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.ClassRemapper;
-import org.objectweb.asm.commons.SimpleRemapper;
+import org.objectweb.asm.commons.Remapper;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
@@ -74,18 +74,24 @@ public class HashComputer {
 
     /**
      * Computes the checksum like {@link #computeHash(byte[])}, but first renames the given classes wherever the
-     * classfile refers to them. The accessor that the JDK generates for the constructor of a proxy class refers to the
-     * proxy by its numbered name, which depends on how many proxies were created before, so the proxy has to be renamed
-     * to its name in the BOMI.
+     * classfile refers to them. A class can refer to a proxy class by its numbered name, which depends on how many
+     * proxies were created before. So the proxy has to be renamed to a name that does not depend on this order.
      */
     public static String computeHash(byte[] bytes, Map<String, String> classNames) {
         ClassReader reader = new ClassReader(bytes);
-        Map<String, String> mapping = new HashMap<>(classNames);
-        mapping.put(reader.getClassName(), CANONICAL_CLASS_NAME);
+        String className = reader.getClassName();
+        // A remapper instead of a copy of the map. The map holds every proxy that the application created so far.
+        Remapper remapper = new Remapper() {
+            @Override
+            public String map(String internalName) {
+                if (internalName.equals(className)) {
+                    return CANONICAL_CLASS_NAME;
+                }
+                return classNames.getOrDefault(internalName, internalName);
+            }
+        };
         ClassNode classNode = new ClassNode();
-        reader.accept(
-                new ClassRemapper(classNode, new SimpleRemapper(mapping)),
-                ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+        reader.accept(new ClassRemapper(classNode, remapper), ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
 
         renameLambdaMethods(classNode);
         return toHexString(sha256(canonicalView(classNode)));

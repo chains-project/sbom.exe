@@ -61,6 +61,21 @@ class HashComputerTest {
     }
 
     @Test
+    void classesThatReferToTheSameProxyHaveTheSameHashWhenTheProxyIsRenamed() {
+        // arrange
+        byte[] referringToProxy0 = classReferringTo("jdk/proxy1/$Proxy0");
+        byte[] referringToProxy2 = classReferringTo("jdk/proxy1/$Proxy2");
+
+        // act + assert
+        assertThat(HashComputer.computeHash(referringToProxy0))
+                .isNotEqualTo(HashComputer.computeHash(referringToProxy2));
+        assertThat(HashComputer.computeHash(
+                        referringToProxy0, Map.of("jdk/proxy1/$Proxy0", "Proxy[java/lang/Runnable]")))
+                .isEqualTo(HashComputer.computeHash(
+                        referringToProxy2, Map.of("jdk/proxy1/$Proxy2", "Proxy[java/lang/Runnable]")));
+    }
+
+    @Test
     void accessorsOfDifferentProxiesHaveDifferentHashes() throws IOException {
         // arrange
         byte[] accessor = Files.readAllBytes(ACCESSOR_OF_PROXY_7);
@@ -182,6 +197,26 @@ class HashComputerTest {
             }
         }
         throw new AssertionError("No instruction with opcode " + opcode + " in " + method.name);
+    }
+
+    /**
+     * A class with a field of the given proxy type and a method that calls {@code run} on this field.
+     */
+    private static byte[] classReferringTo(String proxy) {
+        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        writer.visit(Opcodes.V17, Opcodes.ACC_PUBLIC, "Shape", null, "java/lang/Object", null);
+        writer.visitField(Opcodes.ACC_PUBLIC, "shape", "L" + proxy + ";", null, null)
+                .visitEnd();
+        MethodVisitor method = writer.visitMethod(Opcodes.ACC_PUBLIC, "run", "()V", null, null);
+        method.visitCode();
+        method.visitVarInsn(Opcodes.ALOAD, 0);
+        method.visitFieldInsn(Opcodes.GETFIELD, "Shape", "shape", "L" + proxy + ";");
+        method.visitMethodInsn(Opcodes.INVOKEVIRTUAL, proxy, "run", "()V", false);
+        method.visitInsn(Opcodes.RETURN);
+        method.visitMaxs(0, 0);
+        method.visitEnd();
+        writer.visitEnd();
+        return writer.toByteArray();
     }
 
     private static MethodNode method(ClassNode classNode, String name) {
