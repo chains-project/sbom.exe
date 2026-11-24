@@ -141,7 +141,8 @@ public class Terminator {
         Set<ClassFileAttributes> candidates = fingerprints.get(className);
         if (candidates != null) {
             for (ClassFileAttributes candidate : candidates) {
-                String hash = HashComputer.computeHash(classfileBuffer);
+                // Like the runtime indexer, refer to proxies by their readable name because their numbered names vary.
+                String hash = HashComputer.computeHash(classfileBuffer, proxyOriginalNamesToReadableNames);
                 if (hash.equals(candidate.hash())) {
                     return classfileBuffer;
                 }
